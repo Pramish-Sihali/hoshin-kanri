@@ -9,10 +9,14 @@ import {
   MessageSquare, 
   Settings,
   Menu,
-  X
+  X,
+  Database
 } from 'lucide-react';
 
 import UserMenu from './UserMenu';
+import { useHoshinStore } from '../store/hoshinStore';
+import { allDummyData } from '@/lib/dummyData';
+import { Button } from './ui/button';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,13 +26,22 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { loadDummyData, clearAllData, hasDummyData } = useHoshinStore();
+  
+  const handleToggleDummyData = () => {
+    if (hasDummyData()) {
+      clearAllData();
+    } else {
+      loadDummyData(allDummyData);
+    }
+  };
 
   const navigation = [
     { name: 'Dashboard', href: 'dashboard', icon: Home },
     { name: 'X-Matrix', href: 'matrix', icon: Target },
+    { name: 'Catchball', href: 'catchball', icon: MessageSquare },
     { name: 'Objectives', href: 'objectives', icon: BarChart3 },
     { name: 'Processes', href: 'processes', icon: Users },
-    { name: 'Catchball', href: 'catchball', icon: MessageSquare },
     { name: 'Settings', href: 'settings', icon: Settings },
   ];
 
@@ -111,7 +124,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
       </div>
 
       <div className="md:pl-64 flex flex-col flex-1">
-        {/* NEW: Top header with user menu */}
+        {/* Top header with user menu and dummy data toggle */}
         <div className="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
           <div className="flex justify-between items-center px-4 py-3">
             <button
@@ -126,8 +139,26 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
               {/* Page title or breadcrumbs could go here */}
             </div>
             
-            {/* NEW: User Menu Component */}
-            <UserMenu />
+            {/* Dummy Data Toggle Button */}
+            <div className="flex items-center space-x-3">
+              <Button
+                onClick={handleToggleDummyData}
+                variant={hasDummyData() ? "destructive" : "default"}
+                size="sm"
+                className="flex items-center space-x-2"
+              >
+                <Database className="w-4 h-4" />
+                <span className="hidden sm:inline">
+                  {hasDummyData() ? 'Clear Demo Data' : 'Load Demo Data'}
+                </span>
+                <span className="sm:hidden">
+                  {hasDummyData() ? 'Clear' : 'Demo'}
+                </span>
+              </Button>
+              
+              {/* User Menu Component */}
+              <UserMenu />
+            </div>
           </div>
         </div>
         

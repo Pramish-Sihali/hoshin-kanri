@@ -22,6 +22,11 @@ interface HoshinStore extends HoshinData {
   addCatchballItem: (item: Omit<CatchballItem, 'id'>) => void;
   updateCatchballItem: (id: string, item: Partial<CatchballItem>) => void;
   addCatchballResponse: (itemId: string, response: Omit<CatchballItem['responses'][0], 'id'>) => void;
+  
+  // Bulk operations for dummy data
+  loadDummyData: (data: HoshinData) => void;
+  clearAllData: () => void;
+  hasDummyData: () => boolean;
 }
 
 export const useHoshinStore = create<HoshinStore>()(
@@ -141,7 +146,35 @@ export const useHoshinStore = create<HoshinStore>()(
                 }
               : item
           )
-        }))
+        })),
+      
+      // Bulk operations for dummy data
+      loadDummyData: (data) =>
+        set(() => ({
+          strategicObjectives: data.strategicObjectives,
+          annualObjectives: data.annualObjectives,
+          processes: data.processes,
+          metrics: data.metrics,
+          catchball: data.catchball
+        })),
+      
+      clearAllData: () =>
+        set(() => ({
+          strategicObjectives: [],
+          annualObjectives: [],
+          processes: [],
+          metrics: [],
+          catchball: []
+        })),
+      
+      hasDummyData: () => {
+        const state = get();
+        return state.strategicObjectives.length > 0 || 
+               state.annualObjectives.length > 0 || 
+               state.processes.length > 0 || 
+               state.metrics.length > 0 || 
+               state.catchball.length > 0;
+      }
     }),
     {
       name: 'hoshin-kanri-storage'

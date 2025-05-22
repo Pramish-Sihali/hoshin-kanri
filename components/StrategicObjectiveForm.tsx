@@ -113,7 +113,9 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({
               <Select
                 id="status"
                 value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+              
+
+                onChange={(e ) => setFormData({ ...formData, status: e.target.value as any })}
               >
                 <option value="planning">Planning</option>
                 <option value="in-progress">In Progress</option>
@@ -128,6 +130,8 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({
               <Select
                 id="priority"
                 value={formData.priority}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                 onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
               >
                 <option value="high">High</option>

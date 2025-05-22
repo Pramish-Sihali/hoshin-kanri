@@ -5,6 +5,7 @@ import { useHoshinStore } from '../store/hoshinStore';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
+import InteractiveXMatrix from './InteractiveMatrix';
 
 const XMatrix: React.FC = () => {
   const { strategicObjectives, annualObjectives, processes, metrics } = useHoshinStore();
@@ -203,6 +204,10 @@ const XMatrix: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      <div>
+        <InteractiveXMatrix/>
+        </div>
     </div>
   );
 };

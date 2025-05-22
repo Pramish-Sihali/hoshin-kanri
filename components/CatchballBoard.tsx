@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { useHoshinStore } from '../store/hoshinStore';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -41,10 +41,10 @@ const CatchballBoard: React.FC = () => {
 
   const getAllItems = () => {
     return [
-      ...strategicObjectives.map(item => ({ ...item, type: 'strategic' })),
-      ...annualObjectives.map(item => ({ ...item, type: 'annual' })),
-      ...processes.map(item => ({ ...item, type: 'process' })),
-      ...metrics.map(item => ({ ...item, type: 'metric' }))
+      ...strategicObjectives.map(item => ({ ...item, type: 'strategic', displayName: item.title })),
+      ...annualObjectives.map(item => ({ ...item, type: 'annual', displayName: item.title })),
+      ...processes.map(item => ({ ...item, type: 'process', displayName: item.title })),
+      ...metrics.map(item => ({ ...item, type: 'metric', displayName: item.name }))
     ];
   };
 
@@ -255,7 +255,7 @@ const CatchballBoard: React.FC = () => {
                 <option value="">Select related item...</option>
                 {getAllItems().map((item) => (
                   <option key={`${item.type}-${item.id}`} value={item.id}>
-                    [{item.type}] {item.title}
+                    [{item.type}] {item.displayName}
                   </option>
                 ))}
               </Select>
@@ -276,7 +276,7 @@ const CatchballBoard: React.FC = () => {
           {selectedItem && (
             <>
               <DialogHeader>
-                <DialogTitle className="flex items-center">
+                <DialogTitle >
                   <span className="mr-2">{getTypeIcon(selectedItem.type)}</span>
                   {selectedItem.title}
                 </DialogTitle>

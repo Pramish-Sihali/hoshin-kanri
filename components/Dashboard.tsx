@@ -154,7 +154,7 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {catchball.slice(-5).map((item, _index) => (
+              {catchball.slice(-5).map((item) => (
                 <div key={item.id} className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-2 h-2 mt-2 bg-blue-500 rounded-full"></div>
                   <div className="flex-1">

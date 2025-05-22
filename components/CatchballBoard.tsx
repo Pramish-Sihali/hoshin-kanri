@@ -30,13 +30,13 @@ const CatchballBoard: React.FC = () => {
   const [responseText, setResponseText] = useState('');
   
   const [formData, setFormData] = useState({
-    type: 'question' as const,
+    type: 'question' as 'question' | 'suggestion' | 'concern' | 'approval',
     title: '',
     description: '',
     from: '',
     to: '',
     relatedItemId: '',
-    relatedItemType: 'strategic' as const
+    relatedItemType: 'strategic' as 'strategic' | 'annual' | 'process' | 'metric'
   });
 
   const getAllItems = () => {
@@ -58,13 +58,13 @@ const CatchballBoard: React.FC = () => {
     });
     setShowAddForm(false);
     setFormData({
-      type: 'question',
+      type: 'question' as 'question' | 'suggestion' | 'concern' | 'approval',
       title: '',
       description: '',
       from: '',
       to: '',
       relatedItemId: '',
-      relatedItemType: 'strategic'
+      relatedItemType: 'strategic' as 'strategic' | 'annual' | 'process' | 'metric'
     });
   };
 
@@ -199,7 +199,7 @@ const CatchballBoard: React.FC = () => {
               <Select
                 id="type"
                 value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as 'question' | 'suggestion' | 'concern' | 'approval' })}
               >
                 <option value="question">Question</option>
                 <option value="suggestion">Suggestion</option>

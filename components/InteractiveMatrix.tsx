@@ -17,6 +17,17 @@ interface CorrelationCell {
   symbol?: CorrelationSymbol;
 }
 
+// Union type for matrix items
+type MatrixItem = {
+  id: string;
+  title?: string;
+  name?: string;
+  description?: string;
+  progress?: number;
+  owner?: string;
+  status?: string;
+} | string;
+
 // Default correlation symbols
 const CORRELATION_SYMBOLS: CorrelationSymbol[] = [
   { id: 'strong', symbol: '●', meaning: 'Strong Relationship', color: '#000000' },
@@ -90,26 +101,36 @@ const InteractiveMatrix: React.FC = () => {
     );
   };
 
+  // Type guard functions
+  const isStringItem = (item: MatrixItem): item is string => {
+    return typeof item === 'string';
+  };
+
+  const isObjectItem = (item: MatrixItem): item is Exclude<MatrixItem, string> => {
+    return typeof item === 'object' && item !== null;
+  };
+
   // Render editable item
   const renderEditableItem = (
-    item: any, 
+    item: MatrixItem, 
     bgColor: string, 
     textColor: string = 'text-gray-800'
   ) => {
-    const isEditing = editingCell === item.id;
-    const displayText = item.title || item.name || item;
+    const itemId = isStringItem(item) ? item : item.id;
+    const isEditing = editingCell === itemId;
+    const displayText = isStringItem(item) ? item : (item.title || item.name || '');
     
     return (
       <div 
-        key={typeof item === 'string' ? item : item.id}
+        key={itemId}
         className={`${bgColor} ${textColor} p-3 rounded-lg border border-gray-200 h-full flex flex-col justify-center cursor-pointer hover:shadow-md transition-all`}
-        onClick={() => setEditingCell(typeof item === 'string' ? item : item.id)}
+        onClick={() => setEditingCell(itemId)}
       >
         {isEditing ? (
           <textarea
             className="w-full h-full bg-transparent resize-none outline-none text-sm font-medium"
             value={displayText}
-            onChange={(e) => {
+            onChange={() => {
               // Handle editing logic here
             }}
             onBlur={() => setEditingCell(null)}
@@ -124,12 +145,12 @@ const InteractiveMatrix: React.FC = () => {
         ) : (
           <div className="text-sm font-medium leading-tight">
             {displayText}
-            {typeof item === 'object' && item.description && (
+            {isObjectItem(item) && item.description && (
               <div className="text-xs text-gray-600 mt-1 opacity-75">
                 {item.description.substring(0, 60)}...
               </div>
             )}
-            {typeof item === 'object' && item.progress !== undefined && (
+            {isObjectItem(item) && item.progress !== undefined && (
               <div className="mt-2">
                 <div className="w-full bg-gray-200 rounded-full h-1.5">
                   <div 
@@ -207,7 +228,7 @@ const InteractiveMatrix: React.FC = () => {
             
             {/* Center Diamond Overlay */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-32 h-32 transform rotate-45 bg-gradient-to-br from-red-400  via-green-400 to-blue-400 rounded-lg shadow-lg flex items-center justify-center">
+              <div className="w-32 h-32 transform rotate-45 bg-gradient-to-br from-red-400 to-blue-400 rounded-lg shadow-lg flex items-center justify-center">
                 <div className="transform -rotate-45 text-white font-bold text-center text-sm">
                   <div>Strategic</div>
                   <div>Alignment</div>

@@ -37,9 +37,9 @@ const LoginForm: React.FC = () => {
           router.refresh();
         }
       }
-    } catch (error) {
-      setError('An error occurred during login');
-    } finally {
+    }
+    
+   finally {
       setLoading(false);
     }
   };

@@ -303,7 +303,7 @@ const InteractiveMatrix: React.FC = () => {
           <div className="sticky top-0 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-slate-200 rounded-t-2xl">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg">
+                <div className="p-2 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg shadow-lg">
                   <Grid className="w-5 h-5 text-white" />
                 </div>
                 <span className="break-words">{displayTitle}</span>
@@ -520,7 +520,7 @@ const InteractiveMatrix: React.FC = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="text-center flex-1">
             <div className="flex items-center justify-center gap-3 mb-3">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+              <div className="p-2 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl shadow-lg">
                 <Grid className="w-6 h-6 text-white" />
               </div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">

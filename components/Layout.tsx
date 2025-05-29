@@ -18,6 +18,7 @@ import UserMenu from './UserMenu';
 import { useHoshinStore } from '../store/hoshinStore';
 import { allDummyData } from '@/lib/dummyData';
 import { Button } from './ui/button';
+import Image from 'next/image';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -75,7 +76,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                 </h1>
               </div>
             </div>
-            <nav className="px-4 space-y-2">
+            <nav className="px-4 space-y-2 flex-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -99,6 +100,33 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                 );
               })}
             </nav>
+            
+            {/* Company Logos Section - Mobile */}
+            <div className="px-6 pt-6 border-t border-slate-200 mt-6">
+              <div className="text-center space-y-4">
+                <div className="text-xs text-slate-500 font-medium">Powered by</div>
+                <div className="flex items-center justify-center gap-4">
+                  <div className="bg-white rounded-lg p-2 shadow-md border border-slate-200">
+                    <Image
+                      src="/ixi.svg"
+                      alt="IXI Logo"
+                      width={50}
+                      height={25}
+                      className="opacity-80"
+                    />
+                  </div>
+                  <div className="bg-white rounded-lg p-2 shadow-md border border-slate-200">
+                    <Image
+                      src="/igpa.png"
+                      alt="IGPA Logo"
+                      width={50}
+                      height={25}
+                      className="opacity-80"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -113,9 +141,9 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                   <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  {/* <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
-                    Hoshin Kanri
-                  </h1> */}
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
+                    Policy Tracking
+                  </h1>
                   <p className="text-xs text-slate-500 mt-1">Strategic Planning</p>
                 </div>
               </div>
@@ -141,6 +169,33 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                 );
               })}
             </nav>
+          </div>
+          
+          {/* Company Logos Section - Desktop */}
+          <div className="flex-shrink-0 px-6 py-4 border-t border-slate-200">
+            <div className="text-center space-y-4">
+              <div className="text-xs text-slate-500 font-medium">Powered by The Institude and IXI Corp.</div>
+              <div className="flex items-center justify-center gap-4">
+                <div className="bg-white rounded-lg p-3 shadow-md border border-slate-200 hover:shadow-lg transition-shadow">
+                  <Image
+                    src="/ixi.svg"
+                    alt="IXI Logo"
+                    width={60}
+                    height={30}
+                    className="opacity-80 hover:opacity-100 transition-opacity"
+                  />
+                </div>
+                <div className="bg-white rounded-lg p-3 shadow-md border border-slate-200 hover:shadow-lg transition-shadow">
+                  <Image
+                    src="/igpa.png"
+                    alt="IGPA Logo"
+                    width={60}
+                    height={30}
+                    className="opacity-80 hover:opacity-100 transition-opacity"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

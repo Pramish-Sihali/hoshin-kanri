@@ -71,9 +71,9 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                 <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
                   <Zap className="w-5 h-5 text-white" />
                 </div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
+                {/* <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
                   Hoshin Kanri
-                </h1>
+                </h1> */}
               </div>
             </div>
             <nav className="px-4 space-y-2 flex-1">

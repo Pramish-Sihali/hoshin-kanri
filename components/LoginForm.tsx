@@ -9,6 +9,8 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Alert, AlertDescription } from './ui/alert';
 import { Zap, Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
+import Image from 'next/image';
+
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -62,9 +64,14 @@ const LoginForm: React.FC = () => {
       <Card className="w-full max-w-md relative bg-white/95 backdrop-blur-sm shadow-2xl border-5">
         <CardHeader className="text-center pb-6">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl">
-              <Zap className="w-8 h-8 text-white" />
-            </div>
+            
+                    <Image
+                      src="/ixi.svg"
+                      alt="IXI Logo"
+                      width={370}
+                      height={75}
+                      className="opacity-80"
+                    />
           </div>
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent mb-2">
             Welcome Back

@@ -28,7 +28,7 @@ export interface StrategicObjective {
     owner: string;
     startDate: string;
     endDate: string;
-    status: 'not-started' | 'in-progress' | 'completed' | 'on-hold';
+    status: 'not-started' | 'in-progress' | 'completed' | 'on-hold'| 'planning';
     resources: string[];
   }
   

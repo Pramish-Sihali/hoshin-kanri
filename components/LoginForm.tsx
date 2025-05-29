@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Alert, AlertDescription } from './ui/alert';
-import { Zap, Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
 import Image from 'next/image';
 
 

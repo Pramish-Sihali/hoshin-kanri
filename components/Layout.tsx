@@ -125,7 +125,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
 
       <div className="md:pl-64 flex flex-col flex-1">
         {/* Top header with user menu and dummy data toggle */}
-        <div className="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
+        <div className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-200">
           <div className="flex justify-between items-center px-4 py-3">
             <button
               type="button"

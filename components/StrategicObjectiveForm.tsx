@@ -9,6 +9,7 @@ import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { StrategicObjective } from '../types/hoshin';
+import { Target, Calendar, User, Flag, AlertCircle } from 'lucide-react';
 
 interface StrategicObjectiveFormProps {
   open: boolean;
@@ -49,40 +50,75 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({
     });
   };
 
+  const statusOptions = [
+    { value: 'planning', label: 'Planning', icon: '📋', color: 'text-amber-600' },
+    { value: 'in-progress', label: 'In Progress', icon: '🔄', color: 'text-blue-600' },
+    { value: 'completed', label: 'Completed', icon: '✅', color: 'text-emerald-600' },
+    { value: 'at-risk', label: 'At Risk', icon: '⚠️', color: 'text-red-600' }
+  ];
+
+  const priorityOptions = [
+    { value: 'high', label: 'High Priority', icon: '🔴', color: 'text-red-600' },
+    { value: 'medium', label: 'Medium Priority', icon: '🟡', color: 'text-amber-600' },
+    { value: 'low', label: 'Low Priority', icon: '🟢', color: 'text-emerald-600' }
+  ];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            {objective ? 'Edit Strategic Objective' : 'Add Strategic Objective'}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center">
+                <Target className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-800">
+                  {objective ? 'Edit Strategic Objective' : 'Add Strategic Objective'}
+                </div>
+                <div className="text-sm text-slate-500 font-normal">
+                  {objective ? 'Update your strategic objective details' : 'Define a new long-term strategic goal'}
+                </div>
+              </div>
+            </div>
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium mb-1">
-              Title
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="title" className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+              <Target className="w-4 h-4 text-teal-600" />
+              Objective Title
             </label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="Enter a clear, measurable objective title"
+              className="h-12 rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20"
               required
             />
           </div>
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium mb-1">
+          
+          <div className="space-y-2">
+            <label htmlFor="description" className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+              <AlertCircle className="w-4 h-4 text-teal-600" />
               Description
             </label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Provide detailed context, rationale, and expected outcomes"
+              className="min-h-24 rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20"
               required
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="targetYear" className="block text-sm font-medium mb-1">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label htmlFor="targetYear" className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <Calendar className="w-4 h-4 text-teal-600" />
                 Target Year
               </label>
               <Input
@@ -90,65 +126,86 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({
                 type="number"
                 value={formData.targetYear}
                 onChange={(e) => setFormData({ ...formData, targetYear: parseInt(e.target.value) })}
+                min={new Date().getFullYear()}
+                max={new Date().getFullYear() + 10}
+                className="h-12 rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20"
                 required
               />
             </div>
-            <div>
-              <label htmlFor="owner" className="block text-sm font-medium mb-1">
+            
+            <div className="space-y-2">
+              <label htmlFor="owner" className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <User className="w-4 h-4 text-teal-600" />
                 Owner
               </label>
               <Input
                 id="owner"
                 value={formData.owner}
                 onChange={(e) => setFormData({ ...formData, owner: e.target.value })}
+                placeholder="Responsible person or team"
+                className="h-12 rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20"
                 required
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="status" className="block text-sm font-medium mb-1">
-                Status
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label htmlFor="status" className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <Flag className="w-4 h-4 text-teal-600" />
+                Current Status
               </label>
               <Select
                 id="status"
                 value={formData.status}
-              
-
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                   setFormData({ ...formData, status: e.target.value as StrategicObjective['status'] })
                 }
+                className="h-12 rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20"
               >
-                <option value="planning">Planning</option>
-                <option value="in-progress">In Progress</option>
-                <option value="completed">Completed</option>
-                <option value="at-risk">At Risk</option>
+                {statusOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.icon} {option.label}
+                  </option>
+                ))}
               </Select>
             </div>
-            <div>
-              <label htmlFor="priority" className="block text-sm font-medium mb-1">
-                Priority
+            
+            <div className="space-y-2">
+              <label htmlFor="priority" className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <AlertCircle className="w-4 h-4 text-teal-600" />
+                Priority Level
               </label>
               <Select
                 id="priority"
                 value={formData.priority}
-               
-
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                   setFormData({ ...formData, priority: e.target.value as StrategicObjective['priority'] })
                 }
+                className="h-12 rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20"
               >
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
+                {priorityOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.icon} {option.label}
+                  </option>
+                ))}
               </Select>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button type="submit">
-              {objective ? 'Update' : 'Add'} Objective
+          
+          <div className="flex gap-4 pt-6 border-t border-slate-200">
+            <Button 
+              type="submit"
+              className="flex-1 h-12 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              {objective ? 'Update Objective' : 'Add Objective'}
             </Button>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => onOpenChange(false)}
+              className="flex-1 h-12 border-slate-200 hover:bg-slate-50 font-semibold rounded-xl transition-all duration-200"
+            >
               Cancel
             </Button>
           </div>

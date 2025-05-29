@@ -10,7 +10,8 @@ import {
   Settings,
   Menu,
   X,
-  Database
+  Database,
+  Zap
 } from 'lucide-react';
 
 import UserMenu from './UserMenu';
@@ -46,17 +47,17 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Mobile menu */}
       <div className={`fixed inset-0 flex z-40 md:hidden ${sidebarOpen ? '' : 'pointer-events-none'}`}>
-        <div className={`fixed inset-0 bg-gray-600 bg-opacity-75 ${sidebarOpen ? 'opacity-100' : 'opacity-0'} transition-opacity`} 
+        <div className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm ${sidebarOpen ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`} 
              onClick={() => setSidebarOpen(false)} />
         
-        <div className={`relative flex-1 flex flex-col max-w-xs w-full bg-white ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform`}>
+        <div className={`relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-2xl ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
               type="button"
-              className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="ml-1 flex items-center justify-center h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors"
               onClick={() => setSidebarOpen(false)}
             >
               <X className="h-6 w-6 text-white" />
@@ -64,10 +65,17 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
           </div>
           
           <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-            <div className="flex-shrink-0 flex items-center px-4">
-              <h1 className="text-xl font-bold text-gray-900">Hoshin Kanri</h1>
+            <div className="flex-shrink-0 flex items-center px-6 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-white" />
+                </div>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
+                  Hoshin Kanri
+                </h1>
+              </div>
             </div>
-            <nav className="mt-5 px-2 space-y-1">
+            <nav className="px-4 space-y-2">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -77,13 +85,15 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                       onPageChange(item.href);
                       setSidebarOpen(false);
                     }}
-                    className={`group flex items-center px-2 py-2 text-base font-medium rounded-md w-full text-left ${
+                    className={`group flex items-center px-4 py-3 text-sm font-medium rounded-xl w-full text-left transition-all duration-200 ${
                       currentPage === item.href
-                        ? 'bg-blue-100 text-blue-900'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg'
+                        : 'text-slate-700 hover:bg-slate-100 hover:text-teal-700'
                     }`}
                   >
-                    <Icon className="mr-4 h-6 w-6" />
+                    <Icon className={`mr-3 h-5 w-5 transition-colors ${
+                      currentPage === item.href ? 'text-white' : 'text-slate-500 group-hover:text-teal-600'
+                    }`} />
                     {item.name}
                   </button>
                 );
@@ -95,25 +105,37 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
 
       {/* Static sidebar for desktop */}
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-        <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white">
-          <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-            <div className="flex items-center flex-shrink-0 px-4">
-              <h1 className="text-xl font-bold text-gray-900">Hoshin Kanri</h1>
+        <div className="flex-1 flex flex-col min-h-0 bg-white border-r border-slate-200 shadow-lg">
+          <div className="flex-1 flex flex-col pt-6 pb-4 overflow-y-auto">
+            <div className="flex items-center flex-shrink-0 px-6 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
+                    Hoshin Kanri
+                  </h1>
+                  <p className="text-xs text-slate-500 mt-1">Strategic Planning</p>
+                </div>
+              </div>
             </div>
-            <nav className="mt-5 flex-1 px-2 bg-white space-y-1">
+            <nav className="flex-1 px-4 space-y-2">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
                   <button
                     key={item.name}
                     onClick={() => onPageChange(item.href)}
-                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md w-full text-left ${
+                    className={`group flex items-center px-4 py-3 text-sm font-medium rounded-xl w-full text-left transition-all duration-200 ${
                       currentPage === item.href
-                        ? 'bg-blue-100 text-blue-900'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/25'
+                        : 'text-slate-700 hover:bg-slate-50 hover:text-teal-700'
                     }`}
                   >
-                    <Icon className="mr-3 h-5 w-5" />
+                    <Icon className={`mr-3 h-5 w-5 transition-colors ${
+                      currentPage === item.href ? 'text-white' : 'text-slate-500 group-hover:text-teal-600'
+                    }`} />
                     {item.name}
                   </button>
                 );
@@ -125,11 +147,11 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
 
       <div className="md:pl-64 flex flex-col flex-1">
         {/* Top header with user menu and dummy data toggle */}
-        <div className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-200">
-          <div className="flex justify-between items-center px-4 py-3">
+        <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200">
+          <div className="flex justify-between items-center px-6 py-4">
             <button
               type="button"
-              className="md:hidden -ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="md:hidden -ml-1 -mt-1 h-10 w-10 inline-flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-colors"
               onClick={() => setSidebarOpen(true)}
             >
               <Menu className="h-6 w-6" />
@@ -140,12 +162,16 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
             </div>
             
             {/* Dummy Data Toggle Button */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-4">
               <Button
                 onClick={handleToggleDummyData}
                 variant={hasDummyData() ? "destructive" : "default"}
                 size="sm"
-                className="flex items-center space-x-2"
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
+                  hasDummyData() 
+                    ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg hover:shadow-xl' 
+                    : 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg hover:shadow-xl'
+                }`}
               >
                 <Database className="w-4 h-4" />
                 <span className="hidden sm:inline">
@@ -162,7 +188,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
           </div>
         </div>
         
-        <main className="flex-1">
+        <main className="flex-1 bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
           {children}
         </main>
       </div>

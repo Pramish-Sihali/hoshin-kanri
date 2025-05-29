@@ -47,9 +47,9 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
-              Hoshin Kanri Dashboard
-            </h1>
-            <p className="text-slate-600 text-lg">Strategic Policy Deployment Overview</p>
+            Strategic Policy Deployment Overview       
+                 </h1>
+
           </div>
           <Button 
             onClick={() => setShowObjectiveForm(true)}

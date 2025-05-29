@@ -3,8 +3,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Maximize2, Minimize2, Grid, Target, TrendingUp, Users, BarChart3, X, Calendar, User } from 'lucide-react';
 import { useHoshinStore } from '@/store/hoshinStore';
-
-
+import { createPortal } from 'react-dom';
 
 // Types for correlations
 interface CorrelationSymbol {
@@ -55,7 +54,13 @@ const InteractiveMatrix: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedCard, setSelectedCard] = useState<MatrixItem | null>(null);
   const [highlightedCards, setHighlightedCards] = useState<Set<string>>(new Set());
+  const [isMounted, setIsMounted] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  // Ensure component is mounted before using portals
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Get unique owners for WHO section
   const uniqueOwners = React.useMemo(() => {
@@ -92,6 +97,43 @@ const InteractiveMatrix: React.FC = () => {
 
     generateRandomCorrelations();
   }, [annualObjectives, processes]);
+
+  // Handle fullscreen toggle with proper body scroll management
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => {
+      const newValue = !prev;
+      
+      // Prevent body scroll when in fullscreen
+      if (newValue) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'unset';
+      }
+      
+      return newValue;
+    });
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  // Handle ESC key to exit fullscreen
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isFullscreen) {
+        toggleFullscreen();
+      }
+    };
+
+    if (isFullscreen) {
+      document.addEventListener('keydown', handleEscKey);
+      return () => document.removeEventListener('keydown', handleEscKey);
+    }
+  }, [isFullscreen, toggleFullscreen]);
 
   // Handle card click
   const handleCardClick = useCallback((item: MatrixItem) => {
@@ -141,11 +183,6 @@ const InteractiveMatrix: React.FC = () => {
   const getCorrelationSymbol = useCallback((rowId: string, colId: string): CorrelationSymbol | undefined => {
     return correlations.find(c => c.rowId === rowId && c.colId === colId)?.symbol;
   }, [correlations]);
-
-  // Toggle fullscreen
-  const toggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
-  };
 
   // Enhanced truncate text function with better handling
   const truncateText = (text: string, limit: number) => {
@@ -444,11 +481,8 @@ const InteractiveMatrix: React.FC = () => {
     );
   };
 
-  const containerClass = isFullscreen 
-    ? "fixed inset-0 z-[9999] bg-white overflow-auto" 
-    : "w-full max-w-7xl mx-auto";
-
-  return (
+  // Matrix Content Component
+  const MatrixContent = () => (
     <>
       <style jsx>{`
         .line-clamp-2 {
@@ -481,12 +515,7 @@ const InteractiveMatrix: React.FC = () => {
         }
       `}</style>
 
-      <div className={`${containerClass} ${isFullscreen ? 'p-8' : 'p-6'}`}>
-        {/* Fullscreen Background Overlay */}
-        {isFullscreen && (
-          <div className="absolute inset-0 bg-white z-[-1]" />
-        )}
-        
+      <div className={`${isFullscreen ? 'p-8' : 'p-6'} ${isFullscreen ? 'h-full overflow-auto' : ''}`}>
         {/* Enhanced Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="text-center flex-1">
@@ -505,7 +534,7 @@ const InteractiveMatrix: React.FC = () => {
           <button
             onClick={toggleFullscreen}
             className="p-3 bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 group relative z-10"
-            title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+            title={isFullscreen ? "Exit Fullscreen (ESC)" : "Enter Fullscreen"}
           >
             {isFullscreen ? (
               <Minimize2 className="w-5 h-5 text-slate-700 group-hover:scale-110 transition-transform" />
@@ -584,8 +613,8 @@ const InteractiveMatrix: React.FC = () => {
               
               {/* Enhanced Center Diamond Overlay */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-32 h-32 transform rotate-45 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-2xl flex items-center justify-center backdrop-blur-sm">
-                  <div className="transform -rotate-45 text-white font-bold text-center text-xs">
+                <div className="w-32 h-32 transform rotate-45 bg-gradient-to-br from-teal-600 via-teal-700 to-teal-500 rounded-xl shadow-2xl flex items-center justify-center backdrop-blur-sm">
+                  <div className="transform -rotate-45 text-white font-bold text-center text-xl">
                     <div className="mb-1">Strategic</div>
                     <div>Alignment</div>
                   </div>
@@ -675,13 +704,13 @@ const InteractiveMatrix: React.FC = () => {
             <p className="text-sm text-slate-600 leading-relaxed">
               <strong>Instructions:</strong> Click on any card to view detailed information and see related items highlighted. 
               Each section scrolls independently to accommodate long content. Correlation symbols show strategic relationships. 
-              Use the fullscreen toggle for presentations.
+              Use the fullscreen toggle for presentations. Press ESC to exit fullscreen.
             </p>
           </div>
         </div>
 
         {/* Enhanced Summary Stats */}
-        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+        {/* <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-6 text-center border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-200">
             <div className="text-3xl font-bold text-green-700 mb-2">{strategicObjectives.length}</div>
             <div className="text-sm font-semibold text-green-600 flex items-center justify-center gap-1">
@@ -710,12 +739,34 @@ const InteractiveMatrix: React.FC = () => {
               Metrics Tracked
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Modal */}
       {renderModal()}
     </>
+  );
+
+  // Don't render anything until mounted (to avoid hydration issues)
+  if (!isMounted) {
+    return <div className="w-full max-w-7xl mx-auto p-6">Loading...</div>;
+  }
+
+  // Render fullscreen version using portal
+  if (isFullscreen) {
+    return createPortal(
+      <div className="fixed inset-0 z-[9999] bg-white overflow-auto">
+        <MatrixContent />
+      </div>,
+      document.body
+    );
+  }
+
+  // Render normal version
+  return (
+    <div className="w-full max-w-7xl mx-auto">
+      <MatrixContent />
+    </div>
   );
 };
 

@@ -113,9 +113,9 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                   <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
+                  {/* <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
                     Hoshin Kanri
-                  </h1>
+                  </h1> */}
                   <p className="text-xs text-slate-500 mt-1">Strategic Planning</p>
                 </div>
               </div>

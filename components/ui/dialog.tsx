@@ -1,5 +1,6 @@
 // components/ui/dialog.tsx
 import * as React from "react";
+import { createPortal } from 'react-dom';
 
 interface DialogProps {
   children: React.ReactNode;
@@ -8,18 +9,37 @@ interface DialogProps {
 }
 
 const Dialog = ({ children, open, onOpenChange }: DialogProps) => {
-  if (!open) return null;
+  const [mounted, setMounted] = React.useState(false);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [open]);
+
+  if (!mounted || !open) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       <div 
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
         onClick={() => onOpenChange(false)} 
       />
-      <div className="relative z-50 w-full max-w-lg mx-4">
+      <div className="relative z-[10000] w-full flex items-center justify-center">
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -29,7 +49,7 @@ interface DialogContentProps {
 }
 
 const DialogContent = ({ children, className = "" }: DialogContentProps) => (
-  <div className={`bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 max-h-[90vh] overflow-y-auto ${className}`}>
+  <div className={`bg-white rounded-2xl shadow-2xl border border-slate-200 max-h-[95vh] overflow-y-auto ${className}`}>
     {children}
   </div>
 );
@@ -40,7 +60,7 @@ interface DialogHeaderProps {
 }
 
 const DialogHeader = ({ children, className = "" }: DialogHeaderProps) => (
-  <div className={`mb-6 ${className}`}>{children}</div>
+  <div className={`p-6 border-b border-slate-200 ${className}`}>{children}</div>
 );
 
 interface DialogTitleProps {

@@ -523,9 +523,7 @@ const InteractiveMatrix: React.FC = () => {
               <div className="p-2 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl shadow-lg">
                 <Grid className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                Hoshin Kanri X-Matrix
-              </h1>
+          
             </div>
             <p className="text-slate-600 font-medium">Strategic Policy Deployment Framework</p>
           </div>

@@ -64,9 +64,7 @@ const XMatrix: React.FC = () => {
               <Target className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
-            Hoshin Kanri X-Matrix
-          </h1>
+        
           <p className="text-slate-600 text-lg max-w-2xl mx-auto">
             Strategic Policy Deployment Matrix - Visualize the alignment between your strategic objectives, 
             annual goals, key processes, and performance indicators

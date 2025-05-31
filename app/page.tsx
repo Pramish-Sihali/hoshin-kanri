@@ -6,6 +6,8 @@ import Layout from '../components/Layout';
 import Dashboard from '../components/Dashboard';
 import XMatrix from '../components/XMatrix';
 import CatchballBoard from '../components/CatchballBoard';
+import ObjectivesManagement from '../components/ObjectivesManagement';
+import ProcessManagement from '../components/ProcessManagement';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -19,19 +21,9 @@ export default function Home() {
       case 'catchball':
         return <CatchballBoard />;
       case 'objectives':
-        return (
-          <div className="p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Objectives Management</h1>
-            <p className="text-gray-600">Detailed objectives management coming soon...</p>
-          </div>
-        );
+        return <ObjectivesManagement />;
       case 'processes':
-        return (
-          <div className="p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Process Management</h1>
-            <p className="text-gray-600">Process management features coming soon...</p>
-          </div>
-        );
+        return <ProcessManagement />;
       case 'settings':
         return (
           <div className="p-6">

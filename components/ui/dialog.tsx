@@ -49,7 +49,7 @@ interface DialogContentProps {
 }
 
 const DialogContent = ({ children, className = "" }: DialogContentProps) => (
-  <div className={`bg-white rounded-2xl shadow-2xl border border-slate-200 max-h-[95vh] overflow-y-auto ${className}`}>
+  <div className={`bg-white rounded-2xl shadow-2xl p-4 border border-slate-200 max-h-[95vh] overflow-y-auto ${className}`}>
     {children}
   </div>
 );
@@ -69,7 +69,7 @@ interface DialogTitleProps {
 }
 
 const DialogTitle = ({ children, className = "" }: DialogTitleProps) => (
-  <h2 className={`text-xl font-semibold text-slate-800 ${className}`}>{children}</h2>
+  <h2 className={`text-xl font-semibold p-4 text-slate-800 ${className}`}>{children}</h2>
 );
 
 export { Dialog, DialogContent, DialogHeader, DialogTitle };

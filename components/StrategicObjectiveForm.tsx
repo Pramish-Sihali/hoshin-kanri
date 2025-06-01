@@ -51,21 +51,21 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({
   };
 
   const statusOptions = [
-    { value: 'planning', label: 'Planning', icon: '📋', color: 'text-amber-600' },
-    { value: 'in-progress', label: 'In Progress', icon: '🔄', color: 'text-blue-600' },
-    { value: 'completed', label: 'Completed', icon: '✅', color: 'text-emerald-600' },
-    { value: 'at-risk', label: 'At Risk', icon: '⚠️', color: 'text-red-600' }
+    { value: 'planning', label: 'Planning', icon: '📋' },
+    { value: 'in-progress', label: 'In Progress', icon: '🔄' },
+    { value: 'completed', label: 'Completed', icon: '✅' },
+    { value: 'at-risk', label: 'At Risk', icon: '⚠️' }
   ];
 
   const priorityOptions = [
-    { value: 'high', label: 'High Priority', icon: '🔴', color: 'text-red-600' },
-    { value: 'medium', label: 'Medium Priority', icon: '🟡', color: 'text-amber-600' },
-    { value: 'low', label: 'Low Priority', icon: '🟢', color: 'text-emerald-600' }
+    { value: 'high', label: 'High Priority', icon: '🔴' },
+    { value: 'medium', label: 'Medium Priority', icon: '🟡' },
+    { value: 'low', label: 'Low Priority', icon: '🟢' }
   ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl p-4">
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center gap-3">
@@ -158,17 +158,11 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({
               <Select
                 id="status"
                 value={formData.status}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setFormData({ ...formData, status: e.target.value as StrategicObjective['status'] })
-                }
+                onChange={(value) => setFormData({ ...formData, status: value as StrategicObjective['status'] })}
+                options={statusOptions}
                 className="h-12 rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20"
-              >
-                {statusOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.icon} {option.label}
-                  </option>
-                ))}
-              </Select>
+                placeholder="Select current status"
+              />
             </div>
             
             <div className="space-y-2">
@@ -179,17 +173,11 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({
               <Select
                 id="priority"
                 value={formData.priority}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setFormData({ ...formData, priority: e.target.value as StrategicObjective['priority'] })
-                }
+                onChange={(value) => setFormData({ ...formData, priority: value as StrategicObjective['priority'] })}
+                options={priorityOptions}
                 className="h-12 rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20"
-              >
-                {priorityOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.icon} {option.label}
-                  </option>
-                ))}
-              </Select>
+                placeholder="Select priority level"
+              />
             </div>
           </div>
           

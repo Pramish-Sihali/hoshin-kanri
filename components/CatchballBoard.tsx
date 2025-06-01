@@ -248,7 +248,7 @@ const CatchballBoard: React.FC = () => {
 
         {/* Add Catchball Item Dialog */}
         <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl p-4">
             <DialogHeader>
               <DialogTitle className="text-2xl font-semibold text-slate-800 flex items-center gap-2">
                 <MessageSquare className="w-6 h-6 text-teal-600" />
@@ -262,30 +262,33 @@ const CatchballBoard: React.FC = () => {
                   <Select
                     id="type"
                     value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value as 'question' | 'suggestion' | 'concern' | 'approval' })}
+                    onChange={(value) => setFormData({ ...formData, type: value as 'question' | 'suggestion' | 'concern' | 'approval' })}
+                    options={[
+                      { value: 'question', label: 'Question', icon: '❓' },
+                      { value: 'suggestion', label: 'Suggestion', icon: '💡' },
+                      { value: 'concern', label: 'Concern', icon: '⚠️' },
+                      { value: 'approval', label: 'Approval Request', icon: '✅' }
+                    ]}
                     className="h-12 rounded-xl border-slate-200 focus:border-teal-500"
-                  >
-                    <option value="question">❓ Question</option>
-                    <option value="suggestion">💡 Suggestion</option>
-                    <option value="concern">⚠️ Concern</option>
-                    <option value="approval">✅ Approval Request</option>
-                  </Select>
+                    placeholder="Select type"
+                  />
                 </div>
                 <div>
                   <label htmlFor="relatedItem" className="block text-sm font-semibold text-slate-700 mb-2">Related Item</label>
                   <Select
                     id="relatedItem"
                     value={formData.relatedItemId}
-                    onChange={(e) => setFormData({ ...formData, relatedItemId: e.target.value })}
+                    onChange={(value) => setFormData({ ...formData, relatedItemId: value })}
+                    options={getAllItems().map((item) => ({
+                      value: item.id,
+                      label: `[${item.type}] ${item.displayName}`,
+                      icon: item.type === 'strategic' ? '🎯' : 
+                            item.type === 'annual' ? '📊' :
+                            item.type === 'process' ? '⚙️' : '📈'
+                    }))}
                     className="h-12 rounded-xl border-slate-200 focus:border-teal-500"
-                  >
-                    <option value="">Select related item...</option>
-                    {getAllItems().map((item) => (
-                      <option key={`${item.type}-${item.id}`} value={item.id}>
-                        [{item.type}] {item.displayName}
-                      </option>
-                    ))}
-                  </Select>
+                    placeholder="Select related item..."
+                  />
                 </div>
               </div>
               

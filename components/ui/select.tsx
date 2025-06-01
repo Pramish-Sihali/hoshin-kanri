@@ -21,7 +21,7 @@ export interface SelectProps {
 }
 
 const Select = React.forwardRef<HTMLDivElement, SelectProps>(
-  ({ className, children, id, value, onChange, options = [], placeholder = "Select an option...", disabled = false, ...props }, ref) => {
+  ({ className, children, id, value, onChange, options = [], placeholder = "Select an option...", disabled = false, ...props }) => {
     const [isOpen, setIsOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState(value || '');
     const dropdownRef = React.useRef<HTMLDivElement>(null);

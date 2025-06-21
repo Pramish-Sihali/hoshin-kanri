@@ -48,159 +48,392 @@ const ObjectivesManagement: React.FC = () => {
   const sipocData: Record<string, SIPOCData> = {
     'annual-1': {
       suppliers: [
-        'Department of National ID and Civil Registration',
-        'Local Registration Offices',
-        'Biometric Equipment Vendors',
-        'District Administration Offices'
+        'Trade Negotiation Teams, MoFA',
+        'Embassy Economic Sections',
+        'Legal Advisory Units',
+        'Sector Ministry Representatives'
       ],
       inputs: [
-        'Citizenship certificates',
-        'Birth certificates', 
-        'Biometric data (fingerprints, photos)',
-        'Personal information forms',
-        'Digital infrastructure'
+        'Bilateral negotiation frameworks',
+        'Market access requirements', 
+        'Trade policy guidelines',
+        'Legal compliance documents',
+        'Stakeholder consultation reports'
       ],
-      process: 'National ID Card Issuance Process',
+      process: 'Bilateral Trade Agreement Conclusion Process',
       outputs: [
-        'Digital National ID Cards',
-        'Citizen database records',
-        'Verification certificates',
-        'Access credentials for digital services'
+        'Signed trade agreements',
+        'Market access protocols',
+        'Implementation roadmaps',
+        'Ratification documents'
       ],
       customers: [
-        'Nepali Citizens',
-        'Government Service Centers',
-        'Banking Institutions',
-        'Private Service Providers'
+        'Nepal Export Community',
+        'International Trading Partners',
+        'Trade Promotion Organizations',
+        'Economic Policy Makers'
       ],
       upstreamProcesses: [
-        'Birth Registration System',
-        'Citizenship Verification Process',
-        'Biometric Data Collection'
+        'Market Analysis and Prioritization',
+        'Stakeholder Consultation Process',
+        'Negotiation Strategy Development'
       ],
       downstreamProcesses: [
-        'Government Service Access',
-        'Banking KYC Process',
-        'Digital Service Authentication',
-        'Nagarik App Integration'
+        'Agreement Implementation Monitoring',
+        'Export Facilitation Services',
+        'Market Penetration Activities',
+        'Trade Volume Tracking'
       ]
     },
     'annual-2': {
       suppliers: [
-        'IT Department',
-        'Software Development Teams',
-        'User Experience Researchers',
-        'Government Service Departments'
+        'Trade Promotion Division, MoFA',
+        'Embassy Commercial Sections',
+        'Event Management Companies',
+        'Sector Export Associations'
       ],
       inputs: [
-        'User feedback data',
-        'Service requirements',
-        'Technical specifications',
-        'Government policies',
-        'Digital infrastructure'
+        'Market intelligence reports',
+        'Export readiness assessments',
+        'Buyer database information',
+        'Mission logistics requirements',
+        'B2B matchmaking platforms'
       ],
-      process: 'Nagarik App Enhancement Process',
+      process: 'High-Impact Trade Mission Execution Process',
       outputs: [
-        'Improved mobile application',
-        'Enhanced user interface',
-        'New service integrations',
-        'User training materials'
+        'Executed trade missions',
+        'Business partnership agreements',
+        'Export contract pipelines',
+        'Market entry strategies'
       ],
       customers: [
-        'Nepali Citizens',
-        'Government Service Users',
-        'Local Communities',
-        'Business Organizations'
+        'Nepali Exporters',
+        'International Buyers',
+        'Business Chambers',
+        'Sector Development Agencies'
       ],
       upstreamProcesses: [
-        'User Research and Analysis',
-        'Service Integration Planning',
-        'Technical Architecture Design'
+        'Export Sector Readiness Assessment',
+        'Target Market Selection',
+        'Participant Screening Process'
       ],
       downstreamProcesses: [
-        'Digital Service Delivery',
-        'Citizen Satisfaction Monitoring',
-        'Service Usage Analytics',
-        'Continuous Improvement Process'
+        'Contract Negotiation Support',
+        'Export Transaction Facilitation',
+        'Long-term Partnership Development',
+        'Market Performance Monitoring'
       ]
     },
     'annual-3': {
       suppliers: [
-        'Ministry of Women, Children and Senior Citizens',
-        'Local Municipalities',
-        'Banking Partners',
-        'Social Security Department'
+        'Honorary Consuls Network',
+        'Diaspora Organizations',
+        'Embassy Consular Sections',
+        'Digital Communication Platforms'
       ],
       inputs: [
-        'Child birth records',
-        'Family income data',
-        'Eligibility criteria',
-        'Banking infrastructure',
-        'Government budget allocation'
+        'Diaspora entrepreneur databases',
+        'Business networking requirements',
+        'Market opportunity mappings',
+        'Communication infrastructure',
+        'Network coordination protocols'
       ],
-      process: 'Child Grant Distribution Process',
+      process: 'Diaspora Business Network Establishment Process',
       outputs: [
-        'Monthly grant payments',
-        'Beneficiary records',
-        'Impact assessments',
-        'Compliance reports'
+        'Active diaspora business networks',
+        'Trade facilitation partnerships',
+        'Investment connection platforms',
+        'Market intelligence channels'
       ],
       customers: [
-        'Families with Children (0-5 years)',
-        'Local Communities',
-        'Child Development Programs',
-        'Educational Institutions'
+        'Nepal Diaspora Entrepreneurs',
+        'Domestic Export Companies',
+        'International Market Partners',
+        'Investment Agencies'
       ],
       upstreamProcesses: [
-        'Birth Registration Process',
-        'Family Verification System',
-        'Budget Allocation Process'
+        'Diaspora Mapping and Identification',
+        'Network Structure Design',
+        'Platform Development Process'
       ],
       downstreamProcesses: [
-        'Child Nutrition Monitoring',
-        'Educational Enrollment Tracking',
-        'Poverty Reduction Measurement',
-        'Family Welfare Assessment'
+        'Business Matchmaking Activities',
+        'Investment Flow Facilitation',
+        'Market Intelligence Sharing',
+        'Trade Deal Coordination'
       ]
     },
     'annual-4': {
       suppliers: [
-        'Department of Roads',
-        'Construction Companies',
-        'Local Communities',
-        'Engineering Consultants'
+        'Investment Board Nepal',
+        'Embassy Investment Sections',
+        'Sector Development Agencies',
+        'Due Diligence Consultants'
       ],
       inputs: [
-        'Road construction materials',
-        'Engineering designs',
-        'Land acquisition permits',
-        'Environmental clearances',
-        'Budget allocations'
+        'Investment project portfolios',
+        'Investor targeting databases',
+        'Sector feasibility studies',
+        'Regulatory framework updates',
+        'Investment incentive packages'
       ],
-      process: 'Rural Road Construction Process',
+      process: 'Export-Oriented FDI Commitment Securing Process',
       outputs: [
-        'All-weather roads',
-        'Bridge constructions',
-        'Road maintenance plans',
-        'Community access improvements'
+        'FDI commitment agreements',
+        'Investment implementation plans',
+        'Export capacity expansions',
+        'Technology transfer arrangements'
       ],
       customers: [
-        'Rural Communities',
-        'Agricultural Producers',
-        'Educational Institutions',
-        'Healthcare Facilities',
-        'Emergency Services'
+        'International Investors',
+        'Export Industry Sectors',
+        'Employment Generation Programs',
+        'Economic Development Agencies'
       ],
       upstreamProcesses: [
-        'Road Planning and Survey',
-        'Environmental Impact Assessment',
-        'Community Consultation Process'
+        'Investment Opportunity Development',
+        'Investor Outreach and Targeting',
+        'Project Preparation Process'
       ],
       downstreamProcesses: [
-        'Economic Development Activities',
-        'Improved Healthcare Access',
-        'Educational Service Delivery',
-        'Agricultural Market Access'
+        'Investment Implementation Monitoring',
+        'Export Production Scaling',
+        'Market Access Facilitation',
+        'Performance Impact Assessment'
+      ]
+    },
+    'annual-5': {
+      suppliers: [
+        'Embassy Coordination Division',
+        'Local Real Estate Partners',
+        'Trade Office Service Providers',
+        'Staff Recruitment Agencies'
+      ],
+      inputs: [
+        'Market prioritization criteria',
+        'Office establishment requirements',
+        'Sector expertise specifications',
+        'Operational infrastructure needs',
+        'Budget allocation frameworks'
+      ],
+      process: 'Sector-Specific Trade Office Launch Process',
+      outputs: [
+        'Operational trade promotion offices',
+        'Market-specific service capabilities',
+        'Sector expertise deployment',
+        'Export facilitation infrastructure'
+      ],
+      customers: [
+        'Nepal Export Sectors',
+        'International Business Community',
+        'Host Country Partners',
+        'Trade Development Organizations'
+      ],
+      upstreamProcesses: [
+        'Market Selection and Analysis',
+        'Infrastructure Planning Process',
+        'Staff Deployment Strategy'
+      ],
+      downstreamProcesses: [
+        'Export Promotion Services',
+        'Market Intelligence Generation',
+        'Business Facilitation Activities',
+        'Partnership Development'
+      ]
+    },
+    'annual-6': {
+      suppliers: [
+        'Digital Diplomacy Unit, MoFA',
+        'Software Development Companies',
+        'Cloud Infrastructure Providers',
+        'Data Integration Specialists'
+      ],
+      inputs: [
+        'Stakeholder requirements analysis',
+        'System integration specifications',
+        'Security compliance standards',
+        'User interface designs',
+        'Data management protocols'
+      ],
+      process: 'Economic Diplomacy Digital Platform Deployment Process',
+      outputs: [
+        'Integrated digital platform',
+        'Real-time coordination capabilities',
+        'Performance tracking dashboards',
+        'Stakeholder collaboration tools'
+      ],
+      customers: [
+        'Embassy Economic Officers',
+        'Trade Promotion Staff',
+        'Economic Diplomacy Coordinators',
+        'Senior Government Officials'
+      ],
+      upstreamProcesses: [
+        'Requirements Gathering Process',
+        'Platform Architecture Design',
+        'Security Framework Development'
+      ],
+      downstreamProcesses: [
+        'Digital Coordination Activities',
+        'Performance Analytics Generation',
+        'Stakeholder Communication Enhancement',
+        'Decision Support Systems'
+      ]
+    },
+    'annual-7': {
+      suppliers: [
+        'Event Management Division, MoFA',
+        'International Convention Centers',
+        'Marketing and Communications Agencies',
+        'VIP Protocol Services'
+      ],
+      inputs: [
+        'Investor targeting strategies',
+        'Sector presentation materials',
+        'Event logistics requirements',
+        'Media engagement plans',
+        'Follow-up coordination systems'
+      ],
+      process: 'International Investment Summit Hosting Process',
+      outputs: [
+        'Executed investment summits',
+        'Investor engagement outcomes',
+        'Investment pipeline development',
+        'International visibility enhancement'
+      ],
+      customers: [
+        'International Investor Community',
+        'Nepal Investment Agencies',
+        'Sector Development Organizations',
+        'Economic Policy Stakeholders'
+      ],
+      upstreamProcesses: [
+        'Investor Outreach and Invitation',
+        'Content Development Process',
+        'Event Planning and Coordination'
+      ],
+      downstreamProcesses: [
+        'Investment Commitment Follow-up',
+        'Partnership Development Activities',
+        'Market Visibility Leverage',
+        'Investment Implementation Support'
+      ]
+    },
+    'annual-8': {
+      suppliers: [
+        'Commercial Attachés Network',
+        'Embassy Economic Sections',
+        'Digital Marketing Platforms',
+        'Market Research Organizations'
+      ],
+      inputs: [
+        'Export promotion strategies',
+        'Market intelligence requirements',
+        'Digital outreach capabilities',
+        'Performance measurement systems',
+        'Coordination protocols'
+      ],
+      process: 'Export Inquiry Generation and Increase Process',
+      outputs: [
+        'Qualified export inquiries',
+        'Market intelligence reports',
+        'Export promotion campaigns',
+        'Business lead databases'
+      ],
+      customers: [
+        'Nepal Export Companies',
+        'Trade Promotion Organizations',
+        'International Buyers',
+        'Business Development Agencies'
+      ],
+      upstreamProcesses: [
+        'Market Intelligence Collection',
+        'Export Promotion Strategy Design',
+        'Digital Campaign Development'
+      ],
+      downstreamProcesses: [
+        'Lead Qualification Process',
+        'Business Matchmaking Activities',
+        'Export Transaction Support',
+        'Customer Relationship Management'
+      ]
+    },
+    'annual-9': {
+      suppliers: [
+        'Business Facilitation Unit, MoFA',
+        'Legal Advisory Services',
+        'Sector Expert Networks',
+        'Partnership Brokerage Organizations'
+      ],
+      inputs: [
+        'Exporter capability assessments',
+        'International partner databases',
+        'Partnership framework templates',
+        'Due diligence methodologies',
+        'Market compatibility analyses'
+      ],
+      process: 'Strategic Business Partnership Establishment Process',
+      outputs: [
+        'Formal business partnerships',
+        'Market access agreements',
+        'Technology transfer arrangements',
+        'Long-term trade relationships'
+      ],
+      customers: [
+        'Nepali Export Companies',
+        'International Business Partners',
+        'Technology Recipients',
+        'Market Development Agencies'
+      ],
+      upstreamProcesses: [
+        'Partner Identification and Screening',
+        'Compatibility Assessment Process',
+        'Partnership Structure Design'
+      ],
+      downstreamProcesses: [
+        'Partnership Implementation Support',
+        'Performance Monitoring Activities',
+        'Relationship Management Process',
+        'Expansion and Scaling Support'
+      ]
+    },
+    'annual-10': {
+      suppliers: [
+        'Diaspora Affairs Division, MoFA',
+        'Financial Institution Partners',
+        'Fund Management Specialists',
+        'Legal and Regulatory Advisors'
+      ],
+      inputs: [
+        'Diaspora investment capacity studies',
+        'SME funding requirement analysis',
+        'Fund governance frameworks',
+        'Investment criteria development',
+        'Portfolio management systems'
+      ],
+      process: 'Diaspora Investment Fund Launch Process',
+      outputs: [
+        'Operational investment fund',
+        'SME funding mechanisms',
+        'Investment portfolio strategies',
+        'Diaspora capital mobilization'
+      ],
+      customers: [
+        'Export-Oriented SMEs',
+        'Nepal Diaspora Investors',
+        'Economic Development Programs',
+        'Employment Generation Initiatives'
+      ],
+      upstreamProcesses: [
+        'Fund Structure Design Process',
+        'Regulatory Approval Process',
+        'Capital Raising Activities'
+      ],
+      downstreamProcesses: [
+        'SME Investment Activities',
+        'Portfolio Performance Monitoring',
+        'Return Generation Process',
+        'Fund Expansion Planning'
       ]
     }
   };

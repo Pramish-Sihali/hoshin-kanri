@@ -47,219 +47,283 @@ const ProcessManagement: React.FC = () => {
   const sipocData: Record<string, SIPOCData> = {
     'process-1': {
       suppliers: [
-        'Budget Division, Ministry of Finance',
-        'Line Ministry Budget Officers',
-        'Financial Comptroller General Office',
-        'Treasury Division'
+        'Foreign Secretary Office',
+        'Trade Negotiation Teams',
+        'Embassy Economic Sections',
+        'Legal Advisory Units',
+        'Sector Ministry Representatives'
       ],
       inputs: [
-        'Monthly expenditure reports',
-        'Budget allocation data', 
-        'Project implementation status',
-        'Cash flow statements',
-        'Performance indicators'
+        'Bilateral trade agreement drafts',
+        'Negotiation status reports',
+        'Market access requirements',
+        'Legal compliance frameworks',
+        'Stakeholder feedback'
       ],
-      process: 'Monthly Budget Execution Review Process',
+      process: 'Quarterly Trade Agreement Review and Acceleration Process',
       outputs: [
-        'Budget execution reports',
-        'Implementation bottleneck analysis',
-        'Corrective action plans',
-        'Performance dashboards'
+        'Accelerated negotiation timelines',
+        'Resolved negotiation bottlenecks',
+        'Strategic intervention plans',
+        'High-level diplomatic initiatives'
       ],
       customers: [
-        'Ministry of Finance',
-        'Line Ministries',
-        'National Planning Commission',
-        'Parliament Finance Committee'
+        'Ministry of Foreign Affairs',
+        'Trade and Export Promotion Centre',
+        'Nepal Exporters',
+        'International Trading Partners'
       ]
     },
     'process-2': {
       suppliers: [
-        'Public Procurement Monitoring Office',
-        'Software Development Vendors',
-        'AI Technology Partners',
-        'System Integration Specialists'
+        'Trade Promotion Division, MoFA',
+        'Embassy Commercial Sections',
+        'Federation of Nepalese Chambers of Commerce',
+        'Event Management Companies'
       ],
       inputs: [
-        'Current e-GP system data',
-        'Procurement delay reports',
-        'User feedback from agencies',
-        'AI algorithm requirements'
+        'Market intelligence reports',
+        'Export sector readiness data',
+        'Buyer database information',
+        'Mission logistics requirements',
+        'B2B matchmaking criteria'
       ],
-      process: 'e-GP System Enhancement Process',
+      process: 'Strategic Trade Mission Planning and Execution Process',
       outputs: [
-        'Enhanced e-GP platform',
-        'AI-powered delay alerts',
-        'Automated workflow systems',
-        'User training materials'
+        'Executed trade missions',
+        'Export business leads',
+        'Market penetration strategies',
+        'Partnership agreements'
       ],
       customers: [
-        'Government Procurement Officers',
-        'Line Ministries',
-        'Suppliers and Contractors',
-        'Audit Agencies'
+        'Nepali Exporters',
+        'International Buyers',
+        'Trade Promotion Organizations',
+        'Sector-Specific Associations'
       ]
     },
     'process-3': {
       suppliers: [
-        'National Planning Commission',
-        'Project Implementing Agencies',
-        'Technical Evaluation Consultants',
+        'Honorary Consuls Network',
+        'Diaspora Organizations',
+        'Embassy Consular Sections',
         'Digital Platform Developers'
       ],
       inputs: [
-        'Project proposals',
-        'Feasibility studies',
-        'Environmental assessments',
-        'Budget estimates'
+        'Diaspora entrepreneur database',
+        'Business network requirements',
+        'Market-specific opportunities',
+        'Communication platforms',
+        'Network coordination tools'
       ],
-      process: 'NPB Project Clearance Standardization Process',
+      process: 'Diaspora Business Network Development Process',
       outputs: [
-        'Standardized clearance procedures',
-        'Digital tracking system',
-        'Project approval certificates',
-        'Quality assurance reports'
+        'Active diaspora business networks',
+        'Trade facilitation partnerships',
+        'Investment pipeline connections',
+        'Market intelligence networks'
       ],
       customers: [
-        'Project Implementing Agencies',
-        'Ministry of Finance',
-        'Development Partners',
-        'Infrastructure Beneficiaries'
+        'Nepal Diaspora Community',
+        'Domestic Exporters',
+        'International Market Partners',
+        'Investment Promotion Organizations'
       ]
     },
     'process-4': {
       suppliers: [
-        'Ministry of Federal Affairs',
-        'Provincial Planning Commissions',
-        'Capacity Development Institutes',
-        'IT System Providers'
+        'Investment Board Nepal',
+        'Embassy Investment Sections',
+        'Sector Ministry Liaisons',
+        'Due Diligence Consultants'
       ],
       inputs: [
-        'Provincial budget requirements',
-        'Staff capacity assessments',
-        'Budget management software',
-        'Training materials'
+        'Investment opportunity pipelines',
+        'Investor database information',
+        'Sector-specific project proposals',
+        'Regulatory framework updates',
+        'Market feasibility studies'
       ],
-      process: 'Provincial Budget Support Unit Setup Process',
+      process: 'Investment Promotion and Pipeline Management Process',
       outputs: [
-        'Functional budget support units',
-        'Trained provincial staff',
-        'Budget monitoring systems',
-        'Capacity building programs'
+        'FDI commitment agreements',
+        'Investment pipeline tracking',
+        'Investor facilitation services',
+        'Project implementation support'
       ],
       customers: [
-        'Provincial Governments',
-        'Local Municipalities',
-        'Federal Ministry of Finance',
-        'Citizens receiving services'
+        'International Investors',
+        'Export-Oriented Industries',
+        'Government Revenue Agencies',
+        'Employment Beneficiaries'
       ]
     },
     'process-5': {
       suppliers: [
-        'Office of the Auditor General',
-        'Web Development Teams',
-        'Data Integration Specialists',
-        'Public Communication Units'
+        'Embassy Coordination Division',
+        'Host Country Real Estate Agencies',
+        'Trade Office Equipment Providers',
+        'Local Staff Recruitment Agencies'
       ],
       inputs: [
-        'Budget execution data',
-        'Project progress reports',
-        'Financial management systems',
-        'Public information requirements'
+        'Market prioritization analysis',
+        'Office infrastructure requirements',
+        'Sector expertise specifications',
+        'Operational budget allocations',
+        'Digital connectivity needs'
       ],
-      process: 'Public Dashboard Development and Deployment Process',
+      process: 'Sector-Specific Trade Office Establishment Process',
       outputs: [
-        'Live public dashboard',
-        'Real-time budget tracking',
-        'Transparency reports',
-        'Citizen access interface'
+        'Operational trade promotion offices',
+        'Market-specific trade services',
+        'Sector expertise deployment',
+        'Export facilitation infrastructure'
       ],
       customers: [
-        'General Public',
-        'Civil Society Organizations',
-        'Media and Journalists',
-        'Development Partners'
+        'Nepal Export Community',
+        'International Business Partners',
+        'Host Country Trade Organizations',
+        'Sector-Specific Associations'
       ]
     },
     'process-6': {
       suppliers: [
-        'Financial Comptroller General Office',
-        'System Integration Companies',
-        'Provincial IT Departments',
-        'Training Service Providers'
+        'Digital Diplomacy Unit, MoFA',
+        'Software Development Companies',
+        'Cloud Infrastructure Providers',
+        'Cybersecurity Specialists'
       ],
       inputs: [
-        'Existing financial systems',
-        'Integration requirements',
-        'Staff training needs',
-        'Data migration plans'
+        'Stakeholder coordination requirements',
+        'Real-time data integration needs',
+        'Security and compliance standards',
+        'User interface specifications',
+        'API integration protocols'
       ],
-      process: 'FMIS Integration and Rollout Process',
+      process: 'Digital Platform Development and Integration Process',
       outputs: [
-        'Integrated FMIS platform',
-        'Standardized financial processes',
-        'Real-time financial data',
-        'System user competency'
+        'Integrated economic diplomacy platform',
+        'Real-time coordination capabilities',
+        'Stakeholder collaboration tools',
+        'Performance tracking dashboards'
       ],
       customers: [
-        'Provincial Governments',
-        'Local Municipalities',
-        'Federal Financial Agencies',
-        'External Auditors'
+        'Embassy Network',
+        'Trade Promotion Officers',
+        'Economic Diplomacy Stakeholders',
+        'Senior Government Officials'
       ]
     },
     'process-7': {
       suppliers: [
-        'Human Resources Division, MoF',
-        'Public Service Commission',
-        'Universities and Institutes',
-        'Professional Recruitment Agencies'
+        'Event Management Division, MoFA',
+        'International Convention Centers',
+        'Marketing and PR Agencies',
+        'VIP Protocol Services'
       ],
       inputs: [
-        'Job specifications',
-        'Competitive salary packages',
-        'Technical assessment tools',
-        'Professional development programs'
+        'Investor target databases',
+        'Sector promotion materials',
+        'Event logistics requirements',
+        'Media and communication plans',
+        'Follow-up coordination systems'
       ],
-      process: 'Specialized Staff Recruitment Process',
+      process: 'International Investment Summit Organization Process',
       outputs: [
-        'Qualified data analysts',
-        'Enhanced analytical capacity',
-        'Budget monitoring expertise',
-        'Performance measurement skills'
+        'Executed investment summits',
+        'Investor engagement outcomes',
+        'Investment commitment agreements',
+        'Market visibility enhancement'
       ],
       customers: [
-        'Ministry of Finance',
-        'Budget Division',
-        'Line Ministries',
-        'Policy Making Units'
+        'International Investor Community',
+        'Nepal Investment Promotion Agencies',
+        'Sector Development Organizations',
+        'Economic Policy Makers'
       ]
     },
     'process-8': {
       suppliers: [
-        'Department of Information Technology',
-        'AI Development Companies',
-        'Data Science Consultants',
-        'Cloud Service Providers'
+        'Commercial Attachés Network',
+        'Embassy Economic Sections',
+        'Digital Marketing Agencies',
+        'Market Research Organizations'
       ],
       inputs: [
-        'Procurement system data',
-        'Machine learning algorithms',
-        'Alert notification systems',
-        'Integration protocols'
+        'Export promotion strategies',
+        'Market intelligence requirements',
+        'Digital outreach tools',
+        'Performance reporting systems',
+        'Coordination protocols'
       ],
-      process: 'AI Alert System Development Process',
+      process: 'Embassy Commercial Activities Coordination Process',
       outputs: [
-        'AI-powered alert system',
-        'Predictive delay indicators',
-        'Automated intervention suggestions',
-        'Performance analytics'
+        'Standardized commercial activities',
+        'Qualified export inquiries',
+        'Market intelligence reports',
+        'Export promotion campaigns'
       ],
       customers: [
-        'Procurement Officers',
-        'Project Managers',
-        'Budget Monitoring Units',
-        'Senior Government Officials'
+        'Nepal Export Community',
+        'Trade Promotion Organizations',
+        'International Buyers',
+        'Economic Diplomacy Coordinators'
+      ]
+    },
+    'process-9': {
+      suppliers: [
+        'Business Facilitation Unit, MoFA',
+        'Legal Advisory Services',
+        'Sector Expert Consultants',
+        'Partnership Brokerage Organizations'
+      ],
+      inputs: [
+        'Exporter capability assessments',
+        'International partner databases',
+        'Due diligence frameworks',
+        'Partnership agreement templates',
+        'Market compatibility analysis'
+      ],
+      process: 'Business Partnership Facilitation Program Process',
+      outputs: [
+        'Strategic business partnerships',
+        'Export market access agreements',
+        'Technology transfer arrangements',
+        'Long-term trade relationships'
+      ],
+      customers: [
+        'Nepali Exporters',
+        'International Business Partners',
+        'Technology Transfer Recipients',
+        'Market Development Agencies'
+      ]
+    },
+    'process-10': {
+      suppliers: [
+        'Diaspora Affairs Division, MoFA',
+        'Financial Institution Partners',
+        'Fund Management Companies',
+        'Legal and Regulatory Advisors'
+      ],
+      inputs: [
+        'Diaspora investment capacity analysis',
+        'SME funding requirements',
+        'Fund governance frameworks',
+        'Investment criteria specifications',
+        'Portfolio management systems'
+      ],
+      process: 'Diaspora Investment Fund Setup and Management Process',
+      outputs: [
+        'Operational diaspora investment fund',
+        'SME funding pipeline',
+        'Investment portfolio management',
+        'Diaspora capital mobilization'
+      ],
+      customers: [
+        'Export-Oriented SMEs',
+        'Nepal Diaspora Investors',
+        'Economic Development Agencies',
+        'Employment Generation Programs'
       ]
     }
   };

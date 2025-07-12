@@ -7,11 +7,25 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import StrategicObjectiveForm from './StrategicObjectiveForm';
-import { Plus, Target, TrendingUp, Users, AlertCircle, Activity, CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
+import { Plus, Target, TrendingUp, Users, AlertCircle, Activity, CheckCircle2, Clock, AlertTriangle, Database, Info } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { strategicObjectives, annualObjectives, processes, metrics, catchball } = useHoshinStore();
+  const { 
+    strategicObjectives, 
+    annualObjectives, 
+    processes, 
+    metrics, 
+    catchball,
+    currentDatasetId,
+    getCurrentDatasetName,
+    availableDatasets
+  } = useHoshinStore();
   const [showObjectiveForm, setShowObjectiveForm] = useState(false);
+
+  const getCurrentDataset = () => {
+    if (!currentDatasetId) return null;
+    return availableDatasets.find(d => d.id === currentDatasetId);
+  };
 
   const getStatusStats = () => {
     const allItems = [...strategicObjectives, ...annualObjectives, ...processes];
@@ -39,6 +53,7 @@ const Dashboard: React.FC = () => {
   const stats = getStatusStats();
   const avgPerformance = getMetricsPerformance();
   const pendingCatchball = getPendingCatchball();
+  const currentDataset = getCurrentDataset();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
@@ -47,9 +62,19 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
-            Strategic Policy Deployment Overview       
-                 </h1>
-
+              Strategic Policy Deployment Overview
+            </h1>
+            {currentDataset && (
+              <div className="flex items-center gap-3 mt-3">
+                <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl">
+                  <Database className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <div className="text-sm font-semibold text-blue-800">{currentDataset.name}</div>
+                    <div className="text-xs text-blue-600">{currentDataset.description}</div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <Button 
             onClick={() => setShowObjectiveForm(true)}
@@ -59,6 +84,29 @@ const Dashboard: React.FC = () => {
             Add Strategic Objective
           </Button>
         </div>
+
+        {/* Dataset Information Banner */}
+        {!currentDatasetId && stats.total === 0 && (
+          <Card className="border-5 shadow-lg bg-gradient-to-r from-teal-50 to-blue-50 border-teal-200">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+                  <Info className="w-6 h-6 text-teal-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-teal-800 mb-1">Welcome to Strategic Policy Deployment</h3>
+                  <p className="text-teal-700 mb-3">
+                    This application helps you implement Hoshin Kanri (Policy Deployment) methodology. 
+                    Load demo data to explore features or start building your own strategic plan.
+                  </p>
+                  <p className="text-sm text-teal-600">
+                    💡 Use the "Load Demo Data" dropdown in the top navigation to explore different industry examples
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

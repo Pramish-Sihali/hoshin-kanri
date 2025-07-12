@@ -63,16 +63,7 @@ const LoginForm: React.FC = () => {
 
       <Card className="w-full max-w-md relative bg-white/95 backdrop-blur-sm shadow-2xl border-5">
         <CardHeader className="text-center pb-6">
-          <div className="flex justify-center mb-6">
-            
-                    <Image
-                      src="/ixi.svg"
-                      alt="IXI Logo"
-                      width={370}
-                      height={75}
-                      className="opacity-80"
-                    />
-          </div>
+      
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent mb-2">
             Welcome Back
           </CardTitle>

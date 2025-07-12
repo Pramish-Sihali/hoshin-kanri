@@ -67,36 +67,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
           </div>
           
           <div className="flex-1 h-0 pt-4 pb-4 overflow-y-auto">
-            {/* Company Logos Section - Mobile Top */}
-            <div className="px-4 mb-6">
-              <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-4 shadow-md border border-slate-100">
-                <div className="text-center space-y-3">
-                  <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider">Powered by</div>
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="hover:scale-105 transition-all duration-200">
-                      <Image
-                        src="/ixi.svg"
-                        alt="IXI Logo"
-                        width={85}
-                        height={42}
-                        className="opacity-90 hover:opacity-100 transition-opacity drop-shadow-md"
-                      />
-                    </div>
-                    <div className="hover:scale-105 transition-all duration-200">
-                      <Image
-                        src="/igpa.png"
-                        alt="IGPA Logo"
-                        width={70}
-                        height={35}
-                        className="opacity-90 hover:opacity-100 transition-opacity drop-shadow-md"
-                      />
-                    </div>
-                  </div>
-                  <div className="text-xs text-slate-500 font-medium">The Institute & IXI Corp.</div>
-                </div>
-              </div>
-            </div>
-
+         
             <div className="flex-shrink-0 flex items-center px-6 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">

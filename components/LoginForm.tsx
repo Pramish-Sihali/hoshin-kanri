@@ -9,7 +9,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Alert, AlertDescription } from './ui/alert';
 import { Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
-import Image from 'next/image';
+
 
 
 const LoginForm: React.FC = () => {

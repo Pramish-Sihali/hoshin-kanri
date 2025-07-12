@@ -19,7 +19,7 @@ import UserMenu from './UserMenu';
 import { useHoshinStore } from '../store/hoshinStore';
 import { allDummyData } from '@/lib/dummyData';
 import { Button } from './ui/button';
-import Image from 'next/image';
+
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -114,7 +114,6 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
         <div className="flex-1 flex flex-col min-h-0 bg-white border-r border-slate-200 shadow-lg">
           <div className="flex-1 flex flex-col pt-4 pb-4 overflow-y-auto">
-            {/* Company Logos Section - Desktop Top */}
 
 
             <div className="flex items-center flex-shrink-0 px-6 mb-8">

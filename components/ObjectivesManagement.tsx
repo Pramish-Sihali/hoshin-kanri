@@ -8,6 +8,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { getSIPOCData } from '../lib/sipocData';
 import { 
   Target, 
   TrendingUp, 
@@ -44,398 +45,34 @@ const ObjectivesManagement: React.FC = () => {
   const [selectedObjective, setSelectedObjective] = useState<string | null>(null);
   const [showSIPOC, setShowSIPOC] = useState<string | null>(null);
 
-  // SIPOC data for demo purposes - this would normally come from the database
-  const sipocData: Record<string, SIPOCData> = {
-    'annual-1': {
-      suppliers: [
-        'Trade Negotiation Teams, MoFA',
-        'Embassy Economic Sections',
-        'Legal Advisory Units',
-        'Sector Ministry Representatives'
-      ],
-      inputs: [
-        'Bilateral negotiation frameworks',
-        'Market access requirements', 
-        'Trade policy guidelines',
-        'Legal compliance documents',
-        'Stakeholder consultation reports'
-      ],
-      process: 'Bilateral Trade Agreement Conclusion Process',
-      outputs: [
-        'Signed trade agreements',
-        'Market access protocols',
-        'Implementation roadmaps',
-        'Ratification documents'
-      ],
-      customers: [
-        'Nepal Export Community',
-        'International Trading Partners',
-        'Trade Promotion Organizations',
-        'Economic Policy Makers'
-      ],
-      upstreamProcesses: [
-        'Market Analysis and Prioritization',
-        'Stakeholder Consultation Process',
-        'Negotiation Strategy Development'
-      ],
-      downstreamProcesses: [
-        'Agreement Implementation Monitoring',
-        'Export Facilitation Services',
-        'Market Penetration Activities',
-        'Trade Volume Tracking'
-      ]
-    },
-    'annual-2': {
-      suppliers: [
-        'Trade Promotion Division, MoFA',
-        'Embassy Commercial Sections',
-        'Event Management Companies',
-        'Sector Export Associations'
-      ],
-      inputs: [
-        'Market intelligence reports',
-        'Export readiness assessments',
-        'Buyer database information',
-        'Mission logistics requirements',
-        'B2B matchmaking platforms'
-      ],
-      process: 'High-Impact Trade Mission Execution Process',
-      outputs: [
-        'Executed trade missions',
-        'Business partnership agreements',
-        'Export contract pipelines',
-        'Market entry strategies'
-      ],
-      customers: [
-        'Nepali Exporters',
-        'International Buyers',
-        'Business Chambers',
-        'Sector Development Agencies'
-      ],
-      upstreamProcesses: [
-        'Export Sector Readiness Assessment',
-        'Target Market Selection',
-        'Participant Screening Process'
-      ],
-      downstreamProcesses: [
-        'Contract Negotiation Support',
-        'Export Transaction Facilitation',
-        'Long-term Partnership Development',
-        'Market Performance Monitoring'
-      ]
-    },
-    'annual-3': {
-      suppliers: [
-        'Honorary Consuls Network',
-        'Diaspora Organizations',
-        'Embassy Consular Sections',
-        'Digital Communication Platforms'
-      ],
-      inputs: [
-        'Diaspora entrepreneur databases',
-        'Business networking requirements',
-        'Market opportunity mappings',
-        'Communication infrastructure',
-        'Network coordination protocols'
-      ],
-      process: 'Diaspora Business Network Establishment Process',
-      outputs: [
-        'Active diaspora business networks',
-        'Trade facilitation partnerships',
-        'Investment connection platforms',
-        'Market intelligence channels'
-      ],
-      customers: [
-        'Nepal Diaspora Entrepreneurs',
-        'Domestic Export Companies',
-        'International Market Partners',
-        'Investment Agencies'
-      ],
-      upstreamProcesses: [
-        'Diaspora Mapping and Identification',
-        'Network Structure Design',
-        'Platform Development Process'
-      ],
-      downstreamProcesses: [
-        'Business Matchmaking Activities',
-        'Investment Flow Facilitation',
-        'Market Intelligence Sharing',
-        'Trade Deal Coordination'
-      ]
-    },
-    'annual-4': {
-      suppliers: [
-        'Investment Board Nepal',
-        'Embassy Investment Sections',
-        'Sector Development Agencies',
-        'Due Diligence Consultants'
-      ],
-      inputs: [
-        'Investment project portfolios',
-        'Investor targeting databases',
-        'Sector feasibility studies',
-        'Regulatory framework updates',
-        'Investment incentive packages'
-      ],
-      process: 'Export-Oriented FDI Commitment Securing Process',
-      outputs: [
-        'FDI commitment agreements',
-        'Investment implementation plans',
-        'Export capacity expansions',
-        'Technology transfer arrangements'
-      ],
-      customers: [
-        'International Investors',
-        'Export Industry Sectors',
-        'Employment Generation Programs',
-        'Economic Development Agencies'
-      ],
-      upstreamProcesses: [
-        'Investment Opportunity Development',
-        'Investor Outreach and Targeting',
-        'Project Preparation Process'
-      ],
-      downstreamProcesses: [
-        'Investment Implementation Monitoring',
-        'Export Production Scaling',
-        'Market Access Facilitation',
-        'Performance Impact Assessment'
-      ]
-    },
-    'annual-5': {
-      suppliers: [
-        'Embassy Coordination Division',
-        'Local Real Estate Partners',
-        'Trade Office Service Providers',
-        'Staff Recruitment Agencies'
-      ],
-      inputs: [
-        'Market prioritization criteria',
-        'Office establishment requirements',
-        'Sector expertise specifications',
-        'Operational infrastructure needs',
-        'Budget allocation frameworks'
-      ],
-      process: 'Sector-Specific Trade Office Launch Process',
-      outputs: [
-        'Operational trade promotion offices',
-        'Market-specific service capabilities',
-        'Sector expertise deployment',
-        'Export facilitation infrastructure'
-      ],
-      customers: [
-        'Nepal Export Sectors',
-        'International Business Community',
-        'Host Country Partners',
-        'Trade Development Organizations'
-      ],
-      upstreamProcesses: [
-        'Market Selection and Analysis',
-        'Infrastructure Planning Process',
-        'Staff Deployment Strategy'
-      ],
-      downstreamProcesses: [
-        'Export Promotion Services',
-        'Market Intelligence Generation',
-        'Business Facilitation Activities',
-        'Partnership Development'
-      ]
-    },
-    'annual-6': {
-      suppliers: [
-        'Digital Diplomacy Unit, MoFA',
-        'Software Development Companies',
-        'Cloud Infrastructure Providers',
-        'Data Integration Specialists'
-      ],
-      inputs: [
-        'Stakeholder requirements analysis',
-        'System integration specifications',
-        'Security compliance standards',
-        'User interface designs',
-        'Data management protocols'
-      ],
-      process: 'Economic Diplomacy Digital Platform Deployment Process',
-      outputs: [
-        'Integrated digital platform',
-        'Real-time coordination capabilities',
-        'Performance tracking dashboards',
-        'Stakeholder collaboration tools'
-      ],
-      customers: [
-        'Embassy Economic Officers',
-        'Trade Promotion Staff',
-        'Economic Diplomacy Coordinators',
-        'Senior Government Officials'
-      ],
-      upstreamProcesses: [
-        'Requirements Gathering Process',
-        'Platform Architecture Design',
-        'Security Framework Development'
-      ],
-      downstreamProcesses: [
-        'Digital Coordination Activities',
-        'Performance Analytics Generation',
-        'Stakeholder Communication Enhancement',
-        'Decision Support Systems'
-      ]
-    },
-    'annual-7': {
-      suppliers: [
-        'Event Management Division, MoFA',
-        'International Convention Centers',
-        'Marketing and Communications Agencies',
-        'VIP Protocol Services'
-      ],
-      inputs: [
-        'Investor targeting strategies',
-        'Sector presentation materials',
-        'Event logistics requirements',
-        'Media engagement plans',
-        'Follow-up coordination systems'
-      ],
-      process: 'International Investment Summit Hosting Process',
-      outputs: [
-        'Executed investment summits',
-        'Investor engagement outcomes',
-        'Investment pipeline development',
-        'International visibility enhancement'
-      ],
-      customers: [
-        'International Investor Community',
-        'Nepal Investment Agencies',
-        'Sector Development Organizations',
-        'Economic Policy Stakeholders'
-      ],
-      upstreamProcesses: [
-        'Investor Outreach and Invitation',
-        'Content Development Process',
-        'Event Planning and Coordination'
-      ],
-      downstreamProcesses: [
-        'Investment Commitment Follow-up',
-        'Partnership Development Activities',
-        'Market Visibility Leverage',
-        'Investment Implementation Support'
-      ]
-    },
-    'annual-8': {
-      suppliers: [
-        'Commercial Attachés Network',
-        'Embassy Economic Sections',
-        'Digital Marketing Platforms',
-        'Market Research Organizations'
-      ],
-      inputs: [
-        'Export promotion strategies',
-        'Market intelligence requirements',
-        'Digital outreach capabilities',
-        'Performance measurement systems',
-        'Coordination protocols'
-      ],
-      process: 'Export Inquiry Generation and Increase Process',
-      outputs: [
-        'Qualified export inquiries',
-        'Market intelligence reports',
-        'Export promotion campaigns',
-        'Business lead databases'
-      ],
-      customers: [
-        'Nepal Export Companies',
-        'Trade Promotion Organizations',
-        'International Buyers',
-        'Business Development Agencies'
-      ],
-      upstreamProcesses: [
-        'Market Intelligence Collection',
-        'Export Promotion Strategy Design',
-        'Digital Campaign Development'
-      ],
-      downstreamProcesses: [
-        'Lead Qualification Process',
-        'Business Matchmaking Activities',
-        'Export Transaction Support',
-        'Customer Relationship Management'
-      ]
-    },
-    'annual-9': {
-      suppliers: [
-        'Business Facilitation Unit, MoFA',
-        'Legal Advisory Services',
-        'Sector Expert Networks',
-        'Partnership Brokerage Organizations'
-      ],
-      inputs: [
-        'Exporter capability assessments',
-        'International partner databases',
-        'Partnership framework templates',
-        'Due diligence methodologies',
-        'Market compatibility analyses'
-      ],
-      process: 'Strategic Business Partnership Establishment Process',
-      outputs: [
-        'Formal business partnerships',
-        'Market access agreements',
-        'Technology transfer arrangements',
-        'Long-term trade relationships'
-      ],
-      customers: [
-        'Nepali Export Companies',
-        'International Business Partners',
-        'Technology Recipients',
-        'Market Development Agencies'
-      ],
-      upstreamProcesses: [
-        'Partner Identification and Screening',
-        'Compatibility Assessment Process',
-        'Partnership Structure Design'
-      ],
-      downstreamProcesses: [
-        'Partnership Implementation Support',
-        'Performance Monitoring Activities',
-        'Relationship Management Process',
-        'Expansion and Scaling Support'
-      ]
-    },
-    'annual-10': {
-      suppliers: [
-        'Diaspora Affairs Division, MoFA',
-        'Financial Institution Partners',
-        'Fund Management Specialists',
-        'Legal and Regulatory Advisors'
-      ],
-      inputs: [
-        'Diaspora investment capacity studies',
-        'SME funding requirement analysis',
-        'Fund governance frameworks',
-        'Investment criteria development',
-        'Portfolio management systems'
-      ],
-      process: 'Diaspora Investment Fund Launch Process',
-      outputs: [
-        'Operational investment fund',
-        'SME funding mechanisms',
-        'Investment portfolio strategies',
-        'Diaspora capital mobilization'
-      ],
-      customers: [
-        'Export-Oriented SMEs',
-        'Nepal Diaspora Investors',
-        'Economic Development Programs',
-        'Employment Generation Initiatives'
-      ],
-      upstreamProcesses: [
-        'Fund Structure Design Process',
-        'Regulatory Approval Process',
-        'Capital Raising Activities'
-      ],
-      downstreamProcesses: [
-        'SME Investment Activities',
-        'Portfolio Performance Monitoring',
-        'Return Generation Process',
-        'Fund Expansion Planning'
-      ]
+  // Get SIPOC data from centralized source
+  const getSIPOCForObjective = (objectiveId: string): SIPOCData | null => {
+    // Map objective IDs to SIPOC process IDs
+    const objectiveToSIPOCMap: Record<string, string> = {
+      'ceo-strategic-1': 'ceo-strategic-transformation',
+      'ceo-strategic-2': 'ceo-customer-acquisition',
+      'coo-annual-1': 'coo-customer-service',
+      'coo-annual-2': 'coo-customer-service',
+      'coo-annual-3': 'coo-network-optimization',
+      'cfo-annual-1': 'cfo-financial-recovery',
+      'cfo-annual-2': 'cfo-financial-recovery',
+      'cfo-annual-3': 'cfo-debt-optimization',
+      'cio-annual-1': 'cio-platform-overhaul',
+      'cio-annual-2': 'cio-digital-experience',
+      'cio-annual-3': 'cio-digital-experience',
+      'cmo-annual-1': 'cmo-freemium-strategy',
+      'cmo-annual-2': 'cmo-content-strategy',
+      'cmo-annual-3': 'cmo-freemium-strategy',
+      'cto-annual-1': 'cto-platform-architecture',
+      'cto-annual-2': 'cto-platform-architecture',
+      'cto-annual-3': 'cto-ai-analytics'
+    };
+
+    const sipocId = objectiveToSIPOCMap[objectiveId];
+    if (sipocId) {
+      return getSIPOCData(sipocId) || null;
     }
+    return null;
   };
 
   const getStatusColor = (status: string) => {
@@ -730,6 +367,7 @@ const ObjectivesManagement: React.FC = () => {
                             <div className="space-y-3">
                               {relatedAnnuals.map((annual) => {
                                 const AnnualStatusIcon = getStatusIcon(annual.status);
+                                const sipocData = getSIPOCForObjective(annual.id);
                                 return (
                                   <div key={annual.id} className="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
                                     <div className="flex justify-between items-start mb-2">
@@ -739,7 +377,7 @@ const ObjectivesManagement: React.FC = () => {
                                           <AnnualStatusIcon className="w-3 h-3 mr-1" />
                                           {annual.status}
                                         </Badge>
-                                        {sipocData[annual.id] && (
+                                        {sipocData && (
                                           <Button
                                             size="sm"
                                             variant="outline"
@@ -856,14 +494,21 @@ const ObjectivesManagement: React.FC = () => {
         {/* SIPOC Dialog */}
         <Dialog open={!!showSIPOC} onOpenChange={() => setShowSIPOC(null)}>
           <DialogContent className="max-w-[95vw] w-[95vw] max-h-[95vh] overflow-y-auto">
-            {showSIPOC && sipocData[showSIPOC] && (
+            {showSIPOC && (
               <>
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-semibold text-slate-800">
                     Process Map: {annualObjectives.find(a => a.id === showSIPOC)?.title}
                   </DialogTitle>
                 </DialogHeader>
-                {renderSIPOCDiagram(sipocData[showSIPOC])}
+                {(() => {
+                  const sipocData = getSIPOCForObjective(showSIPOC);
+                  return sipocData ? renderSIPOCDiagram(sipocData) : (
+                    <div className="text-center py-8">
+                      <p className="text-slate-600">No SIPOC data available for this objective.</p>
+                    </div>
+                  );
+                })()}
               </>
             )}
           </DialogContent>

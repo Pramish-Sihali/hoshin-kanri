@@ -41,7 +41,8 @@ const Dashboard: React.FC = () => {
   const getMetricsPerformance = () => {
     if (metrics.length === 0) return 0;
     const totalPerformance = metrics.reduce((sum, metric) => {
-      return sum + (metric.current / metric.target) * 100;
+      const performance = Math.min((metric.current / metric.target) * 100, 100);
+      return sum + performance;
     }, 0);
     return totalPerformance / metrics.length;
   };

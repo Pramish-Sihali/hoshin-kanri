@@ -19,6 +19,7 @@ interface CorrelationCell {
   colId: string;
   coordinate: string; // A1, B2, etc.
   symbol?: CorrelationSymbol;
+  reasoning?: string; // Explanation of correlation calculation
   editable: boolean;
 }
 
@@ -84,43 +85,269 @@ const InteractiveMatrix: React.FC = () => {
     return Array.from(owners).slice(0, 6);
   }, [strategicObjectives, annualObjectives, processes, metrics]);
 
-  // Generate random correlations with coordinates on component mount
+  // State for correlation matrix type
+  const [correlationMatrixType, setCorrelationMatrixType] = useState<{
+    rowType: string;
+    colType: string;
+    rowItems: any[];
+    colItems: any[];
+    rowLabel: string;
+    colLabel: string;
+  }>({ rowType: '', colType: '', rowItems: [], colItems: [], rowLabel: '', colLabel: '' });
+
+  // Determine the best correlation matrix to show based on available data
   useEffect(() => {
-    const generateRandomCorrelations = () => {
-      const newCorrelations: CorrelationCell[] = [];
-      const annualIds = annualObjectives.slice(0, 3).map(obj => obj.id);
-      const processIds = processes.slice(0, 3).map(proc => proc.id);
+    const determineCorrelationMatrix = () => {
+      // Priority order for correlations based on Hoshin Kanri methodology
+      const correlationOptions = [
+        {
+          condition: strategicObjectives.length > 0 && processes.length > 0,
+          rowType: 'strategic',
+          colType: 'processes', 
+          rowItems: strategicObjectives.slice(0, 3),
+          colItems: processes.slice(0, 3),
+          rowLabel: 'WHAT',
+          colLabel: 'HOW'
+        },
+        {
+          condition: annualObjectives.length > 0 && processes.length > 0,
+          rowType: 'annual',
+          colType: 'processes',
+          rowItems: annualObjectives.slice(0, 3), 
+          colItems: processes.slice(0, 3),
+          rowLabel: 'HOW FAR',
+          colLabel: 'HOW'
+        },
+        {
+          condition: processes.length > 0 && metrics.length > 0,
+          rowType: 'processes',
+          colType: 'metrics',
+          rowItems: processes.slice(0, 3),
+          colItems: metrics.slice(0, 3),
+          rowLabel: 'HOW',
+          colLabel: 'HOW MUCH'
+        },
+        {
+          condition: strategicObjectives.length > 0 && annualObjectives.length > 0,
+          rowType: 'strategic',
+          colType: 'annual',
+          rowItems: strategicObjectives.slice(0, 3),
+          colItems: annualObjectives.slice(0, 3),
+          rowLabel: 'WHAT',
+          colLabel: 'HOW FAR'
+        }
+      ];
+
+      // Select the first available correlation type
+      const selectedCorrelation = correlationOptions.find(option => option.condition);
       
-      // Generate random correlations with Cartesian coordinates (about 30-50% of possible combinations)
-      annualIds.forEach((annualId, rowIndex) => {
-        processIds.forEach((processId, colIndex) => {
+      if (selectedCorrelation) {
+        setCorrelationMatrixType({
+          rowType: selectedCorrelation.rowType,
+          colType: selectedCorrelation.colType,
+          rowItems: selectedCorrelation.rowItems,
+          colItems: selectedCorrelation.colItems,
+          rowLabel: selectedCorrelation.rowLabel,
+          colLabel: selectedCorrelation.colLabel
+        });
+      }
+    };
+
+    determineCorrelationMatrix();
+  }, [strategicObjectives, annualObjectives, processes, metrics]);
+
+  // Calculate intelligent correlations based on actual data relationships
+  useEffect(() => {
+    if (!correlationMatrixType.rowItems?.length || !correlationMatrixType.colItems?.length) {
+      setCorrelations([]);
+      return;
+    }
+
+    const calculateIntelligentCorrelations = () => {
+      const newCorrelations: CorrelationCell[] = [];
+      
+      correlationMatrixType.rowItems.forEach((rowItem, rowIndex) => {
+        correlationMatrixType.colItems.forEach((colItem, colIndex) => {
           const coordinate = `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`;
-          if (Math.random() > 0.6) { // 40% chance of correlation
-            const randomSymbol = CORRELATION_SYMBOLS[Math.floor(Math.random() * CORRELATION_SYMBOLS.length)];
-            newCorrelations.push({
-              rowId: annualId,
-              colId: processId,
-              coordinate,
-              symbol: randomSymbol,
-              editable: true
-            });
-          } else {
-            // Add empty cells for reference
-            newCorrelations.push({
-              rowId: annualId,
-              colId: processId,
-              coordinate,
-              editable: true
-            });
-          }
+          
+          // Calculate correlation strength based on multiple factors
+          const correlation = calculateCorrelationStrength(
+            rowItem, 
+            colItem, 
+            correlationMatrixType.rowType, 
+            correlationMatrixType.colType
+          );
+          
+          newCorrelations.push({
+            rowId: rowItem.id,
+            colId: colItem.id,
+            coordinate,
+            symbol: correlation.symbol,
+            reasoning: correlation.reasoning,
+            editable: true
+          });
         });
       });
       
       setCorrelations(newCorrelations);
     };
 
-    generateRandomCorrelations();
-  }, [annualObjectives, processes]);
+    // Specific correlation calculation functions
+    const calculateStrategicProcessCorrelation = (strategic: any, process: any, factors: string[]) => {
+      let score = 0;
+      // Check if process supports any annual objectives linked to this strategic objective
+      const linkedAnnuals = annualObjectives.filter(annual => 
+        annual.strategicObjectiveIds?.includes(strategic.id)
+      );
+      const processSupportsStrategy = linkedAnnuals.some(annual =>
+        process.annualObjectiveIds?.includes(annual.id)
+      );
+      
+      if (processSupportsStrategy) {
+        score += 40;
+        factors.push('Process supports strategic objective through annual objectives');
+      }
+      return score;
+    };
+
+    const calculateAnnualProcessCorrelation = (annual: any, process: any, factors: string[]) => {
+      let score = 0;
+      // Direct relationship (process supports this annual objective)
+      if (process.annualObjectiveIds?.includes(annual.id)) {
+        score += 40;
+        factors.push('Direct support relationship');
+      }
+
+      // Progress correlation
+      if (annual.progress !== undefined && annual.progress > 0) {
+        if (annual.progress >= 75) {
+          score += 15;
+          factors.push('High annual progress');
+        } else if (annual.progress >= 50) {
+          score += 10;
+          factors.push('Moderate annual progress');
+        } else if (annual.progress >= 25) {
+          score += 5;
+          factors.push('Some annual progress');
+        }
+      }
+      return score;
+    };
+
+    const calculateProcessMetricCorrelation = (process: any, metric: any, factors: string[]) => {
+      let score = 0;
+      // Check if metric measures this process (if metrics have processIds)
+      // For now, use common factors like same owner, similar timeline
+      return score;
+    };
+
+    const calculateStrategicAnnualCorrelation = (strategic: any, annual: any, factors: string[]) => {
+      let score = 0;
+      // Direct relationship (annual objective supports this strategic objective)
+      if (annual.strategicObjectiveIds?.includes(strategic.id)) {
+        score += 40;
+        factors.push('Annual objective directly supports strategic objective');
+      }
+
+      // Priority alignment
+      if (strategic.priority === 'high' && annual.progress >= 75) {
+        score += 15;
+        factors.push('High priority strategic with high annual progress');
+      }
+      return score;
+    };
+
+    const calculateCommonFactors = (item1: any, item2: any, factors: string[]) => {
+      let score = 0;
+
+      // Status alignment
+      const status1Score = getStatusScore(item1.status);
+      const status2Score = getStatusScore(item2.status);
+      const statusAlignment = Math.abs(status1Score - status2Score);
+      
+      if (statusAlignment === 0) {
+        score += 20;
+        factors.push('Perfect status alignment');
+      } else if (statusAlignment <= 1) {
+        score += 10;
+        factors.push('Good status alignment');
+      }
+
+      // Owner relationship
+      if (item1.owner && item2.owner && item1.owner === item2.owner) {
+        score += 15;
+        factors.push('Same owner');
+      }
+
+      // Priority alignment
+      if (item1.priority === 'high' || item2.priority === 'high') {
+        score += 5;
+        factors.push('High priority item');
+      }
+
+      return score;
+    };
+
+    const calculateCorrelationStrength = (rowItem: any, colItem: any, rowType: string, colType: string) => {
+      let score = 0;
+      let factors = [];
+
+      // Calculate correlation based on the types being compared
+      if (rowType === 'strategic' && colType === 'processes') {
+        // WHAT ↔ HOW: Strategic Objectives vs Processes
+        score += calculateStrategicProcessCorrelation(rowItem, colItem, factors);
+      } else if (rowType === 'annual' && colType === 'processes') {
+        // HOW FAR ↔ HOW: Annual Objectives vs Processes  
+        score += calculateAnnualProcessCorrelation(rowItem, colItem, factors);
+      } else if (rowType === 'processes' && colType === 'metrics') {
+        // HOW ↔ HOW MUCH: Processes vs Metrics
+        score += calculateProcessMetricCorrelation(rowItem, colItem, factors);
+      } else if (rowType === 'strategic' && colType === 'annual') {
+        // WHAT ↔ HOW FAR: Strategic vs Annual Objectives
+        score += calculateStrategicAnnualCorrelation(rowItem, colItem, factors);
+      }
+
+      // Common factors that apply to all correlation types
+      score += calculateCommonFactors(rowItem, colItem, factors);
+
+      // Determine correlation symbol based on total score
+      let symbol;
+      if (score >= 70) {
+        symbol = CORRELATION_SYMBOLS.find(s => s.id === 'strong-positive');
+      } else if (score >= 50) {
+        symbol = CORRELATION_SYMBOLS.find(s => s.id === 'moderate-positive');
+      } else if (score >= 30) {
+        symbol = CORRELATION_SYMBOLS.find(s => s.id === 'weak-positive');
+      } else if (score >= 15) {
+        symbol = CORRELATION_SYMBOLS.find(s => s.id === 'minimal-impact');
+      } else if (score > 0) {
+        symbol = CORRELATION_SYMBOLS.find(s => s.id === 'minimal-impact');
+      } else {
+        symbol = CORRELATION_SYMBOLS.find(s => s.id === 'no-relationship');
+      }
+
+      return {
+        symbol,
+        score,
+        factors,
+        reasoning: `Score: ${score}/100. Factors: ${factors.join(', ')}`
+      };
+    };
+
+    const getStatusScore = (status: string): number => {
+      switch (status) {
+        case 'completed': return 4;
+        case 'in-progress': return 3;
+        case 'planning': return 2;
+        case 'not-started': return 1;
+        case 'on-hold': return 0;
+        case 'at-risk': return 0;
+        default: return 1;
+      }
+    };
+
+    calculateIntelligentCorrelations();
+  }, [correlationMatrixType, annualObjectives, processes, strategicObjectives, metrics]);
 
   // Handle fullscreen toggle with proper body scroll management
   const toggleFullscreen = useCallback(() => {
@@ -873,12 +1100,15 @@ const InteractiveMatrix: React.FC = () => {
               {/* Correlation Matrix Title */}
               <div className="absolute top-2 left-2 right-2 text-center">
                 <div className="text-sm font-bold text-gray-700 bg-white/80 rounded-lg px-3 py-1 shadow-sm">
-                  Correlation Matrix
+                  {correlationMatrixType.rowLabel && correlationMatrixType.colLabel 
+                    ? `${correlationMatrixType.rowLabel} ↔ ${correlationMatrixType.colLabel} Matrix`
+                    : 'Correlation Matrix'
+                  }
                 </div>
               </div>
               
               {/* Show message if no data */}
-              {(annualObjectives.length === 0 || processes.length === 0) ? (
+              {(!correlationMatrixType.rowItems?.length || !correlationMatrixType.colItems?.length) ? (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center text-gray-500 bg-gray-50/80 rounded-xl p-6 border-2 border-dashed border-gray-200">
                     <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
@@ -886,11 +1116,10 @@ const InteractiveMatrix: React.FC = () => {
                     </div>
                     <p className="text-sm font-medium mb-2">Correlation Matrix</p>
                     <p className="text-xs text-gray-400">
-                      {annualObjectives.length === 0 && processes.length === 0 
-                        ? 'Add annual objectives and processes to see correlations'
-                        : annualObjectives.length === 0 
-                          ? 'Add annual objectives to see correlations'
-                          : 'Add processes to see correlations'}
+                      Load demo data to see intelligent correlations between strategic elements
+                    </p>
+                    <p className="text-xs text-gray-500 mt-2">
+                      The matrix will automatically show the most relevant relationships (WHAT↔HOW, HOW FAR↔HOW, etc.)
                     </p>
                   </div>
                 </div>
@@ -904,36 +1133,36 @@ const InteractiveMatrix: React.FC = () => {
                         ↕
                       </div>
                       
-                      {/* Column headers (Processes) */}
-                      {processes.slice(0, 3).map((process, colIndex) => (
-                        <div key={`header-${process.id}`} className="flex items-center justify-center bg-blue-50 border border-blue-200 rounded text-xs font-semibold text-blue-700 p-1" title={process.title}>
+                      {/* Column headers */}
+                      {correlationMatrixType.colItems?.map((colItem, colIndex) => (
+                        <div key={`header-${colItem.id}`} className="flex items-center justify-center bg-blue-50 border border-blue-200 rounded text-xs font-semibold text-blue-700 p-1" title={colItem.title}>
                           {colIndex + 1}
                         </div>
                       ))}
                       
                       {/* Rows with headers and correlation cells */}
-                      {annualObjectives.slice(0, 3).map((annual, rowIndex) => (
-                        <React.Fragment key={`row-${annual.id}`}>
-                          {/* Row header (Annual Objective) */}
-                          <div className="flex items-center justify-center bg-amber-50 border border-amber-200 rounded text-xs font-semibold text-amber-700" title={annual.title}>
+                      {correlationMatrixType.rowItems?.map((rowItem, rowIndex) => (
+                        <React.Fragment key={`row-${rowItem.id}`}>
+                          {/* Row header */}
+                          <div className="flex items-center justify-center bg-amber-50 border border-amber-200 rounded text-xs font-semibold text-amber-700" title={rowItem.title}>
                             {String.fromCharCode(65 + rowIndex)}
                           </div>
                           
                           {/* Correlation cells */}
-                          {processes.slice(0, 3).map((process, colIndex) => {
-                            const correlation = correlations.find(c => c.rowId === annual.id && c.colId === process.id);
+                          {correlationMatrixType.colItems?.map((colItem, colIndex) => {
+                            const correlation = correlations.find(c => c.rowId === rowItem.id && c.colId === colItem.id);
                             const symbol = correlation?.symbol;
                             const coordinate = `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`;
                             
                             return (
                               <div 
-                                key={`cell-${annual.id}-${process.id}`} 
+                                key={`cell-${rowItem.id}-${colItem.id}`} 
                                 className="flex flex-col items-center justify-center bg-white border border-gray-200 rounded cursor-pointer hover:bg-gray-50 transition-colors relative group"
                                 style={{ 
                                   backgroundColor: symbol ? `${symbol.color}15` : '#ffffff',
                                   borderColor: symbol ? symbol.color : '#e5e7eb'
                                 }}
-                                title={`${coordinate}: ${annual.title} ↔ ${process.title}${symbol ? `\n${symbol.meaning}` : '\nNo relationship'}`}
+                                title={`${coordinate}: ${rowItem.title} ↔ ${colItem.title}${symbol ? `\n${symbol.meaning}` : '\nNo relationship'}${correlation?.reasoning ? `\n\n${correlation.reasoning}` : ''}`}
                               >
                                 {/* Correlation Symbol */}
                                 <div 
@@ -945,7 +1174,7 @@ const InteractiveMatrix: React.FC = () => {
                                 
                                 {/* Correlation Label */}
                                 <div className="text-xs text-gray-500 mt-1 font-medium">
-                                  what{rowIndex + 1},how{colIndex + 1}
+                                  {correlationMatrixType.rowLabel?.toLowerCase() || 'row'}{rowIndex + 1},{correlationMatrixType.colLabel?.toLowerCase() || 'col'}{colIndex + 1}
                                 </div>
                                 
                                 {/* Coordinate label on hover */}
@@ -1172,7 +1401,7 @@ const InteractiveMatrix: React.FC = () => {
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <p><strong>Strategic Flow:</strong> Follow the X-pattern: WHAT defines objectives, HOW shows processes, WHO assigns ownership, HOW MUCH sets metrics.</p>
+                  <p><strong>Strategic Flow:</strong> Follow the X-pattern: WHAT (Strategic Objectives-bottom), HOW FAR (Annual Objectives-left), HOW (Processes-top), HOW MUCH (Metrics-right), WHO (Owners-corner).</p>
                 </div>
               </div>
             </div>

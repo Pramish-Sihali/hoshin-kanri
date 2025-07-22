@@ -57,7 +57,7 @@ interface CharterData {
 
   // Upgraded & New Fields from Charter Image
   sponsor: string;
-  projectType: 'Process Efficiency' | 'Cost Optimization' | 'Process Quality' | 'Tech Automation' | 'Compliance' | 'Innovation';
+  projectType: 'Process Efficiency' | 'Cost Optimization' | 'Process Quality' | 'Tech Automation' | 'Compliance' | 'Marketing';
   ticketSize: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
   strategicTheme: string;
   alignment: string;
@@ -87,7 +87,7 @@ const getBadgeStyle = (type: 'priority' | 'status' | 'projectType' | 'ticketSize
     const styles = {
         priority: { high: 'bg-red-100 text-red-800', medium: 'bg-amber-100 text-amber-800', low: 'bg-green-100 text-green-800' },
         status: { planning: 'bg-slate-100 text-slate-800', 'in-progress': 'bg-blue-100 text-blue-800', 'at-risk': 'bg-orange-100 text-orange-800', completed: 'bg-green-100 text-green-800' },
-        projectType: { 'Process Efficiency': 'bg-green-100 text-green-800', 'Cost Optimization': 'bg-amber-100 text-amber-800', 'Process Quality': 'bg-blue-100 text-blue-800', 'Tech Automation': 'bg-purple-100 text-purple-800', 'Compliance': 'bg-red-100 text-red-800', 'Innovation': 'bg-indigo-100 text-indigo-800' },
+        projectType: { 'Process Efficiency': 'bg-green-100 text-green-800', 'Cost Optimization': 'bg-amber-100 text-amber-800', 'Process Quality': 'bg-blue-100 text-blue-800', 'Tech Automation': 'bg-purple-100 text-purple-800', 'Compliance': 'bg-red-100 text-red-800', 'Marketing': 'bg-indigo-100 text-indigo-800' },
         ticketSize: { XS: 'bg-teal-100 text-teal-800', S: 'bg-cyan-100 text-cyan-800', M: 'bg-sky-100 text-sky-800', L: 'bg-indigo-100 text-indigo-800', XL: 'bg-orange-100 text-orange-800', XXL: 'bg-rose-100 text-rose-800' }
     };
     return (styles[type] as Record<string, string>)[value] || styles.status.planning;
@@ -182,14 +182,7 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({ open, o
       owner: charterData.objectiveOwner,
       priority: charterData.priority,
       status: charterData.status,
-      targetYear: new Date(charterData.endDate).getFullYear(), 
-      // To save the rich charter data, expand your `StrategicObjective` type
-      // in `types/hoshin.ts` and then add the fields here.
-      // Example:
-      // startDate: charterData.startDate,
-      // endDate: charterData.endDate,
-      // milestones: charterData.milestones,
-      // risksAndIssues: charterData.risksAndIssues,
+      targetYear: new Date(charterData.endDate).getFullYear(),
     };
 
     if (objective) {
@@ -232,15 +225,28 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({ open, o
                      <FormField label="Start Date"><input type="date" value={charterData.startDate} onChange={(e) => setCharterData({...charterData, startDate: e.target.value})} className="h-11 px-4 w-full border border-slate-300 rounded-lg" /></FormField>
                      <FormField label="End Date"><input type="date" value={charterData.endDate} onChange={(e) => setCharterData({...charterData, endDate: e.target.value})} className="h-11 px-4 w-full border border-slate-300 rounded-lg" /></FormField>
                      <FormField label="Priority"><select value={charterData.priority} onChange={(e) => setCharterData({...charterData, priority: e.target.value as CharterData['priority']})} className="h-11 px-4 w-full border border-slate-300 rounded-lg bg-white"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></FormField>
-                     <FormField label="Project Type"><select value={charterData.projectType} onChange={(e) => setCharterData({...charterData, projectType: e.target.value as CharterData['projectType']})} className="h-11 px-4 w-full border border-slate-300 rounded-lg bg-white"><option>Process Efficiency</option><option>Cost Optimization</option><option>Process Quality</option><option>Tech Automation</option><option>Compliance</option><option>Marketing and Brand Building</option></select></FormField>
+                     <FormField label="Project Type"><select value={charterData.projectType} onChange={(e) => setCharterData({...charterData, projectType: e.target.value as CharterData['projectType']})} className="h-11 px-4 w-full border border-slate-300 rounded-lg bg-white"><option>Process Efficiency</option><option>Cost Optimization</option><option>Process Quality</option><option>Tech Automation</option><option>Compliance</option><option>Marketing</option></select></FormField>
                 </div>
             </CharterSection>
 
-             <CharterSection title="Strategic Context" icon={<Globe className="w-5 h-5"/>} description="How this objective fits into the broader company strategy.">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <FormField label="Business Need / Problem Statement" required><textarea value={charterData.businessNeed} onChange={(e) => setCharterData({...charterData, businessNeed: e.target.value})} rows={5} className="p-4 w-full border border-slate-300 rounded-lg" placeholder="Describe the business problem or opportunity..." /></FormField>
-                    <FormField label="Alignment with Company Vision"><textarea value={charterData.alignment} onChange={(e) => setCharterData({...charterData, alignment: e.target.value})} rows={5} className="p-4 w-full border border-slate-300 rounded-lg" placeholder="Explain how this aligns with the company's long-term vision..." /></FormField>
-                </div>
+             <CharterSection title="Milestones Schedule" icon={<Calendar className="w-5 h-5"/>} description="Key checkpoints and dates for the objective's timeline.">
+                 <div className="overflow-x-auto"><table className="w-full text-sm">
+                    <thead className="bg-slate-100"><tr className="text-left text-slate-600">
+                        <th className="p-3 font-semibold w-2/5">Milestone</th>
+                        <th className="p-3 font-semibold">Target Date</th>
+                        <th className="p-3 font-semibold">Actual Date</th>
+                        <th className="p-3 font-semibold text-center">Action</th>
+                    </tr></thead>
+                    <tbody>{charterData.milestones.map((milestone, index) => (
+                        <tr key={milestone.id || index} className="border-b border-slate-100">
+                            <td className="p-2"><input type="text" value={milestone.description} placeholder="e.g., Complete UAT Testing" onChange={e => handleUpdateItem('milestones', index, 'description', e.target.value)} className="w-full h-10 px-2 border border-slate-200 rounded-md" /></td>
+                            <td className="p-2"><input type="date" value={milestone.targetCompletionDate} onChange={e => handleUpdateItem('milestones', index, 'targetCompletionDate', e.target.value)} className="w-full h-10 px-2 border border-slate-200 rounded-md" /></td>
+                            <td className="p-2"><input type="date" value={milestone.actualDate || ''} onChange={e => handleUpdateItem('milestones', index, 'actualDate', e.target.value)} className="w-full h-10 px-2 border border-slate-200 rounded-md" /></td>
+                            <td className="p-2 text-center"><button type="button" onClick={() => handleRemoveItem('milestones', index)} className="p-2 text-slate-400 hover:text-red-600 rounded-full hover:bg-red-50"><Trash2 className="w-4 h-4"/></button></td>
+                        </tr>
+                    ))}</tbody>
+                 </table></div>
+                 <button type="button" onClick={() => handleAddItem('milestones', {id: `m-${Date.now()}`, description: '', targetCompletionDate: charterData.endDate, actualDate: ''})} className="w-full mt-4 flex items-center justify-center gap-2 text-sm text-blue-600 font-medium p-3 hover:bg-blue-50 rounded-lg border-2 border-dashed border-blue-200"><PlusCircle className="w-4 h-4"/> Add Milestone</button>
             </CharterSection>
 
             <CharterSection title="Key Performance Indicators (KPIs)" icon={<BarChart3 className="w-5 h-5"/>} description="Measurable values to track success against targets.">
@@ -281,12 +287,7 @@ const StrategicObjectiveForm: React.FC<StrategicObjectiveFormProps> = ({ open, o
                     <div>
                         <h4 className="font-semibold text-slate-700 mb-3 flex items-center gap-2"><DollarSign className="w-4 h-4 text-slate-500"/> Financials</h4>
                         <div className="grid grid-cols-2 gap-4 p-4 border rounded-lg bg-white">
-                            <FormField label="Budget Currency">
-                                <select value={charterData.budgetCurrency} onChange={(e) => setCharterData({...charterData, budgetCurrency: e.target.value})} className="h-10 px-2 w-full border border-slate-300 rounded-md bg-white">
-                                    <option>USD</option>
-                                    <option>NPR</option>
-                                </select>
-                            </FormField>
+                            <FormField label="Budget Currency"><select value={charterData.budgetCurrency} onChange={(e) => setCharterData({...charterData, budgetCurrency: e.target.value})} className="h-10 px-2 w-full border border-slate-300 rounded-md bg-white"><option>USD</option><option>NPR</option></select></FormField>
                             <FormField label="Budget Allocated"><input type="number" value={charterData.budgetAllocated} onChange={(e) => setCharterData({...charterData, budgetAllocated: parseFloat(e.target.value) || 0})} className="h-10 px-3 w-full border border-slate-300 rounded-md"/></FormField>
                         </div>
                     </div>

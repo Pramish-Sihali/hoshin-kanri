@@ -5,19 +5,23 @@ import { Maximize2, Minimize2, Grid, Target, TrendingUp, Users, BarChart3, X, Ca
 import { useHoshinStore } from '@/store/hoshinStore';
 import { createPortal } from 'react-dom';
 
-// Types for correlations
+// Enhanced types for correlations with strength and coordinates
 interface CorrelationSymbol {
   id: string;
-  symbol: '●' | '○' | '▲' | '△';
+  symbol: '●' | '◐' | '○' | '◦' | '×' | '▼';
   meaning: string;
   color: string;
+  strength: number; // 0-5 rating for relationship strength
 }
 
 interface CorrelationCell {
   rowId: string;
   colId: string;
+  coordinate: string; // A1, B2, etc.
   symbol?: CorrelationSymbol;
+  editable: boolean;
 }
+
 
 // Union type for matrix items
 type MatrixItem = {
@@ -40,27 +44,36 @@ type MatrixItem = {
   targetYear?: string | number;
 } | string;
 
-// Professional color palette and enhanced correlation symbols
+// Enhanced correlation symbols with professional design and strength indicators
 const CORRELATION_SYMBOLS: CorrelationSymbol[] = [
-  { id: 'strong', symbol: '●', meaning: 'Strong Relationship', color: '#10b981' },
-  { id: 'medium', symbol: '○', meaning: 'Medium Relationship', color: '#3b82f6' },
-  { id: 'weak', symbol: '▲', meaning: 'Weak Relationship', color: '#f59e0b' },
-  { id: 'potential', symbol: '△', meaning: 'Potential Relationship', color: '#8b5cf6' },
+  { id: 'strong-positive', symbol: '●', meaning: 'Strong Positive', color: '#059669', strength: 5 },
+  { id: 'moderate-positive', symbol: '◐', meaning: 'Moderate Positive', color: '#0891b2', strength: 4 },
+  { id: 'weak-positive', symbol: '○', meaning: 'Weak Positive', color: '#0284c7', strength: 3 },
+  { id: 'minimal-impact', symbol: '◦', meaning: 'Minimal Impact', color: '#64748b', strength: 2 },
+  { id: 'no-relationship', symbol: '×', meaning: 'No Relationship', color: '#94a3b8', strength: 1 },
+  { id: 'negative-impact', symbol: '▼', meaning: 'Negative Impact', color: '#dc2626', strength: 0 }
 ];
 
+
 const InteractiveMatrix: React.FC = () => {
-  const { strategicObjectives, annualObjectives, processes, metrics } = useHoshinStore();
+  const { strategicObjectives, annualObjectives, processes, metrics, loadDataset, hasDummyData } = useHoshinStore();
   const [correlations, setCorrelations] = useState<CorrelationCell[]>([]);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedCard, setSelectedCard] = useState<MatrixItem | null>(null);
   const [highlightedCards, setHighlightedCards] = useState<Set<string>>(new Set());
+  const [highlightedCorrelationType, setHighlightedCorrelationType] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Ensure component is mounted before using portals
+  // Ensure component is mounted before using portals and load sample data if empty
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    
+    // Load sample data if no data exists
+    if (!hasDummyData()) {
+      loadDataset('foreign-policy');
+    }
+  }, [hasDummyData, loadDataset]);
 
   // Get unique owners for WHO section
   const uniqueOwners = React.useMemo(() => {
@@ -71,22 +84,33 @@ const InteractiveMatrix: React.FC = () => {
     return Array.from(owners).slice(0, 6);
   }, [strategicObjectives, annualObjectives, processes, metrics]);
 
-  // Generate random correlations on component mount
+  // Generate random correlations with coordinates on component mount
   useEffect(() => {
     const generateRandomCorrelations = () => {
       const newCorrelations: CorrelationCell[] = [];
       const annualIds = annualObjectives.slice(0, 3).map(obj => obj.id);
       const processIds = processes.slice(0, 3).map(proc => proc.id);
       
-      // Generate random correlations (about 30-50% of possible combinations)
-      annualIds.forEach(annualId => {
-        processIds.forEach(processId => {
+      // Generate random correlations with Cartesian coordinates (about 30-50% of possible combinations)
+      annualIds.forEach((annualId, rowIndex) => {
+        processIds.forEach((processId, colIndex) => {
+          const coordinate = `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`;
           if (Math.random() > 0.6) { // 40% chance of correlation
             const randomSymbol = CORRELATION_SYMBOLS[Math.floor(Math.random() * CORRELATION_SYMBOLS.length)];
             newCorrelations.push({
               rowId: annualId,
               colId: processId,
-              symbol: randomSymbol
+              coordinate,
+              symbol: randomSymbol,
+              editable: true
+            });
+          } else {
+            // Add empty cells for reference
+            newCorrelations.push({
+              rowId: annualId,
+              colId: processId,
+              coordinate,
+              editable: true
             });
           }
         });
@@ -180,37 +204,8 @@ const InteractiveMatrix: React.FC = () => {
     }
   }, [selectedCard]);
 
-  const getCorrelationSymbol = useCallback((rowId: string, colId: string): CorrelationSymbol | undefined => {
-    return correlations.find(c => c.rowId === rowId && c.colId === colId)?.symbol;
-  }, [correlations]);
 
-  // Enhanced truncate text function with better handling
-  const truncateText = (text: string, limit: number) => {
-    if (!text) return '';
-    if (text.length <= limit) return text;
-    return text.substring(0, limit).trim() + '...';
-  };
 
-  // Render correlation cell with enhanced styling
-  const renderCorrelationCell = (rowId: string, colId: string) => {
-    const symbol = getCorrelationSymbol(rowId, colId);
-    return (
-      <div
-        key={`${rowId}-${colId}`}
-        className={`w-full h-full flex items-center justify-center border-2 text-2xl font-bold rounded-lg transition-all duration-300 ${
-          symbol ? 'border-opacity-30 shadow-sm hover:shadow-md' : 'border-gray-200 bg-gray-50/50'
-        }`}
-        title={symbol ? symbol.meaning : 'No correlation'}
-        style={{ 
-          color: symbol?.color || '#94a3b8',
-          backgroundColor: symbol ? `${symbol.color}12` : '#f8fafc',
-          borderColor: symbol?.color || '#e2e8f0'
-        }}
-      >
-        {symbol?.symbol || ''}
-      </div>
-    );
-  };
 
   // Type guard functions
   const isStringItem = (item: MatrixItem): item is string => {
@@ -235,53 +230,56 @@ const InteractiveMatrix: React.FC = () => {
     return (
       <div 
         key={itemId}
-        className={`${bgColor} ${textColor} ${borderColor} p-4 rounded-xl border-2 h-full flex flex-col cursor-pointer transition-all duration-300 group relative overflow-hidden ${
+        className={`${bgColor} ${textColor} ${borderColor} p-2 rounded-lg border h-full flex flex-col cursor-pointer transition-all duration-200 group relative overflow-hidden ${
           isHighlighted 
-            ? 'scale-[1.02] shadow-xl ring-2 ring-blue-500/50 z-20 transform' 
-            : 'hover:shadow-lg hover:scale-[1.01] hover:border-opacity-60'
+            ? 'scale-[1.02] shadow-lg ring-1 ring-blue-400/50 z-20 transform' 
+            : 'hover:shadow-md hover:scale-[1.01] hover:border-opacity-60'
         }`}
         onClick={() => handleCardClick(item)}
-        style={{ minHeight: '90px' }}
+        style={{ minHeight: '80px' }}
       >
         {/* Professional gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         
         <div className="relative z-10 flex-1 flex flex-col">
-          {/* Enhanced title with better typography */}
-          <div className="font-semibold leading-tight mb-2 flex-shrink-0">
-            <div className="line-clamp-2 break-words text-sm" title={displayText}>
-              {truncateText(displayText, 45)}
+          {/* Compact title */}
+          <div className="font-semibold leading-tight mb-1 flex-shrink-0">
+            <div className="line-clamp-1 break-words text-xs" title={displayText}>
+              {displayText}
             </div>
           </div>
           
-          {/* Description with improved styling */}
+          {/* Compact description */}
           {isObjectItem(item) && item.description && (
-            <div className="text-xs opacity-70 font-normal leading-relaxed mb-2 flex-1">
-              <div className="line-clamp-2 break-words" title={item.description}>
-                {truncateText(item.description, 65)}
+            <div className="text-xs opacity-60 font-normal leading-tight mb-1 flex-1">
+              <div className="line-clamp-1 break-words" title={item.description}>
+                {item.description.length > 40 ? item.description.substring(0, 40) + '...' : item.description}
               </div>
             </div>
           )}
           
-          {/* Enhanced progress bar */}
+          {/* Compact progress bar */}
           {isObjectItem(item) && item.progress !== undefined && (
-            <div className="mt-auto">
-              <div className="w-full bg-white/50 rounded-full h-2 shadow-inner mb-1">
+            <div className="mt-auto mb-1">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-xs opacity-60">Progress</span>
+                <span className="text-xs font-semibold">{item.progress}%</span>
+              </div>
+              <div className="w-full bg-white/60 rounded-full h-1.5">
                 <div 
-                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-2 rounded-full shadow-sm transition-all duration-700 ease-out" 
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-1.5 rounded-full transition-all duration-300" 
                   style={{ width: `${item.progress}%` }}
                 ></div>
               </div>
-              <div className="text-xs font-medium opacity-80">{item.progress}%</div>
             </div>
           )}
           
-          {/* Owner with improved layout */}
+          {/* Compact owner */}
           {isObjectItem(item) && item.owner && (
-            <div className="text-xs font-medium mt-2 opacity-60 flex items-center gap-1.5 flex-shrink-0">
+            <div className="text-xs mt-auto pt-1 border-t border-white/20 flex items-center gap-1 flex-shrink-0 opacity-70">
               <User size={10} className="text-current" />
-              <span className="truncate" title={item.owner}>
-                {truncateText(item.owner, 18)}
+              <span className="truncate text-xs" title={item.owner}>
+                {item.owner}
               </span>
             </div>
           )}
@@ -564,9 +562,38 @@ const InteractiveMatrix: React.FC = () => {
   const MatrixContent = () => (
     <>
       <style jsx>{`
+        :root {
+          /* Professional color system for quadrants */
+          --strategic-objectives: #10b981; /* Green - WHAT */
+          --annual-objectives: #f59e0b;    /* Amber - HOW FAR */
+          --key-processes: #3b82f6;        /* Blue - HOW */
+          --metrics: #ec4899;              /* Pink - HOW MUCH */
+          --owners: #8b5cf6;               /* Purple - WHO */
+          
+          /* Grid and structure colors */
+          --grid-border: #e2e8f0;
+          --grid-background: #f8fafc;
+          --cell-hover: #f1f5f9;
+          --cell-selected: #dbeafe;
+          
+          /* Enhanced gradient backgrounds */
+          --strategic-bg: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+          --annual-bg: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+          --process-bg: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+          --metrics-bg: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+          --owners-bg: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+        }
+        
         .line-clamp-2 {
           display: -webkit-box;
           -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        .line-clamp-3 {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
@@ -577,21 +604,22 @@ const InteractiveMatrix: React.FC = () => {
         }
         
         .scrollable-section::-webkit-scrollbar {
-          width: 6px;
+          width: 8px;
         }
         
         .scrollable-section::-webkit-scrollbar-track {
-          background: transparent;
-          border-radius: 3px;
+          background: rgba(241, 245, 249, 0.5);
+          border-radius: 4px;
         }
         
         .scrollable-section::-webkit-scrollbar-thumb {
-          background-color: rgba(156, 163, 175, 0.4);
-          border-radius: 3px;
+          background: linear-gradient(180deg, rgba(148, 163, 184, 0.6) 0%, rgba(148, 163, 184, 0.4) 100%);
+          border-radius: 4px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .scrollable-section::-webkit-scrollbar-thumb:hover {
-          background-color: rgba(156, 163, 175, 0.6);
+          background: linear-gradient(180deg, rgba(100, 116, 139, 0.7) 0%, rgba(100, 116, 139, 0.5) 100%);
         }
         
         /* Enhanced modal scrollbar */
@@ -601,58 +629,149 @@ const InteractiveMatrix: React.FC = () => {
         }
         
         .modal-scroll::-webkit-scrollbar {
-          width: 6px;
+          width: 8px;
         }
         
         .modal-scroll::-webkit-scrollbar-track {
-          background: transparent;
-          border-radius: 3px;
+          background: rgba(241, 245, 249, 0.3);
+          border-radius: 4px;
         }
         
         .modal-scroll::-webkit-scrollbar-thumb {
-          background-color: rgba(156, 163, 175, 0.3);
-          border-radius: 3px;
-          transition: all 0.2s ease;
+          background: linear-gradient(180deg, rgba(148, 163, 184, 0.4) 0%, rgba(148, 163, 184, 0.2) 100%);
+          border-radius: 4px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.3s ease;
         }
         
         .modal-scroll::-webkit-scrollbar-thumb:hover {
-          background-color: rgba(156, 163, 175, 0.5);
+          background: linear-gradient(180deg, rgba(100, 116, 139, 0.6) 0%, rgba(100, 116, 139, 0.4) 100%);
+        }
+        
+        /* Professional quadrant styling */
+        .quadrant-strategic {
+          background: var(--strategic-bg);
+          border-color: var(--strategic-objectives);
+        }
+        
+        .quadrant-annual {
+          background: var(--annual-bg);
+          border-color: var(--annual-objectives);
+        }
+        
+        .quadrant-process {
+          background: var(--process-bg);
+          border-color: var(--key-processes);
+        }
+        
+        .quadrant-metrics {
+          background: var(--metrics-bg);
+          border-color: var(--metrics);
+        }
+        
+        .quadrant-owners {
+          background: var(--owners-bg);
+          border-color: var(--owners);
+        }
+        
+        /* Enhanced grid styling */
+        .matrix-grid {
+          background: var(--grid-background);
+          border: 3px solid var(--grid-border);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 
+                      0 0 0 1px rgba(255, 255, 255, 0.8),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+        
+        .matrix-cell:hover {
+          background-color: var(--cell-hover);
+          transform: translateZ(0) scale(1.01);
+        }
+        
+        .matrix-cell.selected {
+          background-color: var(--cell-selected);
+          box-shadow: 0 0 0 2px #3b82f6;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1200px) {
+          .matrix-grid {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: auto;
+            gap: 1.5rem;
+            height: auto !important;
+            min-height: auto !important;
+          }
+          
+          .matrix-grid > div {
+            grid-column: span 1 !important;
+            grid-row: auto !important;
+            min-height: 300px;
+          }
+          
+          /* Stack quadrants in mobile-friendly order */
+          .quadrant-strategic { order: 1; }
+          .quadrant-annual { order: 2; }
+          .quadrant-process { order: 3; }
+          .quadrant-metrics { order: 4; }
+          .quadrant-owners { order: 5; }
+          
+          /* Hide correlation matrix on smaller screens */
+          .matrix-grid > div[class*="col-span-6 row-span-6"] {
+            display: none;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .matrix-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+            gap: 1rem;
+            padding: 1rem;
+          }
+          
+          .matrix-grid > div {
+            grid-column: span 1 !important;
+            grid-row: auto !important;
+            min-height: 250px;
+            padding: 1rem !important;
+          }
         }
       `}</style>
 
       <div className={`${isFullscreen ? 'p-10' : 'p-8'} ${isFullscreen ? 'h-full overflow-auto' : ''} bg-gradient-to-br from-gray-50 to-white`}>
-        {/* Professional Header */}
-        <div className="flex items-center justify-between mb-12">
-          <div className="text-center flex-1">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="p-4 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl shadow-lg">
-                <Grid className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-left">
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">X-Matrix</h1>
-                <p className="text-lg text-gray-600 font-medium">Hoshin Kanri Strategic Planning Framework</p>
-              </div>
+        {/* Compact Professional Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg shadow-md">
+              <Grid className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">X-Matrix</h1>
+              <p className="text-sm text-gray-600">Hoshin Kanri Strategic Framework</p>
             </div>
           </div>
           
-          {/* Enhanced Fullscreen Toggle */}
-          <button
-            onClick={toggleFullscreen}
-            className="p-4 bg-white hover:bg-gray-50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
-            title={isFullscreen ? "Exit Fullscreen (ESC)" : "Enter Fullscreen"}
-          >
-            {isFullscreen ? (
-              <Minimize2 className="w-6 h-6 text-gray-700 group-hover:scale-110 transition-transform" />
-            ) : (
-              <Maximize2 className="w-6 h-6 text-gray-700 group-hover:scale-110 transition-transform" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Fullscreen Toggle */}
+            <button
+              onClick={toggleFullscreen}
+              className="p-2 bg-white hover:bg-gray-50 rounded-lg shadow border border-gray-200 transition-all duration-200"
+              title={isFullscreen ? "Exit Fullscreen (ESC)" : "Enter Fullscreen"}
+            >
+              {isFullscreen ? (
+                <Minimize2 className="w-4 h-4 text-gray-600" />
+              ) : (
+                <Maximize2 className="w-4 h-4 text-gray-600" />
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Professional Main Matrix Grid */}
+        {/* Enhanced Professional Matrix Grid */}
         <div className="relative">
-          <div className="grid grid-cols-12 grid-rows-12 gap-4 bg-white border-2 border-gray-300 rounded-3xl p-6 shadow-2xl" 
-               style={{ minHeight: isFullscreen ? '75vh' : '900px', height: isFullscreen ? '75vh' : '900px' }}>
+          <div className="matrix-grid grid grid-cols-12 grid-rows-12 gap-4 rounded-2xl p-4 transition-all duration-300" 
+               style={{ minHeight: isFullscreen ? '80vh' : '800px', height: 'auto' }}>
             
             {/* Enhanced corner with branding */}
             <div className="col-span-3 row-span-3 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300 flex items-center justify-center">
@@ -662,92 +781,213 @@ const InteractiveMatrix: React.FC = () => {
               </div>
             </div>
             
-            {/* HOW (Top - Processes) with professional styling */}
-            <div className="col-span-6 row-span-3 bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl border-2 border-orange-300 p-4 shadow-lg flex flex-col">
-              <div className="text-center font-bold text-gray-800 mb-2 text-xl flex items-center justify-center gap-3">
-                <div className="p-2 bg-orange-500 rounded-lg">
-                  <Target className="w-5 h-5 text-white" />
+            {/* HOW (Top - Processes) - Compact */}
+            <div className="col-span-6 row-span-3 quadrant-process rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
+              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
+                <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
+                  <Target className="w-4 h-4 text-white" />
                 </div>
-                HOW
+                <div>
+                  <div className="text-lg font-bold text-blue-800">HOW</div>
+                  <div className="text-xs font-medium text-blue-600 opacity-80">Key Processes</div>
+                </div>
               </div>
-              <div className="text-center text-sm text-gray-600 mb-3 font-semibold">Strategic Initiatives & Key Processes</div>
               <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-3 gap-3 h-full scrollable-section overflow-y-auto">
-                  {processes.slice(0, 3).map(process => 
-                    renderClickableItem(process, 'bg-gradient-to-br from-orange-100 to-orange-50', 'text-orange-900', 'border-orange-300')
+                <div className="grid grid-cols-3 gap-4 h-full scrollable-section overflow-y-auto">
+                  {processes.length === 0 ? (
+                    <div className="col-span-3 flex items-center justify-center p-6 text-blue-600 bg-blue-50 rounded-lg border-2 border-dashed border-blue-200">
+                      <div className="text-center">
+                        <Target className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm font-medium">No processes defined</p>
+                      </div>
+                    </div>
+                  ) : (
+                    processes.slice(0, 6).map(process => 
+                      renderClickableItem(process, 'bg-gradient-to-br from-blue-50 to-blue-100', 'text-blue-900', 'border-blue-400')
+                    )
                   )}
                 </div>
               </div>
             </div>
             
-            {/* WHO (Top-right - Responsibilities) with enhanced design */}
-            <div className="col-span-3 row-span-3 bg-gradient-to-l from-purple-50 to-pink-50 rounded-2xl border-2 border-purple-300 p-4 shadow-lg flex flex-col">
-              <div className="text-center font-bold text-gray-800 mb-2 text-xl flex items-center justify-center gap-3">
-                <div className="p-2 bg-purple-500 rounded-lg">
-                  <Users className="w-5 h-5 text-white" />
+            {/* WHO (Top-right - Responsibilities) - Compact */}
+            <div className="col-span-3 row-span-3 quadrant-owners rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
+              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
+                <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md">
+                  <Users className="w-4 h-4 text-white" />
                 </div>
-                WHO
+                <div>
+                  <div className="text-lg font-bold text-purple-800">WHO</div>
+                  <div className="text-xs font-medium text-purple-600 opacity-80">Resources</div>
+                </div>
               </div>
-              <div className="text-center text-sm text-gray-600 mb-3 font-semibold">Key Resources & Owners</div>
               <div className="flex-1 overflow-hidden">
                 <div className="grid grid-cols-1 gap-3 h-full scrollable-section overflow-y-auto">
-                  {uniqueOwners.slice(0, 3).map(owner => 
-                    renderClickableItem(owner, 'bg-gradient-to-br from-purple-100 to-purple-50', 'text-purple-900', 'border-purple-300')
+                  {uniqueOwners.length === 0 ? (
+                    <div className="flex items-center justify-center p-4 text-purple-600 bg-purple-50 rounded-lg border-2 border-dashed border-purple-200">
+                      <div className="text-center">
+                        <Users className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                        <p className="text-xs font-medium">No owners assigned</p>
+                      </div>
+                    </div>
+                  ) : (
+                    uniqueOwners.slice(0, 6).map(owner => 
+                      renderClickableItem(owner, 'bg-gradient-to-br from-purple-50 to-purple-100', 'text-purple-900', 'border-purple-400')
+                    )
                   )}
                 </div>
               </div>
             </div>
 
-            {/* HOW FAR (Left - Annual Objectives) with professional styling */}
-            <div className="col-span-3 row-span-6 bg-gradient-to-b from-yellow-50 to-amber-50 rounded-2xl border-2 border-yellow-300 p-4 shadow-lg flex flex-col">
-              <div className="text-center font-bold text-gray-800 mb-2 text-xl flex items-center justify-center gap-3">
-                <div className="p-2 bg-yellow-500 rounded-lg">
-                  <TrendingUp className="w-5 h-5 text-white" />
+            {/* HOW FAR (Left - Annual Objectives) - Compact */}
+            <div className="col-span-3 row-span-6 quadrant-annual rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
+              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
+                <div className="p-2 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md">
+                  <TrendingUp className="w-4 h-4 text-white" />
                 </div>
-                HOW FAR
+                <div>
+                  <div className="text-lg font-bold text-amber-800">HOW FAR</div>
+                  <div className="text-xs font-medium text-amber-600 opacity-80">Objectives</div>
+                </div>
               </div>
-              <div className="text-center text-sm text-gray-600 mb-3 font-semibold">Annual Objectives & Targets</div>
               <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-1 gap-3 h-full scrollable-section overflow-y-auto">
-                  {annualObjectives.slice(0, 3).map(objective => 
-                    renderClickableItem(objective, 'bg-gradient-to-br from-yellow-100 to-yellow-50', 'text-yellow-900', 'border-yellow-300')
+                <div className="grid grid-cols-1 gap-4 h-full scrollable-section overflow-y-auto">
+                  {annualObjectives.length === 0 ? (
+                    <div className="flex items-center justify-center p-6 text-amber-600 bg-amber-50 rounded-lg border-2 border-dashed border-amber-200">
+                      <div className="text-center">
+                        <TrendingUp className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm font-medium">No annual objectives</p>
+                      </div>
+                    </div>
+                  ) : (
+                    annualObjectives.slice(0, 6).map(objective => 
+                      renderClickableItem(objective, 'bg-gradient-to-br from-amber-50 to-amber-100', 'text-amber-900', 'border-amber-400')
+                    )
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Enhanced Correlation Matrix (Center) with professional design */}
-            <div className="col-span-6 row-span-6 grid grid-cols-3 grid-rows-3 gap-2 relative bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-gray-300 p-3 shadow-inner">
-              {annualObjectives.slice(0, 3).map(annual => 
-                processes.slice(0, 3).map(process => 
-                  renderCorrelationCell(annual.id, process.id)
-                )
-              ).flat()}
+            {/* Enhanced Correlation Matrix (Center) with professional design and labels */}
+            <div className="col-span-6 row-span-6 relative bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-gray-300 shadow-inner">
+              {/* Correlation Matrix Title */}
+              <div className="absolute top-2 left-2 right-2 text-center">
+                <div className="text-sm font-bold text-gray-700 bg-white/80 rounded-lg px-3 py-1 shadow-sm">
+                  Correlation Matrix
+                </div>
+              </div>
               
-              {/* Professional Center Diamond */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-36 h-36 transform rotate-45 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-2xl shadow-2xl flex items-center justify-center">
-                  <div className="transform -rotate-45 text-white font-bold text-center">
-                    <div className="text-xl mb-1">Strategic</div>
-                    <div className="text-xl">Alignment</div>
+              {/* Show message if no data */}
+              {(annualObjectives.length === 0 || processes.length === 0) ? (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-gray-500 bg-gray-50/80 rounded-xl p-6 border-2 border-dashed border-gray-200">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-2xl">×</span>
+                    </div>
+                    <p className="text-sm font-medium mb-2">Correlation Matrix</p>
+                    <p className="text-xs text-gray-400">
+                      {annualObjectives.length === 0 && processes.length === 0 
+                        ? 'Add annual objectives and processes to see correlations'
+                        : annualObjectives.length === 0 
+                          ? 'Add annual objectives to see correlations'
+                          : 'Add processes to see correlations'}
+                    </p>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  {/* Traditional Hoshin Kanri Correlation Grid */}
+                  <div className="absolute inset-4 top-8">
+                    <div className="h-full grid grid-cols-4 grid-rows-4 gap-1">
+                      {/* Top-left corner indicator */}
+                      <div className="flex items-center justify-center bg-blue-100 border border-blue-200 rounded text-xs font-bold text-blue-700">
+                        ↕
+                      </div>
+                      
+                      {/* Column headers (Processes) */}
+                      {processes.slice(0, 3).map((process, colIndex) => (
+                        <div key={`header-${process.id}`} className="flex items-center justify-center bg-blue-50 border border-blue-200 rounded text-xs font-semibold text-blue-700 p-1" title={process.title}>
+                          {colIndex + 1}
+                        </div>
+                      ))}
+                      
+                      {/* Rows with headers and correlation cells */}
+                      {annualObjectives.slice(0, 3).map((annual, rowIndex) => (
+                        <React.Fragment key={`row-${annual.id}`}>
+                          {/* Row header (Annual Objective) */}
+                          <div className="flex items-center justify-center bg-amber-50 border border-amber-200 rounded text-xs font-semibold text-amber-700" title={annual.title}>
+                            {String.fromCharCode(65 + rowIndex)}
+                          </div>
+                          
+                          {/* Correlation cells */}
+                          {processes.slice(0, 3).map((process, colIndex) => {
+                            const correlation = correlations.find(c => c.rowId === annual.id && c.colId === process.id);
+                            const symbol = correlation?.symbol;
+                            const coordinate = `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`;
+                            
+                            return (
+                              <div 
+                                key={`cell-${annual.id}-${process.id}`} 
+                                className="flex flex-col items-center justify-center bg-white border border-gray-200 rounded cursor-pointer hover:bg-gray-50 transition-colors relative group"
+                                style={{ 
+                                  backgroundColor: symbol ? `${symbol.color}15` : '#ffffff',
+                                  borderColor: symbol ? symbol.color : '#e5e7eb'
+                                }}
+                                title={`${coordinate}: ${annual.title} ↔ ${process.title}${symbol ? `\n${symbol.meaning}` : '\nNo relationship'}`}
+                              >
+                                {/* Correlation Symbol */}
+                                <div 
+                                  className="text-xl font-bold"
+                                  style={{ color: symbol?.color || '#9ca3af' }}
+                                >
+                                  {symbol?.symbol || ''}
+                                </div>
+                                
+                                {/* Correlation Label */}
+                                <div className="text-xs text-gray-500 mt-1 font-medium">
+                                  what{rowIndex + 1},how{colIndex + 1}
+                                </div>
+                                
+                                {/* Coordinate label on hover */}
+                                <div className="absolute top-0 left-0 text-xs bg-gray-800 text-white px-1 rounded opacity-0 group-hover:opacity-100 transition-opacity -mt-5 -ml-1">
+                                  {coordinate}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </div>
+                  
+                </>
+              )}
             </div>
 
-            {/* HOW MUCH (Right - Metrics) with enhanced styling */}
-            <div className="col-span-3 row-span-6 bg-gradient-to-b from-pink-50 to-rose-50 rounded-2xl border-2 border-pink-300 p-4 shadow-lg flex flex-col">
-              <div className="text-center font-bold text-gray-800 mb-2 text-xl flex items-center justify-center gap-3">
-                <div className="p-2 bg-pink-500 rounded-lg">
-                  <BarChart3 className="w-5 h-5 text-white" />
+            {/* HOW MUCH (Right - Metrics) - Compact */}
+            <div className="col-span-3 row-span-6 quadrant-metrics rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
+              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
+                <div className="p-2 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg shadow-md">
+                  <BarChart3 className="w-4 h-4 text-white" />
                 </div>
-                HOW MUCH
+                <div>
+                  <div className="text-lg font-bold text-pink-800">HOW MUCH</div>
+                  <div className="text-xs font-medium text-pink-600 opacity-80">Metrics</div>
+                </div>
               </div>
-              <div className="text-center text-sm text-gray-600 mb-3 font-semibold">Metrics & KPIs</div>
               <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-1 gap-3 h-full scrollable-section overflow-y-auto">
-                  {metrics.slice(0, 3).map(metric => 
-                    renderClickableItem(metric, 'bg-gradient-to-br from-pink-100 to-pink-50', 'text-pink-900', 'border-pink-300')
+                <div className="grid grid-cols-1 gap-4 h-full scrollable-section overflow-y-auto">
+                  {metrics.length === 0 ? (
+                    <div className="flex items-center justify-center p-6 text-pink-600 bg-pink-50 rounded-lg border-2 border-dashed border-pink-200">
+                      <div className="text-center">
+                        <BarChart3 className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm font-medium">No metrics defined</p>
+                      </div>
+                    </div>
+                  ) : (
+                    metrics.slice(0, 6).map(metric => 
+                      renderClickableItem(metric, 'bg-gradient-to-br from-pink-50 to-pink-100', 'text-pink-900', 'border-pink-400')
+                    )
                   )}
                 </div>
               </div>
@@ -756,19 +996,30 @@ const InteractiveMatrix: React.FC = () => {
             {/* Enhanced bottom-left corner */}
             <div className="col-span-3 row-span-3 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300"></div>
             
-            {/* WHAT (Bottom - Strategic Objectives) with professional design */}
-            <div className="col-span-6 row-span-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-2 border-green-300 p-4 shadow-lg flex flex-col">
-              <div className="text-center font-bold text-gray-800 mb-2 text-xl flex items-center justify-center gap-3">
-                <div className="p-2 bg-green-500 rounded-lg">
-                  <Target className="w-5 h-5 text-white" />
+            {/* WHAT (Bottom - Strategic Objectives) - Compact */}
+            <div className="col-span-6 row-span-3 quadrant-strategic rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
+              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
+                <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-md">
+                  <Target className="w-4 h-4 text-white" />
                 </div>
-                WHAT
+                <div>
+                  <div className="text-lg font-bold text-emerald-800">WHAT</div>
+                  <div className="text-xs font-medium text-emerald-600 opacity-80">Strategic Goals</div>
+                </div>
               </div>
-              <div className="text-center text-sm text-gray-600 mb-3 font-semibold">Strategic Objectives (3-5 Years)</div>
               <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-3 gap-3 h-full scrollable-section overflow-y-auto">
-                  {strategicObjectives.slice(0, 3).map(objective => 
-                    renderClickableItem(objective, 'bg-gradient-to-br from-green-100 to-green-50', 'text-green-900', 'border-green-300')
+                <div className="grid grid-cols-3 gap-4 h-full scrollable-section overflow-y-auto">
+                  {strategicObjectives.length === 0 ? (
+                    <div className="col-span-3 flex items-center justify-center p-6 text-emerald-600 bg-emerald-50 rounded-lg border-2 border-dashed border-emerald-200">
+                      <div className="text-center">
+                        <Target className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm font-medium">No strategic objectives</p>
+                      </div>
+                    </div>
+                  ) : (
+                    strategicObjectives.slice(0, 6).map(objective => 
+                      renderClickableItem(objective, 'bg-gradient-to-br from-emerald-50 to-emerald-100', 'text-emerald-900', 'border-emerald-400')
+                    )
                   )}
                 </div>
               </div>
@@ -797,29 +1048,109 @@ const InteractiveMatrix: React.FC = () => {
           </div>
         </div>
 
-        {/* Professional Correlation Legend */}
+        {/* Enhanced Interactive Correlation Legend */}
         <div className="mt-12 bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-xl">
           <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
             <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-            Correlation Legend & Instructions
+            Interactive Correlation Matrix Guide
           </h3>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Correlation Symbols */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Interactive Correlation Symbols */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-800 mb-4">Relationship Indicators</h4>
+              <h4 className="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <span>Relationship Indicators</span>
+                <div className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+                  Click to highlight
+                </div>
+              </h4>
               <div className="space-y-3">
-                {CORRELATION_SYMBOLS.map((symbol) => (
-                  <div
-                    key={symbol.id}
-                    className="flex items-center gap-4 px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50 hover:bg-white transition-colors"
-                  >
-                    <span style={{ color: symbol.color }} className="text-3xl font-bold w-8 text-center">
-                      {symbol.symbol}
-                    </span>
-                    <span className="text-sm font-semibold text-gray-800">{symbol.meaning}</span>
+                {CORRELATION_SYMBOLS.map((symbol) => {
+                  const isHighlighted = highlightedCorrelationType === symbol.id;
+                  const correlationsOfThisType = correlations.filter(c => c.symbol?.id === symbol.id);
+                  
+                  return (
+                    <div
+                      key={symbol.id}
+                      className={`flex items-center gap-4 px-4 py-3 rounded-xl border-2 transition-all duration-300 cursor-pointer group ${
+                        isHighlighted 
+                          ? 'border-blue-400 bg-blue-50 shadow-md scale-[1.02] transform'
+                          : 'border-gray-200 bg-gray-50 hover:bg-white hover:border-gray-300 hover:shadow-sm'
+                      }`}
+                      onClick={() => setHighlightedCorrelationType(isHighlighted ? null : symbol.id)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span 
+                          style={{ color: symbol.color }} 
+                          className={`text-3xl font-bold w-8 text-center transition-transform duration-200 ${
+                            isHighlighted ? 'scale-110' : 'group-hover:scale-105'
+                          }`}
+                        >
+                          {symbol.symbol}
+                        </span>
+                        <div>
+                          <div className="text-sm font-bold text-gray-800">{symbol.meaning}</div>
+                          <div className="text-xs text-gray-600 mt-1">
+                            Strength: {symbol.strength}/5 • {correlationsOfThisType.length} instances
+                          </div>
+                        </div>
+                      </div>
+                      {/* Strength indicator bars */}
+                      <div className="ml-auto flex gap-1">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className={`w-1.5 h-6 rounded-full transition-opacity duration-200 ${
+                              i < symbol.strength ? 'opacity-100' : 'opacity-20'
+                            }`}
+                            style={{ backgroundColor: symbol.color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {highlightedCorrelationType && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="text-sm text-blue-700">
+                    <strong>Highlighting:</strong> All {CORRELATION_SYMBOLS.find(s => s.id === highlightedCorrelationType)?.meaning} relationships in the matrix
                   </div>
-                ))}
+                  <button
+                    onClick={() => setHighlightedCorrelationType(null)}
+                    className="text-xs text-blue-600 hover:text-blue-800 mt-1 underline"
+                  >
+                    Clear highlight
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Matrix Navigation */}
+            <div>
+              <h4 className="text-lg font-semibold text-gray-800 mb-4">Matrix Reference System</h4>
+              <div className="space-y-3 text-sm text-gray-700 leading-relaxed">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-4 h-4 bg-yellow-500 rounded text-white text-xs flex items-center justify-center font-bold">A</div>
+                    <span className="font-semibold">Rows (A, B, C)</span>
+                  </div>
+                  <p className="text-xs">Annual Objectives displayed vertically</p>
+                </div>
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-4 h-4 bg-orange-500 rounded text-white text-xs flex items-center justify-center font-bold">1</div>
+                    <span className="font-semibold">Columns (1, 2, 3)</span>
+                  </div>
+                  <p className="text-xs">Key Processes displayed horizontally</p>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-4 h-4 bg-blue-500 rounded text-white text-xs flex items-center justify-center">A1</div>
+                    <span className="font-semibold">Cell Reference</span>
+                  </div>
+                  <p className="text-xs">Each cell shows relationship between row objective and column process</p>
+                </div>
               </div>
             </div>
             
@@ -833,11 +1164,11 @@ const InteractiveMatrix: React.FC = () => {
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <p><strong>Correlations:</strong> Symbols in the center matrix show relationships between annual objectives and key processes.</p>
+                  <p><strong>Hover for Details:</strong> Hover over correlation symbols to see detailed relationship information.</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <p><strong>Navigation:</strong> Each section scrolls independently. Use fullscreen mode for presentations.</p>
+                  <p><strong>Grid Reference:</strong> Use the A1, B2, C3 system to reference specific correlations in discussions.</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>

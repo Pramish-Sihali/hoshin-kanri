@@ -139,38 +139,38 @@ const XMatrix: React.FC = () => {
                       return (
                         <div
                           key={objective.id}
-                          className={`p-4 rounded-xl border-l-4 ${getPriorityColor(objective.priority)} hover:shadow-md transition-all duration-200 group`}
+                          className={`p-5 rounded-xl border-l-4 ${getPriorityColor(objective.priority)} hover:shadow-lg transition-all duration-200 group`}
                         >
                           <div className="flex justify-between items-start mb-3">
-                            <h3 className="font-semibold text-sm text-slate-800 group-hover:text-blue-700 transition-colors">
+                            <h3 className="font-semibold text-base text-slate-800 group-hover:text-blue-700 transition-colors leading-tight max-w-[70%]">
                               {objective.title}
                             </h3>
-                            <Badge className={`text-xs text-white font-medium ${getStatusColor(objective.status)}`}>
+                            <Badge className={`text-xs text-white font-medium ${getStatusColor(objective.status)} ml-2 flex-shrink-0`}>
                               <StatusIcon className="w-3 h-3 mr-1" />
                               {objective.status}
                             </Badge>
                           </div>
-                          <p className="text-xs text-slate-600 mb-3 line-clamp-2">{objective.description}</p>
-                          <div className="flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-4">
-                              <div className="flex items-center gap-1 text-slate-500">
-                                <Calendar className="w-3 h-3" />
-                                <span>Target: {objective.targetYear}</span>
-                              </div>
-                              <div className="flex items-center gap-1 text-slate-500">
-                                <User className="w-3 h-3" />
-                                <span>{objective.owner}</span>
-                              </div>
+                          <p className="text-sm text-slate-600 mb-4 line-clamp-2 leading-relaxed">{objective.description}</p>
+                          <div className="grid grid-cols-2 gap-3 text-xs">
+                            <div className="flex items-center gap-2 text-slate-500">
+                              <Calendar className="w-4 h-4 flex-shrink-0" />
+                              <span className="font-medium">Target: {objective.targetYear}</span>
                             </div>
-                            <Badge
-                              className={`text-xs px-2 py-1 rounded-full ${
-                                objective.priority === 'high' ? 'bg-red-100 text-red-800 border-red-200' :
-                                objective.priority === 'medium' ? 'bg-amber-100 text-amber-800 border-amber-200' :
-                                'bg-emerald-100 text-emerald-800 border-emerald-200'
-                              }`}
-                            >
-                              {objective.priority}
-                            </Badge>
+                            <div className="flex items-center gap-2 text-slate-500">
+                              <User className="w-4 h-4 flex-shrink-0" />
+                              <span className="truncate font-medium">{objective.owner}</span>
+                            </div>
+                            <div className="col-span-2 mt-2 flex justify-end">
+                              <Badge
+                                className={`text-xs px-3 py-1 rounded-full font-medium ${
+                                  objective.priority === 'high' ? 'bg-red-100 text-red-800 border border-red-200' :
+                                  objective.priority === 'medium' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
+                                  'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                                }`}
+                              >
+                                {objective.priority.toUpperCase()} PRIORITY
+                              </Badge>
+                            </div>
                           </div>
                         </div>
                       );
@@ -203,35 +203,35 @@ const XMatrix: React.FC = () => {
                     {annualObjectives.map((objective) => {
                       const StatusIcon = getStatusIcon(objective.status);
                       return (
-                        <div key={objective.id} className="p-4 rounded-xl bg-white border border-slate-200 hover:shadow-md transition-all duration-200 group">
-                          <div className="flex justify-between items-start mb-3">
-                            <h3 className="font-semibold text-sm text-slate-800 group-hover:text-emerald-700 transition-colors">
+                        <div key={objective.id} className="p-5 rounded-xl bg-white border border-slate-200 hover:shadow-lg transition-all duration-200 group">
+                          <div className="flex justify-between items-start mb-4">
+                            <h3 className="font-semibold text-base text-slate-800 group-hover:text-emerald-700 transition-colors leading-tight max-w-[70%]">
                               {objective.title}
                             </h3>
-                            <Badge className={`text-xs text-white font-medium ${getStatusColor(objective.status)}`}>
+                            <Badge className={`text-xs text-white font-medium ${getStatusColor(objective.status)} ml-2 flex-shrink-0`}>
                               <StatusIcon className="w-3 h-3 mr-1" />
                               {objective.status}
                             </Badge>
                           </div>
-                          <p className="text-xs text-slate-600 mb-3 line-clamp-2">{objective.description}</p>
-                          <div className="mb-3">
-                            <div className="flex justify-between items-center mb-2">
-                              <span className="text-xs font-medium text-slate-600">Progress</span>
-                              <span className="text-xs font-bold text-emerald-600">{objective.progress}%</span>
+                          <p className="text-sm text-slate-600 mb-4 line-clamp-2 leading-relaxed">{objective.description}</p>
+                          <div className="mb-4">
+                            <div className="flex justify-between items-center mb-3">
+                              <span className="text-sm font-semibold text-slate-700">Progress</span>
+                              <span className="text-lg font-bold text-emerald-600">{objective.progress}%</span>
                             </div>
                             <Progress 
                               value={objective.progress} 
-                              className="h-2 bg-emerald-100 [&>div]:bg-gradient-to-r [&>div]:from-emerald-500 [&>div]:to-emerald-600"
+                              className="h-3 bg-emerald-100 [&>div]:bg-gradient-to-r [&>div]:from-emerald-500 [&>div]:to-emerald-600 shadow-inner"
                             />
                           </div>
-                          <div className="flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-1 text-slate-500">
-                              <Calendar className="w-3 h-3" />
-                              <span>Due: {new Date(objective.targetDate).toLocaleDateString()}</span>
+                          <div className="grid grid-cols-2 gap-3 text-xs">
+                            <div className="flex items-center gap-2 text-slate-500">
+                              <Calendar className="w-4 h-4 flex-shrink-0" />
+                              <span className="font-medium">Due: {new Date(objective.targetDate).toLocaleDateString()}</span>
                             </div>
-                            <div className="flex items-center gap-1 text-slate-500">
-                              <User className="w-3 h-3" />
-                              <span>{objective.owner}</span>
+                            <div className="flex items-center gap-2 text-slate-500">
+                              <User className="w-4 h-4 flex-shrink-0" />
+                              <span className="truncate font-medium">{objective.owner}</span>
                             </div>
                           </div>
                         </div>
@@ -265,35 +265,41 @@ const XMatrix: React.FC = () => {
                     {processes.map((process) => {
                       const StatusIcon = getStatusIcon(process.status);
                       return (
-                        <div key={process.id} className="p-4 rounded-xl bg-white border border-slate-200 hover:shadow-md transition-all duration-200 group">
-                          <div className="flex justify-between items-start mb-3">
-                            <h3 className="font-semibold text-sm text-slate-800 group-hover:text-purple-700 transition-colors">
+                        <div key={process.id} className="p-5 rounded-xl bg-white border border-slate-200 hover:shadow-lg transition-all duration-200 group">
+                          <div className="flex justify-between items-start mb-4">
+                            <h3 className="font-semibold text-base text-slate-800 group-hover:text-purple-700 transition-colors leading-tight max-w-[70%]">
                               {process.title}
                             </h3>
-                            <Badge className={`text-xs text-white font-medium ${getStatusColor(process.status)}`}>
+                            <Badge className={`text-xs text-white font-medium ${getStatusColor(process.status)} ml-2 flex-shrink-0`}>
                               <StatusIcon className="w-3 h-3 mr-1" />
                               {process.status}
                             </Badge>
                           </div>
-                          <p className="text-xs text-slate-600 mb-3 line-clamp-2">{process.description}</p>
-                          <div className="space-y-2 text-xs">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-1 text-slate-500">
-                                <Calendar className="w-3 h-3" />
-                                <span>Start: {new Date(process.startDate).toLocaleDateString()}</span>
+                          <p className="text-sm text-slate-600 mb-4 line-clamp-2 leading-relaxed">{process.description}</p>
+                          <div className="space-y-3 text-xs">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="flex items-center gap-2 text-slate-500">
+                                <Calendar className="w-4 h-4 flex-shrink-0 text-green-500" />
+                                <div>
+                                  <span className="font-medium text-slate-700">Start:</span>
+                                  <span className="ml-1 font-medium">{new Date(process.startDate).toLocaleDateString()}</span>
+                                </div>
                               </div>
-                              <div className="flex items-center gap-1 text-slate-500">
-                                <Calendar className="w-3 h-3" />
-                                <span>End: {new Date(process.endDate).toLocaleDateString()}</span>
+                              <div className="flex items-center gap-2 text-slate-500">
+                                <Calendar className="w-4 h-4 flex-shrink-0 text-red-500" />
+                                <div>
+                                  <span className="font-medium text-slate-700">End:</span>
+                                  <span className="ml-1 font-medium">{new Date(process.endDate).toLocaleDateString()}</span>
+                                </div>
                               </div>
                             </div>
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-1 text-slate-500">
-                                <User className="w-3 h-3" />
-                                <span>{process.owner}</span>
+                            <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                              <div className="flex items-center gap-2 text-slate-500">
+                                <User className="w-4 h-4 flex-shrink-0" />
+                                <span className="font-medium">{process.owner}</span>
                               </div>
                               {process.resources.length > 0 && (
-                                <Badge variant="outline" className="text-xs px-2 py-1 rounded-full">
+                                <Badge variant="outline" className="text-xs px-3 py-1 rounded-full border-purple-200 text-purple-700 font-medium">
                                   {process.resources.length} resources
                                 </Badge>
                               )}
@@ -334,35 +340,37 @@ const XMatrix: React.FC = () => {
                                               'from-red-500 to-red-600';
                       
                       return (
-                        <div key={metric.id} className="p-4 rounded-xl bg-white border border-slate-200 hover:shadow-md transition-all duration-200 group">
-                          <div className="flex justify-between items-start mb-3">
-                            <h3 className="font-semibold text-sm text-slate-800 group-hover:text-orange-700 transition-colors">
+                        <div key={metric.id} className="p-5 rounded-xl bg-white border border-slate-200 hover:shadow-lg transition-all duration-200 group">
+                          <div className="flex justify-between items-start mb-4">
+                            <h3 className="font-semibold text-base text-slate-800 group-hover:text-orange-700 transition-colors leading-tight max-w-[60%]">
                               {metric.name}
                             </h3>
-                            <Badge variant="outline" className="text-xs px-2 py-1 rounded-full border-orange-200 text-orange-700">
+                            <Badge variant="outline" className="text-xs px-3 py-1 rounded-full border-orange-200 text-orange-700 font-medium ml-2 flex-shrink-0">
                               {metric.frequency}
                             </Badge>
                           </div>
-                          <p className="text-xs text-slate-600 mb-3 line-clamp-2">{metric.description}</p>
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                              <div className="text-sm">
-                                <span className="font-bold text-slate-800">{metric.current}</span>
-                                <span className="text-slate-400 mx-1">/</span>
-                                <span className="text-slate-600">{metric.target}</span>
-                                <span className="text-slate-500 ml-1 text-xs">{metric.unit}</span>
+                          <p className="text-sm text-slate-600 mb-4 line-clamp-2 leading-relaxed">{metric.description}</p>
+                          <div className="space-y-4">
+                            <div className="bg-slate-50 rounded-lg p-3">
+                              <div className="flex justify-between items-center mb-2">
+                                <div className="text-base">
+                                  <span className="font-bold text-slate-800 text-lg">{metric.current.toLocaleString()}</span>
+                                  <span className="text-slate-400 mx-2 text-lg">/</span>
+                                  <span className="text-slate-600 font-semibold text-lg">{metric.target.toLocaleString()}</span>
+                                  <span className="text-slate-500 ml-2 text-sm font-medium">{metric.unit}</span>
+                                </div>
+                                <div className="text-lg font-bold text-orange-600">
+                                  {performancePercentage.toFixed(1)}%
+                                </div>
                               </div>
-                              <div className="text-sm font-bold text-orange-600">
-                                {performancePercentage.toFixed(1)}%
-                              </div>
+                              <Progress 
+                                value={performancePercentage} 
+                                className={`h-3 bg-slate-200 [&>div]:bg-gradient-to-r [&>div]:${performanceColor} shadow-inner`}
+                              />
                             </div>
-                            <Progress 
-                              value={performancePercentage} 
-                              className={`h-2 bg-slate-100 [&>div]:bg-gradient-to-r [&>div]:${performanceColor}`}
-                            />
-                            <div className="flex items-center gap-1 text-xs text-slate-500">
-                              <User className="w-3 h-3" />
-                              <span>{metric.owner}</span>
+                            <div className="flex items-center gap-2 text-xs text-slate-500">
+                              <User className="w-4 h-4 flex-shrink-0" />
+                              <span className="font-medium">{metric.owner}</span>
                             </div>
                           </div>
                         </div>

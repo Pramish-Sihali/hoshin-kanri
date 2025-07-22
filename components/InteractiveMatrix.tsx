@@ -290,7 +290,7 @@ const InteractiveMatrix: React.FC = () => {
 
     const calculateCorrelationStrength = (rowItem: any, colItem: any, rowType: string, colType: string) => {
       let score = 0;
-      let factors = [];
+      let factors: any[] = [];
 
       // Calculate correlation based on the types being compared
       if (rowType === 'strategic' && colType === 'processes') {

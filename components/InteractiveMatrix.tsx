@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Maximize2, Minimize2, Grid, Target, TrendingUp, Users, BarChart3, X, Calendar, User, Info } from 'lucide-react';
+import { Maximize2, Minimize2, Grid, Target, TrendingUp, Users, BarChart3, X, Calendar, User, Info, ZoomIn, ZoomOut } from 'lucide-react';
 import { useHoshinStore } from '@/store/hoshinStore';
 import { createPortal } from 'react-dom';
 
@@ -64,17 +64,52 @@ const InteractiveMatrix: React.FC = () => {
   const [highlightedCards, setHighlightedCards] = useState<Set<string>>(new Set());
   const [highlightedCorrelationType, setHighlightedCorrelationType] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('xmatrix-zoom');
+      return saved ? parseFloat(saved) : 100;
+    }
+    return 100;
+  });
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Ensure component is mounted before using portals and load sample data if empty
   useEffect(() => {
     setIsMounted(true);
-    
+
     // Load sample data if no data exists
     if (!hasDummyData()) {
       loadDataset('foreign-policy');
     }
   }, [hasDummyData, loadDataset]);
+
+  // Persist zoom level to localStorage and set CSS variable
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('xmatrix-zoom', zoomLevel.toString());
+      // Set CSS custom property for zoom-aware sizing
+      document.documentElement.style.setProperty('--zoom-scale', (zoomLevel / 100).toString());
+    }
+  }, [zoomLevel]);
+
+  // Keyboard shortcuts for zoom
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) {
+        e.preventDefault();
+        setZoomLevel(prev => Math.min(150, prev + 10));
+      } else if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+        e.preventDefault();
+        setZoomLevel(prev => Math.max(75, prev - 10));
+      } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        setZoomLevel(100);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Get unique owners for WHO section with their responsibilities
   const uniqueOwners = React.useMemo(() => {
@@ -454,34 +489,54 @@ const InteractiveMatrix: React.FC = () => {
     return typeof item === 'object' && item !== null;
   };
 
-  // Render owner card with responsibilities
+  // Ultra-compact owner card with zoom-aware font sizes
   const renderOwnerCard = (owner: { name: string; count: number; items: string[] }) => {
+    // Get initials
+    const getInitials = (name: string): string => {
+      const words = name.trim().split(' ');
+      if (words.length >= 2) {
+        return words.map(w => w[0]).join('').toUpperCase().substring(0, 3);
+      }
+      return name.substring(0, 3).toUpperCase();
+    };
+
     return (
       <div
         key={owner.name}
-        className="bg-gradient-to-br from-purple-50 to-purple-100 text-purple-900 border-purple-400 p-2 rounded-md border h-full flex flex-col cursor-pointer transition-all duration-150 group relative overflow-hidden hover:shadow-sm hover:scale-[1.005] hover:border-opacity-70"
+        className="bg-gradient-to-br from-purple-50 to-purple-100 text-purple-900 border-purple-400 rounded border h-full flex flex-col cursor-pointer transition-all duration-150 group relative overflow-hidden hover:shadow-sm hover:border-opacity-70"
         onClick={() => handleCardClick({ id: owner.name, title: owner.name, description: `Responsible for ${owner.count} items`, owner: owner.name, items: owner.items } as any)}
-        style={{ minHeight: '70px' }}
+        style={{
+          minHeight: '45px',
+          padding: 'max(4px, calc(0.375rem * var(--zoom-scale, 1)))'
+        }}
+        title={owner.name}
       >
-        <div className="relative z-10 flex-1 flex flex-col">
-          {/* Owner name */}
-          <div className="font-semibold leading-tight mb-1 flex items-center gap-1">
-            <User size={12} className="text-purple-600" />
-            <div className="text-xs truncate" title={owner.name}>
-              {owner.name}
+        <div className="relative z-10 flex-1 flex flex-col justify-between">
+          {/* Owner initials badge - minimum 13px font */}
+          <div className="font-semibold flex items-center gap-1">
+            <User size={10} className="text-purple-600 flex-shrink-0" />
+            <div
+              className="truncate"
+              style={{ fontSize: 'max(13px, calc(0.875rem * var(--zoom-scale, 1)))' }}
+              title={owner.name}
+            >
+              {getInitials(owner.name)}
             </div>
           </div>
 
-          {/* Responsibilities count */}
-          <div className="text-[10px] opacity-70 mt-auto">
-            {owner.count} {owner.count === 1 ? 'item' : 'items'}
+          {/* Responsibilities count - minimum 10px font */}
+          <div
+            className="opacity-70 font-medium"
+            style={{ fontSize: 'max(10px, calc(0.625rem * var(--zoom-scale, 1)))' }}
+          >
+            +{owner.count}
           </div>
         </div>
       </div>
     );
   };
 
-  // Compact minimalist card rendering
+  // Ultra-compact card with zoom-aware minimum font sizes
   const renderClickableItem = (
     item: MatrixItem,
     bgColor: string,
@@ -490,47 +545,72 @@ const InteractiveMatrix: React.FC = () => {
   ) => {
     const itemId = isStringItem(item) ? item : item.id;
     const displayText = isStringItem(item) ? item : (item.title || item.name || '');
+    const ownerText = !isStringItem(item) && item.owner ? item.owner : '';
     const isHighlighted = highlightedCards.has(itemId);
+
+    // Get initials from owner name (e.g., "Chief Financial Officer" -> "CFO")
+    const getInitials = (name: string): string => {
+      const words = name.trim().split(' ');
+      if (words.length >= 2) {
+        return words.map(w => w[0]).join('').toUpperCase().substring(0, 3);
+      }
+      return name.substring(0, 3).toUpperCase();
+    };
 
     return (
       <div
         key={itemId}
-        className={`${bgColor} ${textColor} ${borderColor} p-1.5 rounded-md border h-full flex flex-col cursor-pointer transition-all duration-150 group relative overflow-hidden ${
+        className={`${bgColor} ${textColor} ${borderColor} rounded border h-full flex flex-col cursor-pointer transition-all duration-150 group relative overflow-hidden ${
           isHighlighted
-            ? 'scale-[1.01] shadow-md ring-1 ring-blue-400/50 z-20 transform'
-            : 'hover:shadow-sm hover:scale-[1.005] hover:border-opacity-70'
+            ? 'shadow-md ring-1 ring-blue-400/50 z-20'
+            : 'hover:shadow-sm hover:border-opacity-70'
         }`}
         onClick={() => handleCardClick(item)}
-        style={{ minHeight: '60px' }}
+        style={{
+          minHeight: '45px',
+          padding: 'max(4px, calc(0.375rem * var(--zoom-scale, 1)))'
+        }}
+        title={displayText}
       >
-        <div className="relative z-10 flex-1 flex flex-col">
-          {/* Readable title */}
-          <div className="font-semibold leading-tight mb-1 flex-shrink-0">
-            <div className="line-clamp-2 break-words text-xs" title={displayText}>
+        <div className="relative z-10 flex-1 flex flex-col justify-between">
+          {/* Title with minimum 13px font */}
+          <div className="font-semibold leading-tight">
+            <div
+              className="line-clamp-2 break-words"
+              style={{ fontSize: 'max(13px, calc(0.875rem * var(--zoom-scale, 1)))' }}
+              title={displayText}
+            >
               {displayText}
             </div>
           </div>
 
-          {/* Progress indicator */}
+          {/* Compact progress bar inline with percentage - 3px height */}
           {isObjectItem(item) && item.progress !== undefined && (
-            <div className="mt-auto mb-1">
-              <div className="w-full bg-white/50 rounded-full h-1.5">
+            <div className="flex items-center gap-1 mt-1">
+              <div className="flex-1 bg-white/50 rounded-full" style={{ height: '3px' }}>
                 <div
-                  className="bg-current h-1.5 rounded-full transition-all duration-300 opacity-80"
-                  style={{ width: `${item.progress}%` }}
+                  className="bg-current rounded-full transition-all duration-300 opacity-80"
+                  style={{ height: '3px', width: `${item.progress}%` }}
                 ></div>
               </div>
-              <span className="text-[10px] opacity-60 mt-0.5">{item.progress}%</span>
+              <span
+                className="opacity-60 font-medium"
+                style={{ fontSize: 'max(10px, calc(0.625rem * var(--zoom-scale, 1)))' }}
+              >
+                {item.progress}%
+              </span>
             </div>
           )}
 
-          {/* Owner indicator */}
+          {/* Compact role badge with initials - minimum 10px font */}
           {isObjectItem(item) && item.owner && (
-            <div className="text-[10px] mt-0.5 flex items-center gap-1 flex-shrink-0 opacity-60">
-              <User size={10} className="text-current" />
-              <span className="truncate" title={item.owner}>
-                {item.owner}
-              </span>
+            <div
+              className="flex items-center gap-0.5 opacity-70 bg-black/5 rounded-full px-1.5 py-0.5 w-fit mt-1"
+              style={{ fontSize: 'max(10px, calc(0.625rem * var(--zoom-scale, 1)))' }}
+              title={item.owner}
+            >
+              <User size={8} className="text-current flex-shrink-0" />
+              <span className="font-medium">{getInitials(item.owner)}</span>
             </div>
           )}
         </div>
@@ -967,52 +1047,107 @@ const InteractiveMatrix: React.FC = () => {
         /* Responsive design */
         @media (max-width: 1200px) {
           .matrix-grid {
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: auto;
-            gap: 1.5rem;
+            grid-template-columns: 1fr !important;
+            grid-template-rows: auto !important;
+            gap: 1rem !important;
             height: auto !important;
-            min-height: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
           }
-          
+
           .matrix-grid > div {
-            grid-column: span 1 !important;
+            grid-column: auto !important;
             grid-row: auto !important;
-            min-height: 300px;
+            min-height: 250px !important;
+            row-start: auto !important;
           }
-          
+
           /* Stack quadrants in mobile-friendly order */
           .quadrant-strategic { order: 1; }
           .quadrant-annual { order: 2; }
           .quadrant-process { order: 3; }
           .quadrant-metrics { order: 4; }
           .quadrant-owners { order: 5; }
-          
+
           /* Hide correlation matrix on smaller screens */
-          .matrix-grid > div[class*="col-span-6 row-span-6"] {
+          .matrix-grid > div[class*="col-span-4 row-start-2"]:not([class*="quadrant"]) {
             display: none;
           }
         }
         
         @media (max-width: 768px) {
           .matrix-grid {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto;
-            gap: 1rem;
-            padding: 1rem;
+            gap: 0.75rem !important;
+            padding: 0.75rem !important;
           }
-          
+
           .matrix-grid > div {
-            grid-column: span 1 !important;
-            grid-row: auto !important;
-            min-height: 250px;
-            padding: 1rem !important;
+            min-height: 200px !important;
+            padding: 0.75rem !important;
           }
+        }
+
+        /* Custom zoom slider styles */
+        input[type="range"].slider::-webkit-slider-thumb {
+          appearance: none;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="range"].slider::-moz-range-thumb {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="range"].slider::-webkit-slider-track {
+          background: #e5e7eb;
+          border-radius: 4px;
+        }
+
+        input[type="range"].slider::-moz-range-track {
+          background: #e5e7eb;
+          border-radius: 4px;
+        }
+
+        /* Zoom container scrollbar */
+        .zoom-scroll-container {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+        }
+
+        .zoom-scroll-container::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+
+        .zoom-scroll-container::-webkit-scrollbar-track {
+          background: rgba(241, 245, 249, 0.5);
+          border-radius: 4px;
+        }
+
+        .zoom-scroll-container::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, rgba(148, 163, 184, 0.6) 0%, rgba(148, 163, 184, 0.4) 100%);
+          border-radius: 4px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .zoom-scroll-container::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, rgba(100, 116, 139, 0.7) 0%, rgba(100, 116, 139, 0.5) 100%);
         }
       `}</style>
 
-      <div className={`${isFullscreen ? 'p-10' : 'p-8'} ${isFullscreen ? 'h-full overflow-auto' : ''} bg-gradient-to-br from-gray-50 to-white`}>
+      <div className={`${isFullscreen ? 'p-10' : 'p-6'} ${isFullscreen ? 'h-full overflow-auto' : ''} bg-gradient-to-br from-gray-50 to-white`}>
         {/* Compact Professional Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg shadow-md">
               <Grid className="w-5 h-5 text-white" />
@@ -1023,7 +1158,40 @@ const InteractiveMatrix: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Zoom Controls */}
+            <div className="flex items-center gap-2 bg-white rounded-lg shadow border border-gray-200 px-3 py-1.5">
+              <button
+                onClick={() => setZoomLevel(prev => Math.max(75, prev - 10))}
+                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                title="Zoom Out (Ctrl/Cmd -)"
+                disabled={zoomLevel <= 75}
+              >
+                <ZoomOut className="w-3.5 h-3.5 text-gray-600" />
+              </button>
+              <div className="flex items-center gap-2">
+                <input
+                  type="range"
+                  min="75"
+                  max="150"
+                  step="5"
+                  value={zoomLevel}
+                  onChange={(e) => setZoomLevel(Number(e.target.value))}
+                  className="w-20 h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                  title="Zoom Level"
+                />
+                <span className="text-xs font-medium text-gray-600 w-10 text-center">{zoomLevel}%</span>
+              </div>
+              <button
+                onClick={() => setZoomLevel(prev => Math.min(150, prev + 10))}
+                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                title="Zoom In (Ctrl/Cmd +)"
+                disabled={zoomLevel >= 150}
+              >
+                <ZoomIn className="w-3.5 h-3.5 text-gray-600" />
+              </button>
+            </div>
+
             {/* Fullscreen Toggle */}
             <button
               onClick={toggleFullscreen}
@@ -1039,32 +1207,53 @@ const InteractiveMatrix: React.FC = () => {
           </div>
         </div>
 
-        {/* Compact Professional Matrix Grid */}
-        <div className="relative">
-          <div className="matrix-grid grid grid-cols-12 grid-rows-12 gap-2 rounded-xl p-3 transition-all duration-300"
-               style={{ minHeight: isFullscreen ? '75vh' : '600px', height: 'auto' }}>
+        {/* Ultra-compact Matrix Grid - Viewport Constrained */}
+        <div
+          className="relative overflow-hidden"
+          style={{
+            height: 'calc(100vh - 120px)'
+          }}
+        >
+          <div
+            className="matrix-grid grid grid-cols-12 rounded-xl transition-all duration-300"
+            style={{
+              height: '100%',
+              gridTemplateRows: 'minmax(0, 1.2fr) minmax(0, 2.5fr) minmax(0, 1fr)',
+              transform: `scale(${zoomLevel / 100})`,
+              transformOrigin: 'top left',
+              width: `${100 / (zoomLevel / 100)}%`,
+              gap: `max(6px, calc(0.375rem * ${zoomLevel / 100}))`,
+              padding: `max(8px, calc(0.5rem * ${zoomLevel / 100}))`
+            }}
+          >
             
             {/* Enhanced corner with branding */}
-            <div className="col-span-3 row-span-3 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300 flex items-center justify-center">
+            <div className="col-span-3 row-start-1 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300 flex items-center justify-center" style={{ minHeight: 0 }}>
               <div className="text-center">
-                <div className="text-gray-500 font-bold text-lg mb-1">X-MATRIX</div>
-                <div className="text-gray-400 text-sm font-medium">Strategic Framework</div>
+                <div className="text-gray-500 font-bold text-base mb-1">X-MATRIX</div>
+                <div className="text-gray-400 text-xs font-medium">Strategic Framework</div>
               </div>
             </div>
-            
-            {/* HOW (Top - Processes) - Ultra Compact */}
-            <div className="col-span-6 row-span-3 quadrant-process rounded-lg border p-2 shadow-md flex flex-col transition-all duration-200 hover:shadow-lg">
-              <div className="text-center mb-1.5 flex items-center justify-center gap-1.5">
-                <div className="p-1.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-md">
-                  <Target className="w-3.5 h-3.5 text-white" />
+
+            {/* HOW (Top - Processes) - Row 1 */}
+            <div
+              className="col-span-6 row-start-1 quadrant-process rounded-lg border shadow-md flex flex-col transition-all duration-200 hover:shadow-lg overflow-hidden"
+              style={{ padding: 'max(6px, calc(0.375rem * var(--zoom-scale, 1)))', minHeight: 0 }}
+            >
+              <div className="text-center flex items-center justify-center gap-1 flex-shrink-0" style={{ marginBottom: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}>
+                <div className="p-1 bg-gradient-to-br from-blue-500 to-blue-600 rounded-md">
+                  <Target className="w-3 h-3 text-white" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-blue-800">HOW</div>
-                  <div className="text-[10px] font-medium text-blue-600">Processes</div>
+                  <div className="font-bold text-blue-800" style={{ fontSize: 'max(11px, calc(0.75rem * var(--zoom-scale, 1)))' }}>HOW</div>
+                  <div className="font-medium text-blue-600" style={{ fontSize: 'max(9px, calc(0.625rem * var(--zoom-scale, 1)))' }}>Processes</div>
                 </div>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-3 gap-2 h-full scrollable-section overflow-y-auto">
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="grid grid-cols-3 h-full scrollable-section overflow-y-auto"
+                  style={{ gap: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}
+                >
                   {processes.length === 0 ? (
                     <div className="col-span-3 flex items-center justify-center p-6 text-blue-600 bg-blue-50 rounded-lg border-2 border-dashed border-blue-200">
                       <div className="text-center">
@@ -1081,19 +1270,25 @@ const InteractiveMatrix: React.FC = () => {
               </div>
             </div>
             
-            {/* WHO (Top-right - Responsibilities) - Compact */}
-            <div className="col-span-3 row-span-3 quadrant-owners rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
-              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
-                <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md">
-                  <Users className="w-4 h-4 text-white" />
+            {/* WHO (Top-right - Responsibilities) - Row 1 */}
+            <div
+              className="col-span-3 row-start-1 quadrant-owners rounded-lg border shadow-md flex flex-col transition-all duration-200 hover:shadow-lg overflow-hidden"
+              style={{ padding: 'max(6px, calc(0.375rem * var(--zoom-scale, 1)))', minHeight: 0 }}
+            >
+              <div className="text-center flex items-center justify-center gap-1 flex-shrink-0" style={{ marginBottom: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}>
+                <div className="p-1 bg-gradient-to-br from-purple-500 to-purple-600 rounded-md">
+                  <Users className="w-3 h-3 text-white" />
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-purple-800">WHO</div>
-                  <div className="text-xs font-medium text-purple-600 opacity-80">Resources</div>
+                  <div className="font-bold text-purple-800" style={{ fontSize: 'max(11px, calc(0.75rem * var(--zoom-scale, 1)))' }}>WHO</div>
+                  <div className="font-medium text-purple-600" style={{ fontSize: 'max(9px, calc(0.625rem * var(--zoom-scale, 1)))' }}>Resources</div>
                 </div>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-1 gap-3 h-full scrollable-section overflow-y-auto">
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="grid grid-cols-1 h-full scrollable-section overflow-y-auto"
+                  style={{ gap: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}
+                >
                   {uniqueOwners.length === 0 ? (
                     <div className="flex items-center justify-center p-4 text-purple-600 bg-purple-50 rounded-lg border-2 border-dashed border-purple-200">
                       <div className="text-center">
@@ -1108,19 +1303,25 @@ const InteractiveMatrix: React.FC = () => {
               </div>
             </div>
 
-            {/* HOW FAR (Left - Annual Objectives) - Compact */}
-            <div className="col-span-3 row-span-6 quadrant-annual rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
-              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
-                <div className="p-2 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md">
-                  <TrendingUp className="w-4 h-4 text-white" />
+            {/* HOW FAR (Left - Annual Objectives) - Row 2 */}
+            <div
+              className="col-span-4 row-start-2 quadrant-annual rounded-lg border shadow-md flex flex-col transition-all duration-200 hover:shadow-lg overflow-hidden"
+              style={{ padding: 'max(6px, calc(0.375rem * var(--zoom-scale, 1)))', minHeight: 0 }}
+            >
+              <div className="text-center flex items-center justify-center gap-1 flex-shrink-0" style={{ marginBottom: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}>
+                <div className="p-1 bg-gradient-to-br from-amber-500 to-amber-600 rounded-md">
+                  <TrendingUp className="w-3 h-3 text-white" />
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-amber-800">HOW FAR</div>
-                  <div className="text-xs font-medium text-amber-600 opacity-80">Objectives</div>
+                  <div className="font-bold text-amber-800" style={{ fontSize: 'max(11px, calc(0.75rem * var(--zoom-scale, 1)))' }}>HOW FAR</div>
+                  <div className="font-medium text-amber-600" style={{ fontSize: 'max(9px, calc(0.625rem * var(--zoom-scale, 1)))' }}>Objectives</div>
                 </div>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-1 gap-4 h-full scrollable-section overflow-y-auto">
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="grid grid-cols-1 h-full scrollable-section overflow-y-auto"
+                  style={{ gap: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}
+                >
                   {annualObjectives.length === 0 ? (
                     <div className="flex items-center justify-center p-6 text-amber-600 bg-amber-50 rounded-lg border-2 border-dashed border-amber-200">
                       <div className="text-center">
@@ -1137,8 +1338,8 @@ const InteractiveMatrix: React.FC = () => {
               </div>
             </div>
 
-            {/* Enhanced Correlation Matrix (Center) with professional design and labels */}
-            <div className="col-span-6 row-span-6 relative bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-gray-300 shadow-inner">
+            {/* Enhanced Correlation Matrix (Center) - Compact Design - Row 2 */}
+            <div className="col-span-4 row-start-2 relative bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-gray-300 shadow-inner overflow-hidden" style={{ minHeight: 0 }}>
               {/* Correlation Matrix Title */}
               <div className="absolute top-2 left-2 right-2 text-center">
                 <div className="text-sm font-bold text-gray-700 bg-white/80 rounded-lg px-3 py-1 shadow-sm">
@@ -1167,17 +1368,17 @@ const InteractiveMatrix: React.FC = () => {
                 </div>
               ) : (
                 <>
-                  {/* Traditional Hoshin Kanri Correlation Grid */}
+                  {/* Traditional Hoshin Kanri Correlation Grid - Compact */}
                   <div className="absolute inset-4 top-8">
-                    <div className="h-full grid grid-cols-4 grid-rows-4 gap-1">
+                    <div className="h-full grid grid-cols-4 grid-rows-4 gap-0">
                       {/* Top-left corner indicator */}
-                      <div className="flex items-center justify-center bg-blue-100 border border-blue-200 rounded text-xs font-bold text-blue-700">
+                      <div className="flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-300 text-blue-800" style={{ fontSize: '16px', fontWeight: 700, borderWidth: '1px' }}>
                         ↕
                       </div>
-                      
-                      {/* Column headers */}
+
+                      {/* Column headers - Clear and bold */}
                       {correlationMatrixType.colItems?.map((colItem, colIndex) => (
-                        <div key={`header-${colItem.id}`} className="flex items-center justify-center bg-blue-50 border border-blue-200 rounded text-xs font-semibold text-blue-700 p-1" title={colItem.title}>
+                        <div key={`header-${colItem.id}`} className="flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-300 text-blue-800 p-2" style={{ fontSize: '18px', fontWeight: 700, borderWidth: '1px' }} title={colItem.title}>
                           {colIndex + 1}
                         </div>
                       ))}
@@ -1185,8 +1386,8 @@ const InteractiveMatrix: React.FC = () => {
                       {/* Rows with headers and correlation cells */}
                       {correlationMatrixType.rowItems?.map((rowItem, rowIndex) => (
                         <React.Fragment key={`row-${rowItem.id}`}>
-                          {/* Row header */}
-                          <div className="flex items-center justify-center bg-amber-50 border border-amber-200 rounded text-xs font-semibold text-amber-700" title={rowItem.title}>
+                          {/* Row header - Clear and bold */}
+                          <div className="flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-300 text-amber-800 p-2" style={{ fontSize: '18px', fontWeight: 700, borderWidth: '1px' }} title={rowItem.title}>
                             {String.fromCharCode(65 + rowIndex)}
                           </div>
                           
@@ -1197,30 +1398,45 @@ const InteractiveMatrix: React.FC = () => {
                             const coordinate = `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`;
                             
                             return (
-                              <div 
-                                key={`cell-${rowItem.id}-${colItem.id}`} 
-                                className="flex flex-col items-center justify-center bg-white border border-gray-200 rounded cursor-pointer hover:bg-gray-50 transition-colors relative group"
-                                style={{ 
+                              <div
+                                key={`cell-${rowItem.id}-${colItem.id}`}
+                                className="flex flex-col items-center justify-center bg-white border cursor-pointer hover:bg-gray-50 transition-all relative group"
+                                style={{
                                   backgroundColor: symbol ? `${symbol.color}15` : '#ffffff',
-                                  borderColor: symbol ? symbol.color : '#e5e7eb'
+                                  borderColor: symbol ? symbol.color : '#e5e7eb',
+                                  borderWidth: '1px',
+                                  padding: '4px',
+                                  minHeight: '50px',
+                                  maxHeight: '60px'
                                 }}
                                 title={`${coordinate}: ${rowItem.title} ↔ ${colItem.title}${symbol ? `\n${symbol.meaning}` : '\nNo relationship'}${correlation?.reasoning ? `\n\n${correlation.reasoning}` : ''}`}
                               >
-                                {/* Correlation Symbol */}
-                                <div 
-                                  className="text-xl font-bold"
-                                  style={{ color: symbol?.color || '#9ca3af' }}
+                                {/* Correlation Symbol - Compact */}
+                                <div
+                                  className="font-bold leading-none"
+                                  style={{
+                                    color: symbol?.color || '#9ca3af',
+                                    fontSize: '14px'
+                                  }}
                                 >
                                   {symbol?.symbol || ''}
                                 </div>
-                                
+
                                 {/* Correlation Label */}
-                                <div className="text-xs text-gray-500 mt-1 font-medium">
+                                <div
+                                  className="text-gray-600 font-medium leading-tight text-center mt-1"
+                                  style={{
+                                    fontSize: '9px'
+                                  }}
+                                >
                                   {correlationMatrixType.rowLabel?.toLowerCase() || 'row'}{rowIndex + 1},{correlationMatrixType.colLabel?.toLowerCase() || 'col'}{colIndex + 1}
                                 </div>
-                                
+
                                 {/* Coordinate label on hover */}
-                                <div className="absolute top-0 left-0 text-xs bg-gray-800 text-white px-1 rounded opacity-0 group-hover:opacity-100 transition-opacity -mt-5 -ml-1">
+                                <div
+                                  className="absolute top-1 left-1 bg-gray-800 text-white px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                  style={{ fontSize: '11px', fontWeight: 600 }}
+                                >
                                   {coordinate}
                                 </div>
                               </div>
@@ -1235,19 +1451,25 @@ const InteractiveMatrix: React.FC = () => {
               )}
             </div>
 
-            {/* HOW MUCH (Right - Metrics) - Compact */}
-            <div className="col-span-3 row-span-6 quadrant-metrics rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
-              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
-                <div className="p-2 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg shadow-md">
-                  <BarChart3 className="w-4 h-4 text-white" />
+            {/* HOW MUCH (Right - Metrics) - Row 2 */}
+            <div
+              className="col-span-4 row-start-2 quadrant-metrics rounded-lg border shadow-md flex flex-col transition-all duration-200 hover:shadow-lg overflow-hidden"
+              style={{ padding: 'max(6px, calc(0.375rem * var(--zoom-scale, 1)))', minHeight: 0 }}
+            >
+              <div className="text-center flex items-center justify-center gap-1 flex-shrink-0" style={{ marginBottom: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}>
+                <div className="p-1 bg-gradient-to-br from-pink-500 to-pink-600 rounded-md">
+                  <BarChart3 className="w-3 h-3 text-white" />
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-pink-800">HOW MUCH</div>
-                  <div className="text-xs font-medium text-pink-600 opacity-80">Metrics</div>
+                  <div className="font-bold text-pink-800" style={{ fontSize: 'max(11px, calc(0.75rem * var(--zoom-scale, 1)))' }}>HOW MUCH</div>
+                  <div className="font-medium text-pink-600" style={{ fontSize: 'max(9px, calc(0.625rem * var(--zoom-scale, 1)))' }}>Metrics</div>
                 </div>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-1 gap-4 h-full scrollable-section overflow-y-auto">
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="grid grid-cols-1 h-full scrollable-section overflow-y-auto"
+                  style={{ gap: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}
+                >
                   {metrics.length === 0 ? (
                     <div className="flex items-center justify-center p-6 text-pink-600 bg-pink-50 rounded-lg border-2 border-dashed border-pink-200">
                       <div className="text-center">
@@ -1264,22 +1486,28 @@ const InteractiveMatrix: React.FC = () => {
               </div>
             </div>
 
-            {/* Enhanced bottom-left corner */}
-            <div className="col-span-3 row-span-3 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300"></div>
-            
-            {/* WHAT (Bottom - Strategic Objectives) - Compact */}
-            <div className="col-span-6 row-span-3 quadrant-strategic rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
-              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
-                <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-md">
-                  <Target className="w-4 h-4 text-white" />
+            {/* Enhanced bottom-left corner - Row 3 */}
+            <div className="col-span-3 row-start-3 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300" style={{ minHeight: 0 }}></div>
+
+            {/* WHAT (Bottom - Strategic Objectives) - Row 3 */}
+            <div
+              className="col-span-6 row-start-3 quadrant-strategic rounded-lg border shadow-md flex flex-col transition-all duration-200 hover:shadow-lg overflow-hidden"
+              style={{ padding: 'max(6px, calc(0.375rem * var(--zoom-scale, 1)))', minHeight: 0 }}
+            >
+              <div className="text-center flex items-center justify-center gap-1 flex-shrink-0" style={{ marginBottom: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}>
+                <div className="p-1 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-md">
+                  <Target className="w-3 h-3 text-white" />
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-emerald-800">WHAT</div>
-                  <div className="text-xs font-medium text-emerald-600 opacity-80">Strategic Goals</div>
+                  <div className="font-bold text-emerald-800" style={{ fontSize: 'max(11px, calc(0.75rem * var(--zoom-scale, 1)))' }}>WHAT</div>
+                  <div className="font-medium text-emerald-600" style={{ fontSize: 'max(9px, calc(0.625rem * var(--zoom-scale, 1)))' }}>Strategic Goals</div>
                 </div>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-3 gap-4 h-full scrollable-section overflow-y-auto">
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="grid grid-cols-3 h-full scrollable-section overflow-y-auto"
+                  style={{ gap: 'max(4px, calc(0.25rem * var(--zoom-scale, 1)))' }}
+                >
                   {strategicObjectives.length === 0 ? (
                     <div className="col-span-3 flex items-center justify-center p-6 text-emerald-600 bg-emerald-50 rounded-lg border-2 border-dashed border-emerald-200">
                       <div className="text-center">
@@ -1296,8 +1524,8 @@ const InteractiveMatrix: React.FC = () => {
               </div>
             </div>
             
-            {/* Enhanced bottom-right corner */}
-            <div className="col-span-3 row-span-3 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300"></div>
+            {/* Enhanced bottom-right corner - Row 3 */}
+            <div className="col-span-3 row-start-3 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300" style={{ minHeight: 0 }}></div>
           </div>
 
           {/* Professional X-Lines Overlay */}
@@ -1320,13 +1548,13 @@ const InteractiveMatrix: React.FC = () => {
         </div>
 
         {/* Enhanced Interactive Correlation Legend */}
-        <div className="mt-12 bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-xl">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+        <div className="mt-6 bg-white rounded-2xl border-2 border-gray-200 p-6 shadow-xl">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
             Interactive Correlation Matrix Guide
           </h3>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Interactive Correlation Symbols */}
             <div>
               <h4 className="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">

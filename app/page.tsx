@@ -8,6 +8,7 @@ import XMatrix from '../components/XMatrix';
 import CatchballBoard from '../components/CatchballBoard';
 import ObjectivesManagement from '../components/ObjectivesManagement';
 import ProcessManagement from '../components/ProcessManagement';
+import KanoModel from '../components/KanoModel';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -24,6 +25,8 @@ export default function Home() {
         return <ObjectivesManagement />;
       case 'processes':
         return <ProcessManagement />;
+      case 'kano':
+        return <KanoModel />;
       case 'settings':
         return (
           <div className="p-6">

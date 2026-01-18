@@ -40,7 +40,7 @@ export interface Process {
   owner: string;
   startDate: string;
   endDate: string;
-  status: 'not-started' | 'in-progress' | 'completed' | 'on-hold'| 'planning';
+  status: 'not-started' | 'in-progress' | 'completed' | 'on-hold' | 'planning';
   resources: string[];
   sipoc?: SIPOCData; // Optional SIPOC data for processes
 }
@@ -89,4 +89,51 @@ export interface DatasetOption {
   name: string;
   description: string;
   data: HoshinData;
+}
+
+// Kano Model Types
+
+export type KanoCategory = 'basic' | 'performance' | 'excitement' | 'indifferent' | 'reverse';
+
+export interface KanoFeature {
+  id: string;
+  name: string;
+  description: string;
+  category: KanoCategory;
+  dysfunctionalScore: number;  // -2 to 2 (dislike to like if feature ABSENT)
+  functionalScore: number;     // -2 to 2 (dislike to like if feature PRESENT)
+  importance: number;          // 1-5 priority score
+  satisfactionImpact: number;  // Calculated
+  linkedStrategicObjectiveIds?: string[];
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CompanyKanoAnalysis {
+  id: string;
+  companyName: string;
+  companyType: 'self' | 'competitor';
+  industry: string;
+  features: KanoFeature[];
+  overallScore: number;
+  strengthAreas: string[];
+  weaknessAreas: string[];
+  analysisDate: string;
+}
+
+export interface KanoInsight {
+  type: 'opportunity' | 'threat' | 'strength' | 'weakness';
+  title: string;
+  description: string;
+  relatedFeatures: string[];  // Feature IDs
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface KanoComparison {
+  id: string;
+  selfCompany: CompanyKanoAnalysis;
+  competitors: CompanyKanoAnalysis[];  // 2 competitors
+  insights: KanoInsight[];
+  createdAt: string;
 }

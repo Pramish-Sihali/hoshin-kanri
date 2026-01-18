@@ -1,13 +1,14 @@
 // components/Layout.tsx - Enhanced version with Generate Report functionality
 'use client';
 
+
 import React, { useState } from 'react';
-import { 
-  Home, 
-  Target, 
-  BarChart3, 
-  Users, 
-  MessageSquare, 
+import {
+  Home,
+  Target,
+  BarChart3,
+  Users,
+  MessageSquare,
   Settings,
   Menu,
   X,
@@ -17,7 +18,8 @@ import {
   Trash2,
   Download,
   Loader2,
-  FileText
+  FileText,
+  LineChart
 } from 'lucide-react';
 
 import UserMenu from './UserMenu';
@@ -38,29 +40,29 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
   const [datasetDropdownOpen, setDatasetDropdownOpen] = useState(false);
   const [isLoadingDataset, setIsLoadingDataset] = useState(false);
   const [showReportGenerator, setShowReportGenerator] = useState(false);
-  
-  const { 
-    loadDataset, 
-    clearAllData, 
-    hasDummyData, 
-    availableDatasets, 
+
+  const {
+    loadDataset,
+    clearAllData,
+    hasDummyData,
+    availableDatasets,
     currentDatasetId,
-    getCurrentDatasetName 
+    getCurrentDatasetName
   } = useHoshinStore();
-  
+
   const handleDatasetSelect = async (datasetId: string) => {
     setIsLoadingDataset(true);
     setDatasetDropdownOpen(false);
-    
+
     // Add a small delay to show loading state
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     if (datasetId === 'clear') {
       clearAllData();
     } else {
       loadDataset(datasetId);
     }
-    
+
     setIsLoadingDataset(false);
   };
 
@@ -72,7 +74,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
       return 'Load Demo Data';
     }
     const datasetName = getCurrentDatasetName();
-    return datasetName ? `${datasetName}` : 'Custom Data';
+    return datasetName ? `${datasetName} ` : 'Custom Data';
   };
 
   const getCurrentButtonIcon = () => {
@@ -90,6 +92,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
     { name: 'X-Matrix', href: 'matrix', icon: Target },
     { name: 'Catchball', href: 'catchball', icon: MessageSquare },
     { name: 'Objectives', href: 'objectives', icon: BarChart3 },
+    { name: 'Kano Model', href: 'kano', icon: LineChart },
     { name: 'Processes', href: 'processes', icon: Users },
     { name: 'Settings', href: 'settings', icon: Settings },
   ];
@@ -108,9 +111,9 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
 
       {/* Mobile menu */}
       <div className={`fixed inset-0 flex z-40 md:hidden ${sidebarOpen ? '' : 'pointer-events-none'}`}>
-        <div className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm ${sidebarOpen ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`} 
-             onClick={() => toggleSidebar()} />
-        
+        <div className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm ${sidebarOpen ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+          onClick={() => toggleSidebar()} />
+
         <div className={`relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-2xl ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
@@ -121,7 +124,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
               <X className="h-6 w-6 text-white" />
             </button>
           </div>
-          
+
           <div className="flex-1 h-0 pt-4 pb-4 overflow-y-auto">
             <div className="flex-shrink-0 flex items-center px-6 mb-6">
               <div className="flex items-center gap-3">
@@ -136,7 +139,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                 </div>
               </div>
             </div>
-            
+
             <nav className="px-4 space-y-2 flex-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
@@ -147,16 +150,14 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                       onPageChange(item.href);
                       toggleSidebar();
                     }}
-                    className={`group flex items-center px-4 py-3 text-sm font-medium rounded-xl w-full text-left transition-all duration-200 ${
-                      currentPage === item.href
-                        ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg'
-                        : 'text-slate-700 hover:bg-slate-100 hover:text-teal-700'
-                    }`}
+                    className={`group flex items-center px-4 py-3 text-sm font-medium rounded-xl w-full text-left transition-all duration-200 ${currentPage === item.href
+                      ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg'
+                      : 'text-slate-700 hover:bg-slate-100 hover:text-teal-700'
+                      }`}
                     disabled={isLoadingDataset}
                   >
-                    <Icon className={`mr-3 h-5 w-5 transition-colors ${
-                      currentPage === item.href ? 'text-white' : 'text-slate-500 group-hover:text-teal-600'
-                    }`} />
+                    <Icon className={`mr-3 h-5 w-5 transition-colors ${currentPage === item.href ? 'text-white' : 'text-slate-500 group-hover:text-teal-600'
+                      }`} />
                     {item.name}
                   </button>
                 );
@@ -185,7 +186,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                 )}
               </div>
             </div>
-            
+
             <nav className={`flex-1 space-y-2 ${sidebarOpen ? 'px-4' : 'px-2'}`}>
               {navigation.map((item) => {
                 const Icon = item.icon;
@@ -193,29 +194,26 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                   <button
                     key={item.name}
                     onClick={() => onPageChange(item.href)}
-                    className={`group flex items-center ${sidebarOpen ? 'px-4' : 'px-2'} py-3 text-sm font-medium rounded-xl w-full transition-all duration-200 ${
-                      currentPage === item.href
-                        ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/25'
-                        : 'text-slate-700 hover:bg-slate-50 hover:text-teal-700'
-                    } ${sidebarOpen ? 'text-left' : 'justify-center'}`}
+                    className={`group flex items-center ${sidebarOpen ? 'px-4' : 'px-2'} py-3 text-sm font-medium rounded-xl w-full transition-all duration-200 ${currentPage === item.href
+                      ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/25'
+                      : 'text-slate-700 hover:bg-slate-50 hover:text-teal-700'
+                      } ${sidebarOpen ? 'text-left' : 'justify-center'}`}
                     disabled={isLoadingDataset}
                     title={!sidebarOpen ? item.name : undefined}
                   >
-                    <Icon className={`${sidebarOpen ? 'mr-3' : ''} h-5 w-5 transition-colors ${
-                      currentPage === item.href ? 'text-white' : 'text-slate-500 group-hover:text-teal-600'
-                    }`} />
+                    <Icon className={`${sidebarOpen ? 'mr-3' : ''} h-5 w-5 transition-colors ${currentPage === item.href ? 'text-white' : 'text-slate-500 group-hover:text-teal-600'
+                      }`} />
                     {sidebarOpen && item.name}
                   </button>
                 );
               })}
-              
+
               {/* Sidebar Collapse Toggle */}
               <div className="pt-4 mt-4 border-t border-slate-200">
                 <button
                   onClick={toggleSidebar}
-                  className={`group flex items-center ${sidebarOpen ? 'px-4' : 'px-2'} py-3 text-sm font-medium rounded-xl w-full transition-all duration-200 text-slate-600 hover:bg-slate-50 hover:text-slate-700 ${
-                    sidebarOpen ? 'text-left' : 'justify-center'
-                  }`}
+                  className={`group flex items-center ${sidebarOpen ? 'px-4' : 'px-2'} py-3 text-sm font-medium rounded-xl w-full transition-all duration-200 text-slate-600 hover:bg-slate-50 hover:text-slate-700 ${sidebarOpen ? 'text-left' : 'justify-center'
+                    }`}
                   title={sidebarOpen ? "Toggle Sidebar" : "Expand Sidebar"}
                 >
                   <Menu className={`${sidebarOpen ? 'mr-3' : ''} h-5 w-5 text-slate-500 group-hover:text-slate-600`} />
@@ -239,22 +237,21 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
             >
               <Menu className="h-6 w-6" />
             </button>
-            
+
             <div className="flex-1 md:flex-none">
               {/* Page title or breadcrumbs could go here */}
             </div>
-            
+
             {/* Actions: Generate Report, Dataset Dropdown, and User Menu */}
             <div className="flex items-center gap-3">
               {/* Generate Report Button - Always show but disabled when no data */}
               <Button
                 onClick={() => setShowReportGenerator(true)}
                 disabled={isLoadingDataset || !hasDummyData()}
-                className={`shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl font-medium ${
-                  hasDummyData() 
-                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white' 
-                    : 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                }`}
+                className={`shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl font-medium ${hasDummyData()
+                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white'
+                  : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                  }`}
                 title={!hasDummyData() ? 'Load demo data first to generate reports' : 'Generate executive report'}
               >
                 <FileText className="w-4 h-4 mr-2" />
@@ -268,14 +265,13 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                   onClick={() => !isLoadingDataset && setDatasetDropdownOpen(!datasetDropdownOpen)}
                   variant="outline"
                   disabled={isLoadingDataset}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 border-slate-200 hover:bg-slate-50 ${
-                    hasDummyData() 
-                      ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 text-blue-700' 
-                      : 'text-slate-700'
-                  } ${isLoadingDataset ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 border-slate-200 hover:bg-slate-50 ${hasDummyData()
+                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 text-blue-700'
+                    : 'text-slate-700'
+                    } ${isLoadingDataset ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
-                  {React.createElement(getCurrentButtonIcon(), { 
-                    className: `w-4 h-4 ${isLoadingDataset ? 'animate-spin' : ''}` 
+                  {React.createElement(getCurrentButtonIcon(), {
+                    className: `w-4 h-4 ${isLoadingDataset ? 'animate-spin' : ''}`
                   })}
                   <span className="hidden sm:inline max-w-48 truncate">
                     {getCurrentButtonText()}
@@ -300,7 +296,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                         <h3 className="text-sm font-semibold text-slate-800">Demo Datasets</h3>
                         <p className="text-xs text-slate-500 mt-1">Choose a dataset to explore the application</p>
                       </div>
-                      
+
                       {/* Clear Data Option */}
                       {hasDummyData() && (
                         <>
@@ -319,33 +315,29 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                           <div className="border-t border-slate-100"></div>
                         </>
                       )}
-                      
+
                       {/* Dataset Options */}
                       <div className="py-1 max-h-96 overflow-y-auto">
                         {availableDatasets.map((dataset) => (
                           <button
                             key={dataset.id}
                             onClick={() => handleDatasetSelect(dataset.id)}
-                            className={`w-full px-4 py-3 text-left hover:bg-slate-50 transition-colors group flex items-start gap-3 ${
-                              currentDatasetId === dataset.id ? 'bg-teal-50 border-r-2 border-teal-500' : ''
-                            }`}
+                            className={`w-full px-4 py-3 text-left hover:bg-slate-50 transition-colors group flex items-start gap-3 ${currentDatasetId === dataset.id ? 'bg-teal-50 border-r-2 border-teal-500' : ''
+                              }`}
                           >
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${
-                              currentDatasetId === dataset.id 
-                                ? 'bg-teal-100 text-teal-600' 
-                                : 'bg-slate-100 group-hover:bg-slate-200 text-slate-600'
-                            }`}>
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${currentDatasetId === dataset.id
+                              ? 'bg-teal-100 text-teal-600'
+                              : 'bg-slate-100 group-hover:bg-slate-200 text-slate-600'
+                              }`}>
                               <Database className="w-4 h-4" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className={`text-sm font-medium truncate ${
-                                currentDatasetId === dataset.id ? 'text-teal-700' : 'text-slate-800'
-                              }`}>
+                              <div className={`text-sm font-medium truncate ${currentDatasetId === dataset.id ? 'text-teal-700' : 'text-slate-800'
+                                }`}>
                                 {dataset.name}
                               </div>
-                              <div className={`text-xs mt-1 line-clamp-2 ${
-                                currentDatasetId === dataset.id ? 'text-teal-600' : 'text-slate-500'
-                              }`}>
+                              <div className={`text-xs mt-1 line-clamp-2 ${currentDatasetId === dataset.id ? 'text-teal-600' : 'text-slate-500'
+                                }`}>
                                 {dataset.description}
                               </div>
                             </div>
@@ -355,7 +347,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                           </button>
                         ))}
                       </div>
-                      
+
                       {/* Dropdown Footer */}
                       <div className="px-4 py-3 bg-slate-50 border-t border-slate-200">
                         <p className="text-xs text-slate-500">
@@ -366,22 +358,22 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                   </>
                 )}
               </div>
-              
+
               {/* User Menu Component */}
               <UserMenu />
             </div>
           </div>
         </div>
-        
+
         <main className="flex-1 bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
           {children}
         </main>
       </div>
 
       {/* Executive Report Generator Modal */}
-      <ExecutiveReportGenerator 
-        open={showReportGenerator} 
-        onOpenChange={setShowReportGenerator} 
+      <ExecutiveReportGenerator
+        open={showReportGenerator}
+        onOpenChange={setShowReportGenerator}
       />
     </div>
   );

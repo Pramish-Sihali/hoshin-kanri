@@ -16,9 +16,7 @@ import {
   BarChart3,
   Users,
   X,
-  Zap,
-  Sparkles,
-  Bot
+  Zap
 } from 'lucide-react';
 
 interface ExecutiveReportProps {
@@ -40,8 +38,6 @@ interface CriticalIssue {
 const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpenChange }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [reportGenerated, setReportGenerated] = useState(false);
-  const [aiSummary, setAiSummary] = useState<string | null>(null);
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const {
     strategicObjectives,
@@ -58,42 +54,6 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
     await new Promise(resolve => setTimeout(resolve, 2000));
     setReportGenerated(true);
     setIsGenerating(false);
-  };
-
-  const generateAiInsights = async () => {
-    setIsAiLoading(true);
-    try {
-      const issues = analyzeCriticalIssues();
-      const kpis = analyzeKPIPerformance();
-
-      const payload = {
-        datasetName: getCurrentDatasetName(),
-        objectives: [
-          ...strategicObjectives.filter(o => o.status === 'at-risk' || o.priority === 'high'),
-          ...annualObjectives.filter(o => o.status === 'at-risk')
-        ],
-        metrics: kpis.filter(k => k.performance < 80),
-        issues: issues.filter(i => i.severity === 'high')
-      };
-
-      const response = await fetch('/api/ai/generate-summary', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate insights');
-      }
-
-      const data = await response.json();
-      setAiSummary(data.summary);
-    } catch (error) {
-      console.error('Error generating AI insights:', error);
-      // Fallback or error toast could act here
-    } finally {
-      setIsAiLoading(false);
-    }
   };
 
   const downloadReport = () => {
@@ -442,53 +402,6 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
             </div>
 
             <div className="p-6 space-y-8">
-
-              {/* AI Insights Section */}
-              <div className="bg-gradient-to-br from-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
-                {/* Background Decor */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-yellow-300" />
-                      AI Strategic Analysis
-                    </h3>
-                    {!aiSummary && (
-                      <Button
-                        onClick={generateAiInsights}
-                        disabled={isAiLoading}
-                        className="bg-indigo-500 hover:bg-indigo-600 text-white border-0"
-                        size="sm"
-                      >
-                        {isAiLoading ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2"></div>
-                            Analyzing...
-                          </>
-                        ) : (
-                          <>
-                            <Bot className="w-4 h-4 mr-2" />
-                            Generate Insights
-                          </>
-                        )}
-                      </Button>
-                    )}
-                  </div>
-
-                  {aiSummary ? (
-                    <div
-                      className="prose prose-invert max-w-none bg-white/5 rounded-xl p-6 backdrop-blur-sm"
-                      dangerouslySetInnerHTML={{ __html: aiSummary }}
-                    />
-                  ) : (
-                    <div className="text-indigo-200 text-sm bg-white/5 rounded-xl p-6 border border-white/10 text-center">
-                      <Bot className="w-8 h-8 mx-auto mb-3 opacity-50" />
-                      <p>Click "Generate Insights" to utilize AWS Bedrock AI to analyze your performance data, seek root causes for critical issues, and provide executive recommendations.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
 
               {/* Executive Summary */}
               <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-6 border border-slate-200">

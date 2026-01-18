@@ -16,7 +16,7 @@ import { KanoComparisonChart } from './kano/KanoComparisonChart';
 import { KanoInsightsPanel } from './kano/KanoInsightsPanel';
 
 const KanoModel: React.FC = () => {
-    const { kanoAnalyses, activeComparison, addKanoAnalysis, updateKanoAnalysis, deleteKanoAnalysis, addFeatureToAnalysis, updateFeature, deleteFeature, setActiveComparison } = useHoshinStore();
+    const { kanoAnalyses, activeComparison, addKanoAnalysis, updateKanoAnalysis, deleteKanoAnalysis, addFeatureToAnalysis, updateFeature, deleteFeature, setActiveComparison, loadDefaultKanoData, hasKanoData } = useHoshinStore();
 
     const [activeTab, setActiveTab] = useState('kano-analysis');
     const [selectedAnalysisId, setSelectedAnalysisId] = useState<string>('');
@@ -35,6 +35,13 @@ const KanoModel: React.FC = () => {
     const selectedAnalysis = useMemo(() =>
         kanoAnalyses.find(a => a.id === selectedAnalysisId) || null
         , [selectedAnalysisId, kanoAnalyses]);
+
+    // Auto-load default Kano data if empty
+    useEffect(() => {
+        if (!hasKanoData()) {
+            loadDefaultKanoData();
+        }
+    }, [hasKanoData, loadDefaultKanoData]);
 
     // Set default selection if exists
     useEffect(() => {

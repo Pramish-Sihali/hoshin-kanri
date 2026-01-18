@@ -76,13 +76,24 @@ const InteractiveMatrix: React.FC = () => {
     }
   }, [hasDummyData, loadDataset]);
 
-  // Get unique owners for WHO section
+  // Get unique owners for WHO section with their responsibilities
   const uniqueOwners = React.useMemo(() => {
-    const owners = new Set<string>();
+    const ownerMap = new Map<string, { name: string; count: number; items: string[] }>();
+
     [...strategicObjectives, ...annualObjectives, ...processes, ...metrics].forEach(item => {
-      if ('owner' in item && item.owner) owners.add(item.owner);
+      if ('owner' in item && item.owner) {
+        const existing = ownerMap.get(item.owner);
+        const itemName = 'title' in item ? item.title : 'name' in item ? item.name : '';
+        if (existing) {
+          existing.count++;
+          existing.items.push(itemName);
+        } else {
+          ownerMap.set(item.owner, { name: item.owner, count: 1, items: [itemName] });
+        }
+      }
     });
-    return Array.from(owners).slice(0, 6);
+
+    return Array.from(ownerMap.values()).slice(0, 6);
   }, [strategicObjectives, annualObjectives, processes, metrics]);
 
   // State for correlation matrix type
@@ -443,69 +454,81 @@ const InteractiveMatrix: React.FC = () => {
     return typeof item === 'object' && item !== null;
   };
 
-  // Enhanced render clickable item with professional styling
+  // Render owner card with responsibilities
+  const renderOwnerCard = (owner: { name: string; count: number; items: string[] }) => {
+    return (
+      <div
+        key={owner.name}
+        className="bg-gradient-to-br from-purple-50 to-purple-100 text-purple-900 border-purple-400 p-2 rounded-md border h-full flex flex-col cursor-pointer transition-all duration-150 group relative overflow-hidden hover:shadow-sm hover:scale-[1.005] hover:border-opacity-70"
+        onClick={() => handleCardClick({ id: owner.name, title: owner.name, description: `Responsible for ${owner.count} items`, owner: owner.name, items: owner.items } as any)}
+        style={{ minHeight: '70px' }}
+      >
+        <div className="relative z-10 flex-1 flex flex-col">
+          {/* Owner name */}
+          <div className="font-semibold leading-tight mb-1 flex items-center gap-1">
+            <User size={12} className="text-purple-600" />
+            <div className="text-xs truncate" title={owner.name}>
+              {owner.name}
+            </div>
+          </div>
+
+          {/* Responsibilities count */}
+          <div className="text-[10px] opacity-70 mt-auto">
+            {owner.count} {owner.count === 1 ? 'item' : 'items'}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Compact minimalist card rendering
   const renderClickableItem = (
-    item: MatrixItem, 
-    bgColor: string, 
+    item: MatrixItem,
+    bgColor: string,
     textColor: string = 'text-gray-800',
     borderColor: string = 'border-gray-200'
   ) => {
     const itemId = isStringItem(item) ? item : item.id;
     const displayText = isStringItem(item) ? item : (item.title || item.name || '');
     const isHighlighted = highlightedCards.has(itemId);
-    
+
     return (
-      <div 
+      <div
         key={itemId}
-        className={`${bgColor} ${textColor} ${borderColor} p-2 rounded-lg border h-full flex flex-col cursor-pointer transition-all duration-200 group relative overflow-hidden ${
-          isHighlighted 
-            ? 'scale-[1.02] shadow-lg ring-1 ring-blue-400/50 z-20 transform' 
-            : 'hover:shadow-md hover:scale-[1.01] hover:border-opacity-60'
+        className={`${bgColor} ${textColor} ${borderColor} p-1.5 rounded-md border h-full flex flex-col cursor-pointer transition-all duration-150 group relative overflow-hidden ${
+          isHighlighted
+            ? 'scale-[1.01] shadow-md ring-1 ring-blue-400/50 z-20 transform'
+            : 'hover:shadow-sm hover:scale-[1.005] hover:border-opacity-70'
         }`}
         onClick={() => handleCardClick(item)}
-        style={{ minHeight: '80px' }}
+        style={{ minHeight: '60px' }}
       >
-        {/* Professional gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        
         <div className="relative z-10 flex-1 flex flex-col">
-          {/* Compact title */}
+          {/* Readable title */}
           <div className="font-semibold leading-tight mb-1 flex-shrink-0">
-            <div className="line-clamp-1 break-words text-xs" title={displayText}>
+            <div className="line-clamp-2 break-words text-xs" title={displayText}>
               {displayText}
             </div>
           </div>
-          
-          {/* Compact description */}
-          {isObjectItem(item) && item.description && (
-            <div className="text-xs opacity-60 font-normal leading-tight mb-1 flex-1">
-              <div className="line-clamp-1 break-words" title={item.description}>
-                {item.description.length > 40 ? item.description.substring(0, 40) + '...' : item.description}
-              </div>
-            </div>
-          )}
-          
-          {/* Compact progress bar */}
+
+          {/* Progress indicator */}
           {isObjectItem(item) && item.progress !== undefined && (
             <div className="mt-auto mb-1">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-xs opacity-60">Progress</span>
-                <span className="text-xs font-semibold">{item.progress}%</span>
-              </div>
-              <div className="w-full bg-white/60 rounded-full h-1.5">
-                <div 
-                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-1.5 rounded-full transition-all duration-300" 
+              <div className="w-full bg-white/50 rounded-full h-1.5">
+                <div
+                  className="bg-current h-1.5 rounded-full transition-all duration-300 opacity-80"
                   style={{ width: `${item.progress}%` }}
                 ></div>
               </div>
+              <span className="text-[10px] opacity-60 mt-0.5">{item.progress}%</span>
             </div>
           )}
-          
-          {/* Compact owner */}
+
+          {/* Owner indicator */}
           {isObjectItem(item) && item.owner && (
-            <div className="text-xs mt-auto pt-1 border-t border-white/20 flex items-center gap-1 flex-shrink-0 opacity-70">
+            <div className="text-[10px] mt-0.5 flex items-center gap-1 flex-shrink-0 opacity-60">
               <User size={10} className="text-current" />
-              <span className="truncate text-xs" title={item.owner}>
+              <span className="truncate" title={item.owner}>
                 {item.owner}
               </span>
             </div>
@@ -517,7 +540,7 @@ const InteractiveMatrix: React.FC = () => {
 
   // Clean and organized Modal Component
   const renderModal = () => {
-    if (!selectedCard) return null;
+    if (!selectedCard || !isMounted) return null;
 
     const item = selectedCard;
     const isString = isStringItem(item);
@@ -531,8 +554,8 @@ const InteractiveMatrix: React.FC = () => {
     const hasResources = !isString && item.resources && item.resources.length > 0;
     const hasPriority = !isString && item.priority;
 
-    return (
-      <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-[10000] p-6">
+    const modalContent = (
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[99999] p-4 md:p-6" style={{ zIndex: 99999 }}>
         <div 
           ref={modalRef}
           className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] max-w-5xl w-full max-h-[90vh] overflow-hidden border border-white/20"
@@ -757,6 +780,24 @@ const InteractiveMatrix: React.FC = () => {
                   </div>
                 )}
 
+                {/* Owner Responsibilities List */}
+                {!isString && (item as any).items && (item as any).items.length > 0 && (
+                  <div className="bg-gradient-to-br from-purple-50/80 to-indigo-50/80 backdrop-blur-sm p-6 rounded-xl border border-purple-200/50">
+                    <h4 className="font-semibold text-purple-800 mb-4 text-lg flex items-center gap-2">
+                      <Users className="w-5 h-5" />
+                      Responsibilities
+                    </h4>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {(item as any).items.slice(0, 10).map((itemName: string, idx: number) => (
+                        <div key={idx} className="flex items-start gap-2 text-sm text-purple-700">
+                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"></div>
+                          <span>{itemName}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Connections Footer */}
                 {highlightedCards.size > 0 && (
                   <div className="bg-gradient-to-r from-gray-50/80 to-blue-50/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 border-dashed">
@@ -769,7 +810,7 @@ const InteractiveMatrix: React.FC = () => {
                     </p>
                   </div>
                 )}
-                
+
               </div>
             ) : (
               // Simple view for string items
@@ -783,6 +824,9 @@ const InteractiveMatrix: React.FC = () => {
         </div>
       </div>
     );
+
+    // Use portal to render modal at body level with highest z-index
+    return createPortal(modalContent, document.body);
   };
 
   // Enhanced Matrix Content Component
@@ -995,10 +1039,10 @@ const InteractiveMatrix: React.FC = () => {
           </div>
         </div>
 
-        {/* Enhanced Professional Matrix Grid */}
+        {/* Compact Professional Matrix Grid */}
         <div className="relative">
-          <div className="matrix-grid grid grid-cols-12 grid-rows-12 gap-4 rounded-2xl p-4 transition-all duration-300" 
-               style={{ minHeight: isFullscreen ? '80vh' : '800px', height: 'auto' }}>
+          <div className="matrix-grid grid grid-cols-12 grid-rows-12 gap-2 rounded-xl p-3 transition-all duration-300"
+               style={{ minHeight: isFullscreen ? '75vh' : '600px', height: 'auto' }}>
             
             {/* Enhanced corner with branding */}
             <div className="col-span-3 row-span-3 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl border-2 border-gray-300 flex items-center justify-center">
@@ -1008,19 +1052,19 @@ const InteractiveMatrix: React.FC = () => {
               </div>
             </div>
             
-            {/* HOW (Top - Processes) - Compact */}
-            <div className="col-span-6 row-span-3 quadrant-process rounded-lg border-2 p-3 shadow-lg flex flex-col transition-all duration-300 hover:shadow-xl">
-              <div className="text-center font-bold text-gray-800 mb-2 text-sm flex items-center justify-center gap-2">
-                <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
-                  <Target className="w-4 h-4 text-white" />
+            {/* HOW (Top - Processes) - Ultra Compact */}
+            <div className="col-span-6 row-span-3 quadrant-process rounded-lg border p-2 shadow-md flex flex-col transition-all duration-200 hover:shadow-lg">
+              <div className="text-center mb-1.5 flex items-center justify-center gap-1.5">
+                <div className="p-1.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-md">
+                  <Target className="w-3.5 h-3.5 text-white" />
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-blue-800">HOW</div>
-                  <div className="text-xs font-medium text-blue-600 opacity-80">Key Processes</div>
+                  <div className="text-sm font-bold text-blue-800">HOW</div>
+                  <div className="text-[10px] font-medium text-blue-600">Processes</div>
                 </div>
               </div>
               <div className="flex-1 overflow-hidden">
-                <div className="grid grid-cols-3 gap-4 h-full scrollable-section overflow-y-auto">
+                <div className="grid grid-cols-3 gap-2 h-full scrollable-section overflow-y-auto">
                   {processes.length === 0 ? (
                     <div className="col-span-3 flex items-center justify-center p-6 text-blue-600 bg-blue-50 rounded-lg border-2 border-dashed border-blue-200">
                       <div className="text-center">
@@ -1058,9 +1102,7 @@ const InteractiveMatrix: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    uniqueOwners.slice(0, 6).map(owner => 
-                      renderClickableItem(owner, 'bg-gradient-to-br from-purple-50 to-purple-100', 'text-purple-900', 'border-purple-400')
-                    )
+                    uniqueOwners.map(owner => renderOwnerCard(owner))
                   )}
                 </div>
               </div>

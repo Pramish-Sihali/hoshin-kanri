@@ -1,6 +1,6 @@
 // store/hoshinStore.ts
 import { HoshinData, StrategicObjective, AnnualObjective, Process, Metric, CatchballItem, CompanyKanoAnalysis, KanoComparison, KanoFeature, KanoInsight, KanoCategory } from '@/types/hoshin';
-import { availableDatasets, DatasetOption } from '@/lib/dummyData';
+import { availableDatasets, DatasetOption, allKanoAnalyses } from '@/lib/dummyData';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -51,6 +51,10 @@ interface HoshinStore extends HoshinData {
   // Kano Comparison methods
   setActiveComparison: (comparison: KanoComparison | null) => void;
 
+  // Kano data initialization
+  loadDefaultKanoData: () => void;
+  hasKanoData: () => boolean;
+
   // Bulk operations
   loadDummyData: (data: HoshinData) => void; // Legacy support
   clearAllData: () => void;
@@ -75,13 +79,18 @@ export const useHoshinStore = create<HoshinStore>()(
       loadDataset: (datasetId: string) => {
         const dataset = availableDatasets.find((d: { id: string; }) => d.id === datasetId);
         if (dataset) {
+          // Also load Kano data if not already present
+          const state = get();
+          const shouldLoadKano = state.kanoAnalyses.length === 0;
+
           set(() => ({
             strategicObjectives: [...dataset.data.strategicObjectives],
             annualObjectives: [...dataset.data.annualObjectives],
             processes: [...dataset.data.processes],
             metrics: [...dataset.data.metrics],
             catchball: [...dataset.data.catchball],
-            currentDatasetId: datasetId
+            currentDatasetId: datasetId,
+            ...(shouldLoadKano ? { kanoAnalyses: [...allKanoAnalyses] } : {})
           }));
         }
       },
@@ -300,6 +309,18 @@ export const useHoshinStore = create<HoshinStore>()(
         })),
 
       setActiveComparison: (comparison) => set({ activeComparison: comparison }),
+
+      // Kano data initialization
+      loadDefaultKanoData: () => {
+        set(() => ({
+          kanoAnalyses: [...allKanoAnalyses]
+        }));
+      },
+
+      hasKanoData: () => {
+        const state = get();
+        return state.kanoAnalyses.length > 0;
+      },
 
       // Bulk operations
       loadDummyData: (data) =>

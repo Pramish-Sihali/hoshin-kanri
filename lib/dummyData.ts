@@ -1,43 +1,55 @@
 // lib/dummyData.ts
-import { StrategicObjective, AnnualObjective, Process, Metric, CatchballItem, HoshinData } from '../types/hoshin';
+import { StrategicObjective, AnnualObjective, Process, Metric, CatchballItem, HoshinData, CompanyKanoAnalysis, KanoFeature } from '../types/hoshin';
 
-// CEO - Strategic Vision & Governance (Level 1)
+// =============================================================================
+// CEO - Strategic Vision & Capital Pathways (Level 1)
+// Breakthrough Objectives (5-Year) + Capital-Contingent Strategy
+// =============================================================================
 export const ceoData: HoshinData = {
   strategicObjectives: [
     {
-      id: 'ceo-strategic-1',
-      title: 'Transform DHGO from Liability to Strategic Asset',
-      description: 'Complete transformation of DHGO platform from current failing state to core strategic asset driving growth, customer retention, and revenue diversification for DishHome.',
-      targetYear: 2027,
+      id: 'breakthrough-1',
+      title: 'Restore EBITDA Quality ≥20% and Cash EBITDA ≥15%',
+      description: 'Valuation credibility precedes any IPO or M&A. Achieve sustainable earnings quality through disciplined cost management, revenue optimization, and capital-aware execution.',
+      targetYear: 2030,
       owner: 'Chief Executive Officer',
       status: 'in-progress',
       priority: 'high'
     },
     {
-      id: 'ceo-strategic-2',
-      title: 'Achieve 2 Million Customer Milestone',
-      description: 'Execute comprehensive customer acquisition strategy to reach 2 million active DHGO users within 12 months through systematic conversion of existing base and market expansion.',
-      targetYear: 2025,
+      id: 'breakthrough-2',
+      title: 'Build Enterprise + VAS to ≥30% of EBITDA',
+      description: 'Create structural hedge against price-led consumer wars through high-ARPU, SLA-backed enterprise revenues with predictable cash flows.',
+      targetYear: 2030,
       owner: 'Chief Executive Officer',
       status: 'in-progress',
       priority: 'high'
     },
     {
-      id: 'ceo-strategic-3',
-      title: 'Return to Sustainable Profitability',
-      description: 'Achieve positive operating margin and sustainable financial performance through DHGO revenue growth, cost optimization, and strategic business model transformation.',
-      targetYear: 2026,
-      owner: 'Chief Executive Officer',
-      status: 'at-risk',
-      priority: 'high'
-    },
-    {
-      id: 'ceo-strategic-4',
-      title: 'Establish Digital Market Leadership',
-      description: 'Position DishHome as Nepal\'s leading digital entertainment and connectivity provider through integrated DTH, ISP, and OTT service excellence.',
+      id: 'breakthrough-3',
+      title: 'Achieve M&A-Ready Operating Architecture',
+      description: 'Enable consolidation without value leakage through standardized processes, unified systems, and integration-ready infrastructure.',
       targetYear: 2028,
       owner: 'Chief Executive Officer',
       status: 'planning',
+      priority: 'high'
+    },
+    {
+      id: 'breakthrough-4',
+      title: 'Establish OTT as Churn-Defence Ecosystem Lever',
+      description: 'Position OTT as ARPU defense and bundling pillar - not a cost center. Prevent ARPU erosion while avoiding content traps through partner-first aggregator strategy.',
+      targetYear: 2028,
+      owner: 'Chief Executive Officer',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'breakthrough-5',
+      title: 'Create Capital-Contingent Strategic Freedom',
+      description: 'Strategy must survive both IPO and non-IPO outcomes. Pre-design capital pathways: IPO-led consolidator (Path A) vs Strategic Merger (Path B).',
+      targetYear: 2027,
+      owner: 'Chief Executive Officer',
+      status: 'at-risk',
       priority: 'high'
     }
   ],
@@ -45,58 +57,76 @@ export const ceoData: HoshinData = {
     {
       id: 'ceo-annual-1',
       title: 'Execute Strategic Transformation Roadmap',
-      description: 'Implement comprehensive strategic transformation plan with clear milestones, resource allocation, and performance tracking across all business units.',
-      strategicObjectiveIds: ['ceo-strategic-1', 'ceo-strategic-4'],
+      description: 'Implement PMO-led transformation with clear milestones across all Four Pillars. Establish control layer as foundation for IPO and consolidation readiness.',
+      strategicObjectiveIds: ['breakthrough-1', 'breakthrough-3'],
       targetDate: '2025-12-31',
       owner: 'Chief Executive Officer',
       status: 'in-progress',
-      progress: 65
+      progress: 45
     },
     {
       id: 'ceo-annual-2',
-      title: 'Achieve 1.2M Customer Conversion from Existing Base',
-      description: 'Convert 60% of existing DTH and ISP customers to DHGO platform through aggressive bundling and value-added service strategies.',
-      strategicObjectiveIds: ['ceo-strategic-2'],
-      targetDate: '2025-09-30',
+      title: 'Achieve M&A/IPO Decision Readiness Gate (Year 2 H2)',
+      description: 'Complete pre-integration readiness assessment for Subisu/TechMinds (Path A) or WorldLink merger fast-track (Path B). Capital pathway activation.',
+      strategicObjectiveIds: ['breakthrough-5', 'breakthrough-3'],
+      targetDate: '2026-12-31',
       owner: 'Chief Executive Officer',
-      status: 'in-progress',
-      progress: 58
+      status: 'planning',
+      progress: 15
     }
   ],
   processes: [
     {
       id: 'ceo-process-1',
-      title: 'Strategic Transformation Leadership',
-      description: 'Executive leadership process for driving organizational transformation with clear accountability and milestone tracking.',
+      title: 'Strategic Transformation Leadership & PMO',
+      description: 'Executive leadership process for driving organizational transformation with PMO-led governance, workstreams, KPIs, and weekly governance cadence.',
       annualObjectiveIds: ['ceo-annual-1'],
       owner: 'Chief Executive Officer',
       startDate: '2025-01-01',
       endDate: '2025-12-31',
       status: 'in-progress',
-      resources: ['Executive team', 'Strategic consultants', 'Change management', 'Performance dashboards']
+      resources: ['Executive team', 'PMO office', 'Strategic consultants', 'Change management'],
+      sipoc: {
+        suppliers: ['Board of Directors', 'External Advisors', 'Big-4 Consultants'],
+        inputs: ['Strategic mandate', 'Capital constraints', 'Market intelligence', 'Audit findings'],
+        process: 'PMO-led transformation with stage-gate governance and quarterly KPI reviews',
+        outputs: ['Strategic roadmap', 'Initiative scorecards', 'Board dashboards', 'Capital pathway decisions'],
+        customers: ['Board of Directors', 'Shareholders', 'All Departments', 'External Investors']
+      }
+    },
+    {
+      id: 'ceo-process-2',
+      title: 'Capital Pathway Decision Framework',
+      description: 'Pre-designed decision framework for Path A (IPO-led M&A) vs Path B (Strategic Merger) with ROIC gating and trigger points.',
+      annualObjectiveIds: ['ceo-annual-2'],
+      owner: 'Chief Executive Officer',
+      startDate: '2025-06-01',
+      endDate: '2026-12-31',
+      status: 'planning',
+      resources: ['Investment banking advisors', 'Legal team', 'M&A specialists', 'Due diligence teams']
     }
   ],
   metrics: [
     {
       id: 'ceo-metric-1',
       name: 'Strategic Objective Completion Rate',
-      description: 'Percentage of strategic objectives completed on time and within budget',
+      description: 'Percentage of breakthrough objectives on track with quarterly KPI gates passed',
       processIds: ['ceo-process-1'],
-      target: 90,
-      current: 65,
-      unit: '% completion',
+      target: 85,
+      current: 45,
+      unit: '% on-track',
       frequency: 'quarterly',
       owner: 'Chief Executive Officer'
     },
     {
       id: 'ceo-metric-2',
-      name: 'Customer Base Growth Rate',
-      description: 'Total active customer growth across all DishHome services',
-      processIds: ['ceo-process-1'],
-      target: 2000000,
-      current: 1200000,
-      unit: 'customers',
-      frequency: 'monthly',
+      name: 'M&A Readiness Score',
+      description: 'Integration readiness assessment score for potential consolidation scenarios',
+      processIds: ['ceo-process-2'],
+      target: 80,
+      current: 25,
+      unit: '% ready',
+      frequency: 'quarterly',
       owner: 'Chief Executive Officer'
     }
   ],
@@ -104,170 +134,58 @@ export const ceoData: HoshinData = {
     {
       id: 'ceo-catchball-1',
       type: 'approval',
-      title: 'Additional Budget for Technology Overhaul',
-      description: 'CIO requests additional $500K for white-label OTT platform implementation to ensure quality and timeline adherence.',
-      from: 'Chief Information Officer',
-      to: 'Chief Executive Officer',
-      relatedItemId: 'ceo-strategic-1',
+      title: 'Strategic Architecture & Value Pillars Approval',
+      description: 'Board approval required for Four Integrated Value Pillars and Control Layer architecture. Foundation for all subsequent capital decisions.',
+      from: 'Chief Executive Officer',
+      to: 'Board of Directors',
+      relatedItemId: 'breakthrough-1',
       relatedItemType: 'strategic',
       status: 'pending',
-      createdAt: '2025-07-10T09:00:00Z',
+      createdAt: '2025-01-15T09:00:00Z',
       responses: [
         {
           id: 'ceo-response-1',
-          message: 'Approved. Technology foundation is critical for success. Let\'s ensure we select the right partner and maintain quality standards.',
-          author: 'Chief Executive Officer',
-          createdAt: '2025-07-10T14:30:00Z'
+          message: 'Board aligned on "discipline before ambition" approach. Proceed with Pillar I Control Layer First 18 Months implementation.',
+          author: 'Board Chairman',
+          createdAt: '2025-01-20T14:30:00Z'
         }
       ]
-    }
-  ]
-};
-
-// COO - Operational Excellence & Service Delivery (Level 2)
-export const cooData: HoshinData = {
-  strategicObjectives: [
-    {
-      id: 'coo-strategic-1',
-      title: 'Achieve World-Class Service Delivery Standards',
-      description: 'Implement comprehensive service excellence framework achieving 99.9% network uptime and 4-hour average customer support response time.',
-      targetYear: 2026,
-      owner: 'Chief Operating Officer',
-      status: 'in-progress',
-      priority: 'high'
     },
     {
-      id: 'coo-strategic-2',
-      title: 'Optimize Customer Experience Operations',
-      description: 'Transform customer service operations to achieve 90% customer satisfaction and reduce churn through operational excellence.',
-      targetYear: 2026,
-      owner: 'Chief Operating Officer',
-      status: 'in-progress',
-      priority: 'high'
-    }
-  ],
-  annualObjectives: [
-    {
-      id: 'coo-annual-1',
-      title: 'Implement Service Level Agreement Program',
-      description: 'Deploy comprehensive SLA program with service guarantees, compensation mechanisms, and performance tracking similar to WorldLink\'s "2तै" program.',
-      strategicObjectiveIds: ['coo-strategic-1'],
-      targetDate: '2025-08-31',
-      owner: 'Chief Operating Officer',
-      status: 'in-progress',
-      progress: 72
-    },
-    {
-      id: 'coo-annual-2',
-      title: 'Achieve 4-Hour Support Response Time',
-      description: 'Reduce average customer support response time from current 8 hours to 4 hours through process optimization and resource allocation.',
-      strategicObjectiveIds: ['coo-strategic-2'],
-      targetDate: '2025-10-31',
-      owner: 'Chief Operating Officer',
-      status: 'in-progress',
-      progress: 68
-    },
-    {
-      id: 'coo-annual-3',
-      title: 'Deploy 99.9% Network Uptime Infrastructure',
-      description: 'Implement network monitoring, redundancy, and maintenance systems to achieve industry-leading 99.9% uptime.',
-      strategicObjectiveIds: ['coo-strategic-1'],
-      targetDate: '2025-11-30',
-      owner: 'Chief Operating Officer',
-      status: 'in-progress',
-      progress: 75
-    }
-  ],
-  processes: [
-    {
-      id: 'coo-process-1',
-      title: 'Network Uptime Optimization',
-      description: 'Comprehensive network monitoring and maintenance process ensuring maximum uptime and service reliability.',
-      annualObjectiveIds: ['coo-annual-3'],
-      owner: 'Network Operations Manager',
-      startDate: '2025-01-01',
-      endDate: '2025-12-31',
-      status: 'in-progress',
-      resources: ['Network engineers', 'Monitoring tools', 'Maintenance teams', 'Backup systems']
-    },
-    {
-      id: 'coo-process-2',
-      title: 'Customer Service Response Optimization',
-      description: 'Streamlined customer service process with priority queuing, automated routing, and performance tracking.',
-      annualObjectiveIds: ['coo-annual-1', 'coo-annual-2'],
-      owner: 'Customer Service Manager',
-      startDate: '2025-02-01',
-      endDate: '2025-10-31',
-      status: 'in-progress',
-      resources: ['Service representatives', 'Ticketing system', 'Training programs', 'Performance dashboards']
-    }
-  ],
-  metrics: [
-    {
-      id: 'coo-metric-1',
-      name: 'Network Uptime Percentage',
-      description: 'Percentage of time network services are operational and accessible',
-      processIds: ['coo-process-1'],
-      target: 99.9,
-      current: 98.2,
-      unit: '% uptime',
-      frequency: 'daily',
-      owner: 'Network Operations Manager'
-    },
-    {
-      id: 'coo-metric-2',
-      name: 'Customer Support Response Time',
-      description: 'Average time to first response for customer support tickets',
-      processIds: ['coo-process-2'],
-      target: 4,
-      current: 6.5,
-      unit: 'hours',
-      frequency: 'daily',
-      owner: 'Customer Service Manager'
-    },
-    {
-      id: 'coo-metric-3',
-      name: 'Customer Satisfaction Score',
-      description: 'Overall customer satisfaction rating based on service experience',
-      processIds: ['coo-process-2'],
-      target: 90,
-      current: 78,
-      unit: '% satisfaction',
-      frequency: 'monthly',
-      owner: 'Customer Experience Manager'
-    }
-  ],
-  catchball: [
-    {
-      id: 'coo-catchball-1',
-      type: 'concern',
-      title: 'Staff Training Requirements for New SLA Program',
-      description: 'Customer service team needs comprehensive training on new SLA procedures and compensation mechanisms. Current staff may need additional support.',
-      from: 'Customer Service Manager',
-      to: 'Chief Operating Officer',
-      relatedItemId: 'coo-annual-1',
-      relatedItemType: 'annual',
+      id: 'ceo-catchball-2',
+      type: 'question',
+      title: 'Capital Pathway Decision Gate Timing',
+      description: 'Request confirmation on Year 2 H2 as appropriate timing for Path A vs Path B decision. Market conditions may require acceleration.',
+      from: 'Chief Executive Officer',
+      to: 'Board of Directors',
+      relatedItemId: 'breakthrough-5',
+      relatedItemType: 'strategic',
       status: 'pending',
-      createdAt: '2025-07-09T11:30:00Z',
-      responses: [
-        {
-          id: 'coo-response-1',
-          message: 'Approved for additional training budget. Let\'s bring in external trainers and create comprehensive certification program.',
-          author: 'Chief Operating Officer',
-          createdAt: '2025-07-09T16:45:00Z'
-        }
-      ]
+      createdAt: '2025-02-01T10:00:00Z',
+      responses: []
     }
   ]
 };
 
-// CFO - Financial Transformation & Resource Optimization (Level 2)
+// =============================================================================
+// CFO - Financial Core & Credibility Reset (Level 2 - Pillar I)
+// EBITDA Restoration, Cash Flow, Capital Discipline, IPO-Grade Controls
+// =============================================================================
 export const cfoData: HoshinData = {
   strategicObjectives: [
     {
+      id: 'theme-s1-financial',
+      title: 'Financial Core First - Cash, Controls, ROIC Gating',
+      description: 'Mandatory under all future scenarios. No optional growth until cash conversion is stabilized. Controls are valuation infrastructure, not compliance.',
+      targetYear: 2027,
+      owner: 'Chief Financial Officer',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
       id: 'cfo-strategic-1',
-      title: 'Achieve Sustainable Financial Recovery',
-      description: 'Return to positive operating margin within 12 months through revenue optimization, cost management, and strategic financial restructuring.',
+      title: 'Achieve Sustainable EBITDA Margin ≥18-20%',
+      description: 'Return to positive operating margin through EBITDA restoration with structural levers: vendor consolidation, enterprise mix shift, VAS bundling, tech efficiency.',
       targetYear: 2026,
       owner: 'Chief Financial Officer',
       status: 'at-risk',
@@ -275,585 +193,1331 @@ export const cfoData: HoshinData = {
     },
     {
       id: 'cfo-strategic-2',
-      title: 'Optimize Capital Structure and Debt Management',
-      description: 'Reduce debt-to-equity ratio to under 2.0x and optimize capital allocation for sustainable growth and profitability.',
+      title: 'Rebuild Cash Credibility & Working Capital Discipline',
+      description: 'Restore operating cash predictability. CFO fell from 1,358.6m to 338.6m (-75.1%). Cash improved via financing, not operations - this must reverse.',
       targetYear: 2026,
       owner: 'Chief Financial Officer',
-      status: 'in-progress',
+      status: 'at-risk',
       priority: 'high'
     }
   ],
   annualObjectives: [
     {
-      id: 'cfo-annual-1',
-      title: 'Return to Positive Operating Margin',
-      description: 'Achieve positive operating margin by Q4 2025 through revenue growth from DHGO and cost optimization across all business units.',
-      strategicObjectiveIds: ['cfo-strategic-1'],
+      id: 'annual-a1',
+      title: 'Stabilise EBITDA to ≥18% Run-Rate',
+      description: 'Year 1 Foundation objective. Starting from ~13% baseline, achieve 18%+ through ZBB reset, vendor consolidation, and margin bridge implementation.',
+      strategicObjectiveIds: ['theme-s1-financial', 'cfo-strategic-1'],
       targetDate: '2025-12-31',
       owner: 'Chief Financial Officer',
       status: 'in-progress',
-      progress: 58
+      progress: 35
     },
     {
-      id: 'cfo-annual-2',
-      title: 'Increase ARPU by 15% Through Premium Services',
-      description: 'Implement premium service tiers and bundling strategies to increase average revenue per user across DTH, ISP, and DHGO services.',
-      strategicObjectiveIds: ['cfo-strategic-1'],
-      targetDate: '2025-11-30',
+      id: 'annual-a2',
+      title: 'Restore Operating Cash Predictability',
+      description: 'Year 1 Foundation objective. Implement working capital discipline, demand-linked capex, and ROIC gating. Target Cash EBITDA ≥15%.',
+      strategicObjectiveIds: ['theme-s1-financial', 'cfo-strategic-2'],
+      targetDate: '2025-12-31',
       owner: 'Chief Financial Officer',
       status: 'in-progress',
-      progress: 62
+      progress: 28
     },
     {
       id: 'cfo-annual-3',
-      title: 'Reduce Debt-to-Equity Ratio to 2.0x',
-      description: 'Implement debt restructuring and equity optimization strategies to achieve target debt-to-equity ratio of 2.0x or lower.',
-      strategicObjectiveIds: ['cfo-strategic-2'],
+      title: 'Implement IPO-Grade Financial Controls',
+      description: 'Deploy segment P&Ls (DTH vs ISP vs OTT vs Data Center), weekly close + variance discipline, NFRS 15 compliance, Big-4 aligned audit model.',
+      strategicObjectiveIds: ['theme-s1-financial'],
+      targetDate: '2025-09-30',
+      owner: 'Chief Financial Officer',
+      status: 'in-progress',
+      progress: 42
+    },
+    {
+      id: 'cfo-annual-4',
+      title: 'Reduce FX Exposure to ≤2% of Revenue',
+      description: 'Current FX impact ~7% of revenue. Implement hedging strategy and exposure cap to protect margins from currency volatility.',
+      strategicObjectiveIds: ['cfo-strategic-1'],
       targetDate: '2025-12-31',
       owner: 'Chief Financial Officer',
       status: 'in-progress',
-      progress: 45
+      progress: 30
     }
   ],
   processes: [
     {
       id: 'cfo-process-1',
-      title: 'Financial Recovery and Profitability Management',
-      description: 'Comprehensive financial management process focusing on revenue optimization, cost control, and profitability improvement.',
-      annualObjectiveIds: ['cfo-annual-1', 'cfo-annual-2'],
+      title: 'Zero-Based Budgeting (ZBB) Reset',
+      description: 'Complete ZBB reset for all controllable cost pools. No historical baseline assumptions - every expense justified from zero.',
+      annualObjectiveIds: ['annual-a1'],
       owner: 'Financial Planning Manager',
       startDate: '2025-01-01',
-      endDate: '2025-12-31',
+      endDate: '2025-06-30',
       status: 'in-progress',
-      resources: ['Financial analysts', 'Budget management', 'Revenue operations', 'Cost control systems']
+      resources: ['Financial analysts', 'Department heads', 'Cost accountants', 'Budget management system']
     },
     {
       id: 'cfo-process-2',
-      title: 'Debt Restructuring and Capital Optimization',
-      description: 'Strategic debt management and capital structure optimization process for sustainable financial health.',
-      annualObjectiveIds: ['cfo-annual-3'],
-      owner: 'Treasury Manager',
+      title: 'Weekly Flash Close & Variance Discipline',
+      description: 'Implement weekly flash close with monthly hard close. Real-time EBITDA visibility and variance analysis for rapid course correction.',
+      annualObjectiveIds: ['annual-a1', 'cfo-annual-3'],
+      owner: 'Financial Controller',
       startDate: '2025-02-01',
       endDate: '2025-12-31',
       status: 'in-progress',
-      resources: ['Treasury team', 'Banking partners', 'Financial advisors', 'Legal support']
+      resources: ['Finance team', 'ERP system', 'Reporting tools', 'Variance dashboards']
+    },
+    {
+      id: 'cfo-process-3',
+      title: 'Capex ROIC Gating & Demand-Linked Investment',
+      description: 'Capital allocation gatekeeping with ROIC thresholds. No capex approved without demand linkage and payback analysis.',
+      annualObjectiveIds: ['annual-a2'],
+      owner: 'Treasury Manager',
+      startDate: '2025-01-01',
+      endDate: '2025-12-31',
+      status: 'in-progress',
+      resources: ['Investment committee', 'Capital planning tools', 'Demand forecasting', 'ROI models']
+    },
+    {
+      id: 'cfo-process-4',
+      title: 'NFRS 15 Revenue Recognition Remediation',
+      description: 'Address internal audit finding on revenue recognition weakness. Implement automated revenue deferral and contract performance obligation mapping.',
+      annualObjectiveIds: ['cfo-annual-3'],
+      owner: 'Revenue Operations Manager',
+      startDate: '2025-02-01',
+      endDate: '2025-08-31',
+      status: 'in-progress',
+      resources: ['Revenue accountants', 'External auditors', 'Legal team', 'Contract management system']
     }
   ],
   metrics: [
     {
       id: 'cfo-metric-1',
-      name: 'Operating Margin Percentage',
-      description: 'Operating income as percentage of total revenue',
-      processIds: ['cfo-process-1'],
-      target: 5,
-      current: -8.5,
+      name: 'EBITDA Margin Percentage',
+      description: 'Operating EBITDA as percentage of revenue. Baseline ~13%, Target 18-20%',
+      processIds: ['cfo-process-1', 'cfo-process-2'],
+      target: 18,
+      current: 13,
       unit: '% margin',
       frequency: 'monthly',
       owner: 'Chief Financial Officer'
     },
     {
       id: 'cfo-metric-2',
-      name: 'Average Revenue Per User (ARPU)',
-      description: 'Average monthly revenue generated per customer across all services',
-      processIds: ['cfo-process-1'],
-      target: 850,
-      current: 742,
-      unit: 'NPR/month',
+      name: 'Cash EBITDA Percentage',
+      description: 'Cash conversion from EBITDA. Baseline ~10%, Target ≥15%',
+      processIds: ['cfo-process-3'],
+      target: 15,
+      current: 10,
+      unit: '% cash conversion',
       frequency: 'monthly',
-      owner: 'Revenue Operations Manager'
+      owner: 'Chief Financial Officer'
     },
     {
       id: 'cfo-metric-3',
-      name: 'Debt-to-Equity Ratio',
-      description: 'Ratio of total debt to total equity',
-      processIds: ['cfo-process-2'],
-      target: 2.0,
-      current: 2.87,
-      unit: 'ratio',
+      name: 'Return on Invested Capital (ROIC)',
+      description: 'Capital efficiency measure. Currently <0%, Target ≥10%',
+      processIds: ['cfo-process-3'],
+      target: 10,
+      current: -2,
+      unit: '% ROIC',
       frequency: 'quarterly',
+      owner: 'Chief Financial Officer'
+    },
+    {
+      id: 'cfo-metric-4',
+      name: 'FX Impact on Revenue',
+      description: 'Foreign exchange losses as percentage of revenue. Current ~7%, Target ≤2%',
+      processIds: ['cfo-process-1'],
+      target: 2,
+      current: 7,
+      unit: '% revenue',
+      frequency: 'monthly',
       owner: 'Treasury Manager'
+    },
+    {
+      id: 'cfo-metric-5',
+      name: 'Operating Cash Flow (NPR)',
+      description: 'Operating cash flow in millions. FY81: 1,358.6m → FY82: 338.6m. Must recover.',
+      processIds: ['cfo-process-2', 'cfo-process-3'],
+      target: 1200,
+      current: 339,
+      unit: 'NPR Million',
+      frequency: 'monthly',
+      owner: 'Chief Financial Officer'
     }
   ],
   catchball: [
     {
       id: 'cfo-catchball-1',
-      type: 'question',
-      title: 'DHGO Revenue Recognition Model',
-      description: 'Need clarification on revenue recognition for DHGO freemium model - how should we account for AVOD, SVOD, and TVOD revenues?',
-      from: 'Revenue Operations Manager',
-      to: 'Chief Financial Officer',
-      relatedItemId: 'cfo-annual-1',
-      relatedItemType: 'annual',
+      type: 'concern',
+      title: 'Revenue Decline is Structural, Not Cyclical',
+      description: 'Revenue from 5,159m to 3,715m (-28%). DTH revenue collapsed 54.5% while ISP held flat. Profitability erosion is economic. Incremental growth strategies no longer compound enterprise value.',
+      from: 'Chief Financial Officer',
+      to: 'Board of Directors',
+      relatedItemId: 'cfo-strategic-1',
+      relatedItemType: 'strategic',
       status: 'addressed',
-      createdAt: '2025-07-08T13:20:00Z',
+      createdAt: '2025-01-10T11:00:00Z',
       responses: [
         {
           id: 'cfo-response-1',
-          message: 'Let\'s implement separate revenue streams: AVOD as advertising revenue, SVOD as subscription revenue, TVOD as transactional revenue. I\'ll coordinate with external auditors for compliance.',
-          author: 'Chief Financial Officer',
-          createdAt: '2025-07-08T17:15:00Z'
+          message: 'Acknowledged. Board approves pivot from growth-chasing to earnings and cash architecture. Value creation precedes valuation events.',
+          author: 'Board Chairman',
+          createdAt: '2025-01-12T15:00:00Z'
         }
       ]
-    }
-  ]
-};
-
-// CIO - Technology Infrastructure & Digital Transformation (Level 2)
-export const cioData: HoshinData = {
-  strategicObjectives: [
-    {
-      id: 'cio-strategic-1',
-      title: 'Complete DHGO Platform Technology Overhaul',
-      description: 'Partner with white-label OTT provider to completely rebuild DHGO platform with world-class stability, scalability, and user experience.',
-      targetYear: 2025,
-      owner: 'Chief Information Officer',
-      status: 'in-progress',
-      priority: 'high'
     },
     {
-      id: 'cio-strategic-2',
-      title: 'Digitize Customer Experience Infrastructure',
-      description: 'Deploy comprehensive digital infrastructure for customer service, self-service capabilities, and mobile-first experiences.',
-      targetYear: 2026,
-      owner: 'Chief Information Officer',
-      status: 'in-progress',
-      priority: 'high'
-    }
-  ],
-  annualObjectives: [
-    {
-      id: 'cio-annual-1',
-      title: 'Deploy White-Label OTT Platform (ViewLift/VPlayed)',
-      description: 'Complete selection, implementation, and deployment of white-label OTT platform with full customization and integration.',
-      strategicObjectiveIds: ['cio-strategic-1'],
-      targetDate: '2025-09-30',
-      owner: 'Chief Information Officer',
-      status: 'in-progress',
-      progress: 68
-    },
-    {
-      id: 'cio-annual-2',
-      title: 'Enhance Mobile App and Web Experience',
-      description: 'Deploy redesigned mobile applications and web platforms with improved UX, self-service capabilities, and digital customer support.',
-      strategicObjectiveIds: ['cio-strategic-2'],
-      targetDate: '2025-11-30',
-      owner: 'Chief Information Officer',
-      status: 'in-progress',
-      progress: 55
-    },
-    {
-      id: 'cio-annual-3',
-      title: 'Implement Digital Customer Service Platform',
-      description: 'Deploy comprehensive digital customer service platform with AI chatbots, knowledge base, and integrated ticketing system.',
-      strategicObjectiveIds: ['cio-strategic-2'],
-      targetDate: '2025-10-31',
-      owner: 'Chief Information Officer',
-      status: 'in-progress',
-      progress: 62
-    }
-  ],
-  processes: [
-    {
-      id: 'cio-process-1',
-      title: 'DHGO Platform Technology Overhaul',
-      description: 'Complete technology transformation process including vendor selection, implementation, testing, and deployment.',
-      annualObjectiveIds: ['cio-annual-1'],
-      owner: 'Platform Development Manager',
-      startDate: '2025-01-01',
-      endDate: '2025-09-30',
-      status: 'in-progress',
-      resources: ['Development team', 'QA engineers', 'External vendors', 'Integration specialists']
-    },
-    {
-      id: 'cio-process-2',
-      title: 'Digital Customer Experience Enhancement',
-      description: 'Development and deployment of digital customer experience platforms and self-service capabilities.',
-      annualObjectiveIds: ['cio-annual-2', 'cio-annual-3'],
-      owner: 'Digital Experience Manager',
-      startDate: '2025-02-01',
-      endDate: '2025-11-30',
-      status: 'in-progress',
-      resources: ['UX designers', 'Mobile developers', 'Web developers', 'Digital analysts']
-    }
-  ],
-  metrics: [
-    {
-      id: 'cio-metric-1',
-      name: 'Platform Stability (App Crash Rate)',
-      description: 'Percentage of app sessions that end in crashes or errors',
-      processIds: ['cio-process-1'],
-      target: 0.1,
-      current: 8.5,
-      unit: '% crash rate',
-      frequency: 'daily',
-      owner: 'Platform Development Manager'
-    },
-    {
-      id: 'cio-metric-2',
-      name: 'Digital Self-Service Adoption',
-      description: 'Percentage of customer inquiries resolved through self-service channels',
-      processIds: ['cio-process-2'],
-      target: 65,
-      current: 28,
-      unit: '% self-service',
-      frequency: 'weekly',
-      owner: 'Digital Experience Manager'
-    },
-    {
-      id: 'cio-metric-3',
-      name: 'Mobile App User Rating',
-      description: 'Average user rating on app stores (iOS and Android)',
-      processIds: ['cio-process-2'],
-      target: 4.5,
-      current: 2.8,
-      unit: 'rating (1-5)',
-      frequency: 'weekly',
-      owner: 'Mobile Development Manager'
-    }
-  ],
-  catchball: [
-    {
-      id: 'cio-catchball-1',
-      type: 'suggestion',
-      title: 'Integration with Existing DTH and ISP Systems',
-      description: 'Recommend implementing unified customer authentication system across DHGO, DTH, and ISP services for seamless user experience.',
-      from: 'Platform Development Manager',
-      to: 'Chief Information Officer',
-      relatedItemId: 'cio-annual-1',
+      id: 'cfo-catchball-2',
+      type: 'approval',
+      title: 'NFRS 15 Revenue Recognition Remediation Budget',
+      description: 'Request approval for external consultant engagement to address internal audit finding on revenue recognition weakness. IPO readiness requirement.',
+      from: 'Financial Controller',
+      to: 'Chief Financial Officer',
+      relatedItemId: 'cfo-annual-3',
       relatedItemType: 'annual',
       status: 'pending',
-      createdAt: '2025-07-11T10:45:00Z',
-      responses: [
-        {
-          id: 'cio-response-1',
-          message: 'Excellent idea! Single sign-on across all services will significantly improve user experience. Let\'s prioritize this in Phase 2 development.',
-          author: 'Chief Information Officer',
-          createdAt: '2025-07-11T15:20:00Z'
-        }
-      ]
+      createdAt: '2025-02-05T09:30:00Z',
+      responses: []
     }
   ]
 };
 
-// CMO - Customer Acquisition & Brand Positioning (Level 2)
-export const cmoData: HoshinData = {
-  strategicObjectives: [
-    {
-      id: 'cmo-strategic-1',
-      title: 'Execute 2 Million Customer Acquisition Strategy',
-      description: 'Implement comprehensive customer acquisition strategy targeting 2 million DHGO users through phased approach and cross-leverage with existing customer base.',
-      targetYear: 2025,
-      owner: 'Chief Marketing Officer',
-      status: 'in-progress',
-      priority: 'high'
-    },
-    {
-      id: 'cmo-strategic-2',
-      title: 'Establish Hyper-Local Content Leadership',
-      description: 'Position DHGO as the exclusive destination for premium Nepali content through strategic content acquisition and local partnerships.',
-      targetYear: 2026,
-      owner: 'Chief Marketing Officer',
-      status: 'in-progress',
-      priority: 'high'
-    }
-  ],
-  annualObjectives: [
-    {
-      id: 'cmo-annual-1',
-      title: 'Implement Freemium-Plus Monetization Model',
-      description: 'Deploy hybrid AVOD-SVOD-TVOD model with tiered pricing and strategic content distribution across free and premium tiers.',
-      strategicObjectiveIds: ['cmo-strategic-1'],
-      targetDate: '2025-08-31',
-      owner: 'Chief Marketing Officer',
-      status: 'in-progress',
-      progress: 72
-    },
-    {
-      id: 'cmo-annual-2',
-      title: 'Secure Exclusive Rights to 10 Major Nepali Films',
-      description: 'Acquire exclusive digital streaming rights for 10 top-grossing Nepali films for first-window digital premieres on DHGO.',
-      strategicObjectiveIds: ['cmo-strategic-2'],
-      targetDate: '2025-12-31',
-      owner: 'Chief Marketing Officer',
-      status: 'in-progress',
-      progress: 68
-    },
-    {
-      id: 'cmo-annual-3',
-      title: 'Convert 60% of Existing DishHome Customers',
-      description: 'Achieve 60% activation rate from existing DTH and ISP customer base through bundling, incentives, and value-added services.',
-      strategicObjectiveIds: ['cmo-strategic-1'],
-      targetDate: '2025-10-31',
-      owner: 'Chief Marketing Officer',
-      status: 'in-progress',
-      progress: 55
-    }
-  ],
-  processes: [
-    {
-      id: 'cmo-process-1',
-      title: 'Freemium-Plus Strategy Implementation',
-      description: 'Comprehensive monetization strategy process including pricing, content allocation, and customer conversion optimization.',
-      annualObjectiveIds: ['cmo-annual-1'],
-      owner: 'Monetization Strategy Manager',
-      startDate: '2025-01-01',
-      endDate: '2025-08-31',
-      status: 'in-progress',
-      resources: ['Pricing analysts', 'Content strategists', 'Customer research', 'A/B testing tools']
-    },
-    {
-      id: 'cmo-process-2',
-      title: 'Hyper-Local Content Acquisition',
-      description: 'Strategic content acquisition and partnership development process for exclusive Nepali content library.',
-      annualObjectiveIds: ['cmo-annual-2'],
-      owner: 'Content Acquisition Manager',
-      startDate: '2025-02-01',
-      endDate: '2025-12-31',
-      status: 'in-progress',
-      resources: ['Content negotiators', 'Legal team', 'Market researchers', 'Local partners']
-    }
-  ],
-  metrics: [
-    {
-      id: 'cmo-metric-1',
-      name: 'Customer Acquisition Rate',
-      description: 'Number of new customers acquired per month',
-      processIds: ['cmo-process-1'],
-      target: 150000,
-      current: 85000,
-      unit: 'customers/month',
-      frequency: 'monthly',
-      owner: 'Customer Acquisition Manager'
-    },
-    {
-      id: 'cmo-metric-2',
-      name: 'Content Engagement Rate',
-      description: 'Average time spent watching content per user session',
-      processIds: ['cmo-process-2'],
-      target: 45,
-      current: 28,
-      unit: 'minutes/session',
-      frequency: 'weekly',
-      owner: 'Content Strategy Manager'
-    },
-    {
-      id: 'cmo-metric-3',
-      name: 'Conversion Rate (Free to Premium)',
-      description: 'Percentage of free users converting to premium subscriptions',
-      processIds: ['cmo-process-1'],
-      target: 15,
-      current: 8.5,
-      unit: '% conversion',
-      frequency: 'monthly',
-      owner: 'Monetization Strategy Manager'
-    }
-  ],
-  catchball: [
-    {
-      id: 'cmo-catchball-1',
-      type: 'concern',
-      title: 'Content Acquisition Budget Constraints',
-      description: 'Current budget may not be sufficient to secure exclusive rights for all 10 targeted major Nepali films. Need additional funding or revised strategy.',
-      from: 'Content Acquisition Manager',
-      to: 'Chief Marketing Officer',
-      relatedItemId: 'cmo-annual-2',
-      relatedItemType: 'annual',
-      status: 'pending',
-      createdAt: '2025-07-10T14:30:00Z',
-      responses: [
-        {
-          id: 'cmo-response-1',
-          message: 'Let\'s prioritize top 5 films for exclusive rights and negotiate revenue-sharing deals for the others. I\'ll coordinate with CFO for budget adjustment.',
-          author: 'Chief Marketing Officer',
-          createdAt: '2025-07-10T18:15:00Z'
-        }
-      ]
-    }
-  ]
-};
-
-// CTO - Technical Innovation & Platform Architecture (Level 2)
+// =============================================================================
+// CTO - Technology, NOC & Platform Architecture (Level 2 - Pillar III)
+// Programmable Infrastructure, AI-NOC, OSS/BSS, Cyber Governance
+// =============================================================================
 export const ctoData: HoshinData = {
   strategicObjectives: [
     {
+      id: 'theme-s4-technology',
+      title: 'Programmable Network & Distribution Reset',
+      description: 'Transform from network operator to programmable infrastructure. Technology builds operating leverage and M&A readiness.',
+      targetYear: 2028,
+      owner: 'Chief Technology Officer',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
       id: 'cto-strategic-1',
-      title: 'Build Scalable Platform Architecture for 2M Users',
-      description: 'Design and implement scalable cloud-native architecture capable of supporting 2 million concurrent users with 99.9% uptime and low latency.',
-      targetYear: 2025,
+      title: 'Deploy AI-NOC for Predictive Operations',
+      description: 'Implement AI-powered Network Operations Center with predictive incident detection, automated remediation, and proactive maintenance.',
+      targetYear: 2027,
       owner: 'Chief Technology Officer',
       status: 'in-progress',
       priority: 'high'
     },
     {
       id: 'cto-strategic-2',
-      title: 'Implement AI-Powered Platform Intelligence',
-      description: 'Deploy advanced AI and machine learning capabilities for personalized recommendations, predictive analytics, and automated customer insights.',
-      targetYear: 2026,
+      title: 'Achieve Unified OSS/BSS Architecture',
+      description: 'Consolidate operations and business support systems into unified platform. M&A-ready stack enabling seamless integration.',
+      targetYear: 2027,
       owner: 'Chief Technology Officer',
+      status: 'planning',
+      priority: 'high'
+    }
+  ],
+  annualObjectives: [
+    {
+      id: 'annual-a7',
+      title: 'Complete OSS/BSS & NOC Hardening',
+      description: 'Year 2 Optionality objective. Deploy unified OSS/BSS blueprint and complete NOC resilience improvements.',
+      strategicObjectiveIds: ['theme-s4-technology', 'cto-strategic-2'],
+      targetDate: '2026-12-31',
+      owner: 'Chief Technology Officer',
+      status: 'planning',
+      progress: 10
+    },
+    {
+      id: 'cto-annual-1',
+      title: 'Deploy AI-NOC Pilot',
+      description: 'Year 1 H2 objective. Implement predictive incident detection and automated remediation pilot program.',
+      strategicObjectiveIds: ['cto-strategic-1'],
+      targetDate: '2025-12-31',
+      owner: 'Chief Technology Officer',
+      status: 'in-progress',
+      progress: 25
+    },
+    {
+      id: 'cto-annual-2',
+      title: 'Implement IAM/RBAC & SIEM Rollout',
+      description: 'Address critical internal audit finding: unauthorized OSS access and ONT deletion incidents. Deploy zero-tolerance access controls.',
+      strategicObjectiveIds: ['theme-s4-technology'],
+      targetDate: '2025-09-30',
+      owner: 'Chief Technology Officer',
+      status: 'in-progress',
+      progress: 40
+    },
+    {
+      id: 'cto-annual-3',
+      title: 'Vendor Stack Consolidation',
+      description: 'Reduce technology vendor complexity. Consolidate to strategic partners with standardized integrations.',
+      strategicObjectiveIds: ['theme-s4-technology', 'cto-strategic-2'],
+      targetDate: '2025-12-31',
+      owner: 'Chief Technology Officer',
+      status: 'in-progress',
+      progress: 20
+    }
+  ],
+  processes: [
+    {
+      id: 'cto-process-1',
+      title: 'AI-NOC Development & Deployment',
+      description: 'Build predictive operations capability with ML-based incident prediction, automated ticketing, and self-healing network functions.',
+      annualObjectiveIds: ['cto-annual-1'],
+      owner: 'NOC Manager',
+      startDate: '2025-04-01',
+      endDate: '2025-12-31',
+      status: 'in-progress',
+      resources: ['ML engineers', 'NOC operators', 'Network architects', 'Monitoring tools']
+    },
+    {
+      id: 'cto-process-2',
+      title: 'Identity & Access Management (IAM) Implementation',
+      description: 'Deploy comprehensive IAM with role-based access control, rapid deprovisioning, and SOC monitoring. Address audit observations.',
+      annualObjectiveIds: ['cto-annual-2'],
+      owner: 'Security Manager',
+      startDate: '2025-02-01',
+      endDate: '2025-09-30',
+      status: 'in-progress',
+      resources: ['Security team', 'IAM platform', 'SIEM tools', 'Incident response team']
+    },
+    {
+      id: 'cto-process-3',
+      title: 'OSS/BSS Unification Blueprint',
+      description: 'Design and implement unified operations and business support system architecture for M&A readiness.',
+      annualObjectiveIds: ['annual-a7'],
+      owner: 'Enterprise Architecture Manager',
+      startDate: '2025-06-01',
+      endDate: '2026-12-31',
+      status: 'planning',
+      resources: ['Enterprise architects', 'System integrators', 'Process engineers', 'Vendor partners']
+    }
+  ],
+  metrics: [
+    {
+      id: 'cto-metric-1',
+      name: 'Network Uptime Percentage',
+      description: 'Platform availability target. Industry standard 99.9%',
+      processIds: ['cto-process-1'],
+      target: 99.9,
+      current: 98.5,
+      unit: '% uptime',
+      frequency: 'daily',
+      owner: 'NOC Manager'
+    },
+    {
+      id: 'cto-metric-2',
+      name: 'Unauthorized Access Incidents',
+      description: 'Critical security metric. Target zero unauthorized OSS/network access. Audit flagged multiple incidents.',
+      processIds: ['cto-process-2'],
+      target: 0,
+      current: 8,
+      unit: 'incidents/month',
+      frequency: 'monthly',
+      owner: 'Security Manager'
+    },
+    {
+      id: 'cto-metric-3',
+      name: 'Mean Time to Repair (MTTR)',
+      description: 'Average time to resolve network incidents. Target reduction through AI-NOC.',
+      processIds: ['cto-process-1'],
+      target: 2,
+      current: 6,
+      unit: 'hours',
+      frequency: 'weekly',
+      owner: 'NOC Manager'
+    },
+    {
+      id: 'cto-metric-4',
+      name: 'System Integration Readiness',
+      description: 'M&A integration readiness score based on OSS/BSS maturity',
+      processIds: ['cto-process-3'],
+      target: 85,
+      current: 35,
+      unit: '% ready',
+      frequency: 'quarterly',
+      owner: 'Enterprise Architecture Manager'
+    }
+  ],
+  catchball: [
+    {
+      id: 'cto-catchball-1',
+      type: 'concern',
+      title: 'Critical: Unauthorized OSS Access & ONT Deletion',
+      description: 'Internal audit flagged unauthorized OSS access and ONT deletion incidents. Service integrity and fraud risk. Zero-trust segments and configuration baselines urgently needed.',
+      from: 'Security Manager',
+      to: 'Chief Technology Officer',
+      relatedItemId: 'cto-annual-2',
+      relatedItemType: 'annual',
+      status: 'pending',
+      createdAt: '2025-01-25T14:00:00Z',
+      responses: [
+        {
+          id: 'cto-response-1',
+          message: 'Approved as priority. IAM/SIEM rollout accelerated to Y1 H1. All access logs reviewed. Deprovisioning workflow implemented.',
+          author: 'Chief Technology Officer',
+          createdAt: '2025-01-26T09:00:00Z'
+        }
+      ]
+    },
+    {
+      id: 'cto-catchball-2',
+      type: 'question',
+      title: 'Mandatory IS Audit Compliance (Cyber Security By-laws 2077)',
+      description: 'Internal audit notes mandatory IS audit not conducted. Regulatory and cyber exposure risk. Request guidance on audit vendor selection and timeline.',
+      from: 'Security Manager',
+      to: 'Chief Technology Officer',
+      relatedItemId: 'theme-s4-technology',
+      relatedItemType: 'strategic',
+      status: 'pending',
+      createdAt: '2025-02-01T10:00:00Z',
+      responses: []
+    }
+  ]
+};
+
+// =============================================================================
+// CMO - Enterprise, OTT & Customer Strategy (Level 2 - Pillar II & III)
+// Enterprise GTM, OTT Repositioning, Customer Acquisition
+// =============================================================================
+export const cmoData: HoshinData = {
+  strategicObjectives: [
+    {
+      id: 'theme-s2-enterprise',
+      title: 'Enterprise-Led Value Expansion',
+      description: 'SLA-backed, predictable, high-margin revenues. Enterprise is risk reducer (less price war exposure) and improves IPO narrative with recurring revenue.',
+      targetYear: 2030,
+      owner: 'Chief Marketing Officer',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'theme-s3-ott',
+      title: 'OTT & VAS With Economic Guardrails',
+      description: 'Bundling, retention, diaspora monetisation. No exclusive content bidding wars. No minimum guarantees without scale proof. Partner-first aggregator strategy.',
+      targetYear: 2028,
+      owner: 'Chief Marketing Officer',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'cmo-strategic-1',
+      title: 'Achieve Enterprise ≥25-30% of EBITDA (5 Years)',
+      description: 'Transform revenue mix from consumer-dependent to enterprise-balanced. High ARPU, multi-year contracts, SLA-backed revenues with predictable cash flows.',
+      targetYear: 2030,
+      owner: 'Chief Marketing Officer',
       status: 'in-progress',
       priority: 'high'
     }
   ],
   annualObjectives: [
     {
-      id: 'cto-annual-1',
-      title: 'Deploy Multi-CDN Architecture',
-      description: 'Implement multi-CDN strategy with Akamai, Cloudflare, and AWS CloudFront for optimal content delivery across Nepal\'s diverse geography.',
-      strategicObjectiveIds: ['cto-strategic-1'],
-      targetDate: '2025-10-31',
-      owner: 'Chief Technology Officer',
-      status: 'in-progress',
-      progress: 65
-    },
-    {
-      id: 'cto-annual-2',
-      title: 'Implement Multi-DRM Content Protection',
-      description: 'Deploy comprehensive DRM solution with Google Widevine, Apple FairPlay, and Microsoft PlayReady for secure content delivery.',
-      strategicObjectiveIds: ['cto-strategic-1'],
-      targetDate: '2025-09-30',
-      owner: 'Chief Technology Officer',
-      status: 'in-progress',
-      progress: 58
-    },
-    {
-      id: 'cto-annual-3',
-      title: 'Launch AI-Powered Recommendation Engine',
-      description: 'Deploy machine learning-based recommendation system for personalized content discovery and user engagement optimization.',
-      strategicObjectiveIds: ['cto-strategic-2'],
+      id: 'annual-a3',
+      title: 'Launch Enterprise GTM v1 with SLA Discipline',
+      description: 'Year 1 Foundation objective. Deploy account-based selling, standardized SLA templates with service credits, and uptime monitoring.',
+      strategicObjectiveIds: ['theme-s2-enterprise', 'cmo-strategic-1'],
       targetDate: '2025-12-31',
-      owner: 'Chief Technology Officer',
+      owner: 'Chief Marketing Officer',
       status: 'in-progress',
-      progress: 42
+      progress: 30
+    },
+    {
+      id: 'annual-a4',
+      title: 'Reset OTT into Bundling-Led, ROI-Guarded Model',
+      description: 'Year 1 Foundation objective. OTT as ARPU defense not cost center. Implement churn-based ROI tests, diaspora geo-pricing, ad-supported models.',
+      strategicObjectiveIds: ['theme-s3-ott', 'breakthrough-4'],
+      targetDate: '2025-12-31',
+      owner: 'Chief Marketing Officer',
+      status: 'in-progress',
+      progress: 35
+    },
+    {
+      id: 'annual-a6',
+      title: 'Reach Enterprise ≥15% of EBITDA',
+      description: 'Year 2 Optionality objective. Scale enterprise revenue contribution as hedge against consumer price wars.',
+      strategicObjectiveIds: ['theme-s2-enterprise', 'cmo-strategic-1'],
+      targetDate: '2026-12-31',
+      owner: 'Chief Marketing Officer',
+      status: 'planning',
+      progress: 5
+    },
+    {
+      id: 'cmo-annual-4',
+      title: 'Deploy Kano-Based Enterprise Service Stack',
+      description: 'Implement service architecture based on Kano model: Must-haves (compliance/reliability), Performance (margin drivers), Delighters (moat).',
+      strategicObjectiveIds: ['theme-s2-enterprise'],
+      targetDate: '2025-10-31',
+      owner: 'Chief Marketing Officer',
+      status: 'in-progress',
+      progress: 25
     }
   ],
   processes: [
     {
-      id: 'cto-process-1',
-      title: 'Scalable Platform Architecture Development',
-      description: 'Design and implementation of cloud-native, scalable architecture with microservices and containerized deployment.',
-      annualObjectiveIds: ['cto-annual-1', 'cto-annual-2'],
-      owner: 'Platform Architecture Manager',
-      startDate: '2025-01-01',
-      endDate: '2025-10-31',
-      status: 'in-progress',
-      resources: ['Cloud architects', 'DevOps engineers', 'Security specialists', 'Performance engineers']
-    },
-    {
-      id: 'cto-process-2',
-      title: 'AI and Machine Learning Implementation',
-      description: 'Development and deployment of AI/ML capabilities for recommendations, analytics, and predictive insights.',
-      annualObjectiveIds: ['cto-annual-3'],
-      owner: 'AI/ML Engineering Manager',
-      startDate: '2025-03-01',
+      id: 'cmo-process-1',
+      title: 'Account-Based Selling (ABM) Program',
+      description: 'Enterprise GTM process with qualified pipeline management, account planning, and performance-linked incentives.',
+      annualObjectiveIds: ['annual-a3'],
+      owner: 'Enterprise Sales Director',
+      startDate: '2025-02-01',
       endDate: '2025-12-31',
       status: 'in-progress',
-      resources: ['Data scientists', 'ML engineers', 'Data engineers', 'AI specialists']
+      resources: ['Enterprise sales team', 'CRM system', 'Marketing automation', 'Account managers']
+    },
+    {
+      id: 'cmo-process-2',
+      title: 'SLA Product Catalogue Development',
+      description: 'Standardize enterprise SKUs with service level agreements, service credits, and uptime monitoring integration.',
+      annualObjectiveIds: ['annual-a3', 'cmo-annual-4'],
+      owner: 'Product Manager - Enterprise',
+      startDate: '2025-03-01',
+      endDate: '2025-09-30',
+      status: 'in-progress',
+      resources: ['Product team', 'Legal', 'Service delivery', 'Pricing analysts']
+    },
+    {
+      id: 'cmo-process-3',
+      title: 'OTT Bundling & Churn Analytics',
+      description: 'Deploy churn analytics with cohort analysis, A/B testing on bundles, and ROI proof requirements before expansion.',
+      annualObjectiveIds: ['annual-a4'],
+      owner: 'OTT Product Manager',
+      startDate: '2025-02-01',
+      endDate: '2025-12-31',
+      status: 'in-progress',
+      resources: ['Data analytics team', 'Content team', 'Marketing', 'Tech platform']
+    },
+    {
+      id: 'cmo-process-4',
+      title: 'Kano-Based Service Architecture Workshop',
+      description: 'Define enterprise service stack using Kano economics: categorize features as Basic, Performance, or Delighter.',
+      annualObjectiveIds: ['cmo-annual-4'],
+      owner: 'Product Strategy Manager',
+      startDate: '2025-03-01',
+      endDate: '2025-06-30',
+      status: 'in-progress',
+      resources: ['Product team', 'Customer research', 'Pricing team', 'External facilitators']
     }
   ],
   metrics: [
     {
-      id: 'cto-metric-1',
-      name: 'Platform Scalability (Concurrent Users)',
-      description: 'Maximum number of concurrent users supported without performance degradation',
-      processIds: ['cto-process-1'],
-      target: 2000000,
-      current: 500000,
-      unit: 'concurrent users',
-      frequency: 'weekly',
-      owner: 'Platform Architecture Manager'
+      id: 'cmo-metric-1',
+      name: 'Enterprise Revenue as % of EBITDA',
+      description: 'Enterprise contribution to profitability. Year 1 target 10%, Year 2 target 15%, 5-year target 25-30%',
+      processIds: ['cmo-process-1', 'cmo-process-2'],
+      target: 10,
+      current: 5,
+      unit: '% of EBITDA',
+      frequency: 'monthly',
+      owner: 'Enterprise Sales Director'
     },
     {
-      id: 'cto-metric-2',
-      name: 'Content Delivery Speed',
-      description: 'Average time for content to start playing after user selection',
-      processIds: ['cto-process-1'],
+      id: 'cmo-metric-2',
+      name: 'Enterprise Pipeline Value (NPR)',
+      description: 'Qualified enterprise opportunity pipeline value',
+      processIds: ['cmo-process-1'],
+      target: 500,
+      current: 180,
+      unit: 'NPR Million',
+      frequency: 'monthly',
+      owner: 'Enterprise Sales Director'
+    },
+    {
+      id: 'cmo-metric-3',
+      name: 'OTT Attach Rate (Bundle)',
+      description: 'Percentage of DTH/ISP customers with active OTT bundle',
+      processIds: ['cmo-process-3'],
+      target: 40,
+      current: 18,
+      unit: '% attach rate',
+      frequency: 'monthly',
+      owner: 'OTT Product Manager'
+    },
+    {
+      id: 'cmo-metric-4',
+      name: 'Churn Rate (Bundled vs Non-Bundled)',
+      description: 'Comparative churn showing OTT bundle retention impact',
+      processIds: ['cmo-process-3'],
       target: 2,
-      current: 8.5,
-      unit: 'seconds',
-      frequency: 'daily',
-      owner: 'CDN Operations Manager'
+      current: 5,
+      unit: '% monthly churn',
+      frequency: 'monthly',
+      owner: 'Customer Retention Manager'
     },
     {
-      id: 'cto-metric-3',
-      name: 'Recommendation Accuracy',
-      description: 'Percentage of recommended content that users actually watch',
-      processIds: ['cto-process-2'],
-      target: 35,
-      current: 15,
-      unit: '% accuracy',
+      id: 'cmo-metric-5',
+      name: 'Enterprise SLA Compliance Rate',
+      description: 'Percentage of enterprise contracts meeting SLA commitments',
+      processIds: ['cmo-process-2'],
+      target: 99,
+      current: 92,
+      unit: '% compliance',
       frequency: 'weekly',
-      owner: 'AI/ML Engineering Manager'
+      owner: 'Service Delivery Manager'
     }
   ],
   catchball: [
     {
-      id: 'cto-catchball-1',
-      type: 'question',
-      title: 'Data Privacy Compliance for AI Recommendations',
-      description: 'Need guidance on data privacy regulations for AI recommendation system. How should we handle user data collection and processing?',
-      from: 'AI/ML Engineering Manager',
-      to: 'Chief Technology Officer',
-      relatedItemId: 'cto-annual-3',
-      relatedItemType: 'annual',
-      status: 'pending',
-      createdAt: '2025-07-12T09:15:00Z',
+      id: 'cmo-catchball-1',
+      type: 'suggestion',
+      title: 'OTT Strategy Guardrail Proposal',
+      description: 'Recommend explicit prohibitions: No exclusive content bidding wars, no minimum guarantees without scale proof. Partner-first aggregator approach.',
+      from: 'OTT Product Manager',
+      to: 'Chief Marketing Officer',
+      relatedItemId: 'theme-s3-ott',
+      relatedItemType: 'strategic',
+      status: 'addressed',
+      createdAt: '2025-01-20T11:00:00Z',
       responses: [
         {
-          id: 'cto-response-1',
-          message: 'Let\'s implement privacy-by-design approach with user consent management and data anonymization. I\'ll coordinate with legal team for compliance framework.',
-          author: 'Chief Technology Officer',
-          createdAt: '2025-07-12T14:30:00Z'
+          id: 'cmo-response-1',
+          message: 'Approved. These guardrails are now mandatory policy. OTT is strategically sound but not yet financially clear on ROI - we proceed with discipline.',
+          author: 'Chief Marketing Officer',
+          createdAt: '2025-01-21T14:00:00Z'
         }
       ]
+    },
+    {
+      id: 'cmo-catchball-2',
+      type: 'question',
+      title: 'Datalaya Integration for Enterprise Offerings',
+      description: 'Datalaya can enable hosting, sovereignty, and CDN/caching for enterprise. However, internal audit flagged missing formal agreements. Clarify governance.',
+      from: 'Enterprise Sales Director',
+      to: 'Chief Marketing Officer',
+      relatedItemId: 'annual-a3',
+      relatedItemType: 'annual',
+      status: 'pending',
+      createdAt: '2025-02-10T09:00:00Z',
+      responses: []
     }
   ]
 };
 
+// =============================================================================
+// COO - Operations, Distribution & Vendor Management (Level 2 - Pillar IV)
+// Ecosystem Control, Distributor Reset, Service Delivery
+// =============================================================================
+export const cooData: HoshinData = {
+  strategicObjectives: [
+    {
+      id: 'theme-s5-ecosystem',
+      title: 'Ecosystem Shift: From Fragmentation to Strategic Control',
+      description: 'Vendor consolidation (reduce complexity, improve unit economics), performance-linked distributors, regional clustering for service efficiency.',
+      targetYear: 2027,
+      owner: 'Chief Operating Officer',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'coo-strategic-1',
+      title: 'Achieve World-Class Service Delivery Standards',
+      description: 'Implement comprehensive service excellence framework. Target industry-leading uptime and response times.',
+      targetYear: 2027,
+      owner: 'Chief Operating Officer',
+      status: 'in-progress',
+      priority: 'high'
+    }
+  ],
+  annualObjectives: [
+    {
+      id: 'annual-a5',
+      title: 'Implement PMO + Governance + Audit Closure',
+      description: 'Year 1 Foundation objective. Establish control layer MVP with close discipline and access controls. Audit closure as mandatory KPI.',
+      strategicObjectiveIds: ['theme-s5-ecosystem'],
+      targetDate: '2025-12-31',
+      owner: 'Chief Operating Officer',
+      status: 'in-progress',
+      progress: 40
+    },
+    {
+      id: 'annual-a9',
+      title: 'Execute Vendor & Distributor Consolidation Wave-1',
+      description: 'Year 2 objective. Implement vendor scorecards, consolidation wave plan, and distributor SOPs with audit rights.',
+      strategicObjectiveIds: ['theme-s5-ecosystem'],
+      targetDate: '2026-12-31',
+      owner: 'Chief Operating Officer',
+      status: 'planning',
+      progress: 10
+    },
+    {
+      id: 'coo-annual-3',
+      title: 'Deploy Distributor SOPs & Performance Framework',
+      description: 'Year 1 H1 objective. Standardize distributor processes, implement performance-linked payouts, and fraud controls.',
+      strategicObjectiveIds: ['theme-s5-ecosystem'],
+      targetDate: '2025-06-30',
+      owner: 'Chief Operating Officer',
+      status: 'in-progress',
+      progress: 55
+    },
+    {
+      id: 'coo-annual-4',
+      title: 'Regional Service Clustering for Efficiency',
+      description: 'Reorganize service operations by regional clusters to reduce cost-to-serve and improve response times.',
+      strategicObjectiveIds: ['coo-strategic-1'],
+      targetDate: '2025-12-31',
+      owner: 'Chief Operating Officer',
+      status: 'in-progress',
+      progress: 30
+    }
+  ],
+  processes: [
+    {
+      id: 'coo-process-1',
+      title: 'PMO Governance Framework',
+      description: 'Establish Project Management Office with initiative tracking, benefit realization, and stage-gate governance.',
+      annualObjectiveIds: ['annual-a5'],
+      owner: 'PMO Director',
+      startDate: '2025-01-01',
+      endDate: '2025-12-31',
+      status: 'in-progress',
+      resources: ['PMO team', 'Project managers', 'Governance tools', 'Reporting dashboards']
+    },
+    {
+      id: 'coo-process-2',
+      title: 'Internal Audit Closure Program',
+      description: 'Systematic closure of internal audit observations. Audit closure is KPI, not back-office item.',
+      annualObjectiveIds: ['annual-a5'],
+      owner: 'Internal Audit Manager',
+      startDate: '2025-01-01',
+      endDate: '2025-12-31',
+      status: 'in-progress',
+      resources: ['Internal audit team', 'Department heads', 'Compliance officers', 'Tracking system']
+    },
+    {
+      id: 'coo-process-3',
+      title: 'Distributor SOPs & Fraud Controls',
+      description: 'Standardize distributor operations with documented procedures, audit rights, and exception reporting.',
+      annualObjectiveIds: ['coo-annual-3'],
+      owner: 'Distribution Manager',
+      startDate: '2025-01-01',
+      endDate: '2025-06-30',
+      status: 'in-progress',
+      resources: ['Distribution team', 'Legal', 'Compliance', 'Field audit']
+    },
+    {
+      id: 'coo-process-4',
+      title: 'Vendor Scorecard & Consolidation Planning',
+      description: 'Implement vendor performance scorecards and multi-wave consolidation plan for strategic partners.',
+      annualObjectiveIds: ['annual-a9'],
+      owner: 'Procurement Manager',
+      startDate: '2025-06-01',
+      endDate: '2026-12-31',
+      status: 'planning',
+      resources: ['Procurement team', 'Vendor managers', 'Legal', 'Finance']
+    }
+  ],
+  metrics: [
+    {
+      id: 'coo-metric-1',
+      name: 'Audit Observation Closure Rate',
+      description: 'Percentage of internal audit findings closed within target timeline',
+      processIds: ['coo-process-2'],
+      target: 95,
+      current: 68,
+      unit: '% closed',
+      frequency: 'monthly',
+      owner: 'Internal Audit Manager'
+    },
+    {
+      id: 'coo-metric-2',
+      name: 'Distributor Commission Leakage',
+      description: 'Revenue lost to commission scheme weaknesses or fraud. Internal audit flagged issues.',
+      processIds: ['coo-process-3'],
+      target: 0.5,
+      current: 3.2,
+      unit: '% of revenue',
+      frequency: 'monthly',
+      owner: 'Distribution Manager'
+    },
+    {
+      id: 'coo-metric-3',
+      name: 'Cost-to-Serve Reduction',
+      description: 'Operational cost per customer served, targeting reduction through clustering',
+      processIds: ['coo-process-4'],
+      target: 15,
+      current: 0,
+      unit: '% reduction YoY',
+      frequency: 'quarterly',
+      owner: 'Operations Manager'
+    },
+    {
+      id: 'coo-metric-4',
+      name: 'Vendor Consolidation Progress',
+      description: 'Number of vendors reduced through strategic consolidation',
+      processIds: ['coo-process-4'],
+      target: 30,
+      current: 5,
+      unit: '% vendors reduced',
+      frequency: 'quarterly',
+      owner: 'Procurement Manager'
+    }
+  ],
+  catchball: [
+    {
+      id: 'coo-catchball-1',
+      type: 'concern',
+      title: 'Referral Issues & Commission Scheme Weaknesses',
+      description: 'Internal audit identified significant control gaps in distributor commissions and referral programs. Risk of revenue leakage and fraud.',
+      from: 'Distribution Manager',
+      to: 'Chief Operating Officer',
+      relatedItemId: 'coo-annual-3',
+      relatedItemType: 'annual',
+      status: 'pending',
+      createdAt: '2025-01-28T10:00:00Z',
+      responses: [
+        {
+          id: 'coo-response-1',
+          message: 'Prioritize Distributor SOPs implementation. Implement maker-checker for all commission approvals. Monthly audit of top 20 distributors.',
+          author: 'Chief Operating Officer',
+          createdAt: '2025-01-29T11:00:00Z'
+        }
+      ]
+    },
+    {
+      id: 'coo-catchball-2',
+      type: 'approval',
+      title: 'RBIA Policy Implementation',
+      description: 'Internal audit noted absence of Risk-Based Internal Audit (RBIA) policy creating blind spots. Request approval for RBIA framework rollout.',
+      from: 'Internal Audit Manager',
+      to: 'Chief Operating Officer',
+      relatedItemId: 'annual-a5',
+      relatedItemType: 'annual',
+      status: 'pending',
+      createdAt: '2025-02-05T14:00:00Z',
+      responses: []
+    }
+  ]
+};
+
+// =============================================================================
 // Unified DishHome Dataset (All Levels Combined)
+// =============================================================================
 export const dishHomeUnifiedData: HoshinData = {
   strategicObjectives: [
     ...ceoData.strategicObjectives,
-    ...cooData.strategicObjectives,
     ...cfoData.strategicObjectives,
-    ...cioData.strategicObjectives,
+    ...ctoData.strategicObjectives,
     ...cmoData.strategicObjectives,
-    ...ctoData.strategicObjectives
+    ...cooData.strategicObjectives
   ],
   annualObjectives: [
     ...ceoData.annualObjectives,
-    ...cooData.annualObjectives,
     ...cfoData.annualObjectives,
-    ...cioData.annualObjectives,
+    ...ctoData.annualObjectives,
     ...cmoData.annualObjectives,
-    ...ctoData.annualObjectives
+    ...cooData.annualObjectives
   ],
   processes: [
     ...ceoData.processes,
-    ...cooData.processes,
     ...cfoData.processes,
-    ...cioData.processes,
+    ...ctoData.processes,
     ...cmoData.processes,
-    ...ctoData.processes
+    ...cooData.processes
   ],
   metrics: [
     ...ceoData.metrics,
-    ...cooData.metrics,
     ...cfoData.metrics,
-    ...cioData.metrics,
+    ...ctoData.metrics,
     ...cmoData.metrics,
-    ...ctoData.metrics
+    ...cooData.metrics
   ],
   catchball: [
     ...ceoData.catchball,
-    ...cooData.catchball,
     ...cfoData.catchball,
-    ...cioData.catchball,
+    ...ctoData.catchball,
     ...cmoData.catchball,
-    ...ctoData.catchball
+    ...cooData.catchball
   ]
 };
 
-// Dataset definitions with proper titles and level indicators
+// =============================================================================
+// Kano Model Data - DishHome & Competitors
+// Based on Enterprise Product Architecture (Slide 11) and Competitive Landscape (Slide 16)
+// =============================================================================
+
+// DishHome Enterprise Service Features (Based on Kano Service Stack)
+const dishHomeKanoFeatures: KanoFeature[] = [
+  // BASIC (Must-Haves) - Entry cost, don't over-engineer
+  {
+    id: 'dh-feature-1',
+    name: 'Dedicated Internet Connectivity',
+    description: 'Enterprise-grade dedicated internet with guaranteed bandwidth allocation',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 1,
+    importance: 5,
+    satisfactionImpact: 0.3,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise'],
+    notes: 'Must-have compliance requirement. Table stakes for enterprise deals.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'dh-feature-2',
+    name: 'Network Redundancy & Failover',
+    description: 'Automatic failover to backup links ensuring business continuity',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 1,
+    importance: 5,
+    satisfactionImpact: 0.3,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise'],
+    notes: 'Enterprise customers expect this. Absence causes immediate dissatisfaction.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'dh-feature-3',
+    name: 'Cybersecurity Baseline',
+    description: 'Standard security features: firewall, DDoS protection, secure DNS',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 0,
+    importance: 5,
+    satisfactionImpact: 0.2,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'theme-s4-technology'],
+    notes: 'Compliance requirement. Expected standard, not differentiator.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  // PERFORMANCE (Margin Drivers) - More is better, competitive battleground
+  {
+    id: 'dh-feature-4',
+    name: 'Managed WiFi Solutions',
+    description: 'Enterprise WiFi with centralized management, analytics, and guest access',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 2,
+    importance: 4,
+    satisfactionImpact: 0.7,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'cmo-strategic-1'],
+    notes: 'Linear satisfaction driver. Key margin opportunity.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'dh-feature-5',
+    name: 'SD-WAN Implementation',
+    description: 'Software-defined WAN for multi-site enterprises with intelligent routing',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 2,
+    importance: 4,
+    satisfactionImpact: 0.75,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'cmo-strategic-1'],
+    notes: 'Growing enterprise requirement. Competitive battleground feature.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'dh-feature-6',
+    name: 'Secure Access Service Edge (SASE)',
+    description: 'Cloud-delivered security with zero-trust network access',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 2,
+    importance: 3,
+    satisfactionImpact: 0.65,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise'],
+    notes: 'Emerging requirement. First-mover advantage potential.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'dh-feature-7',
+    name: 'Real-Time Network Monitoring',
+    description: 'Proactive monitoring with dashboards, alerts, and SLA tracking',
+    category: 'performance',
+    dysfunctionalScore: -1,
+    functionalScore: 2,
+    importance: 4,
+    satisfactionImpact: 0.6,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'cto-strategic-1'],
+    notes: 'Increasingly expected. Quality differentiator.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  // EXCITEMENT (Delighters/Moat) - High priority for differentiation
+  {
+    id: 'dh-feature-8',
+    name: 'Data Sovereignty Solutions',
+    description: 'On-premise and Nepal-based data hosting ensuring regulatory compliance and sovereignty',
+    category: 'excitement',
+    dysfunctionalScore: 1,
+    functionalScore: 2,
+    importance: 4,
+    satisfactionImpact: 0.9,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'cmo-strategic-1'],
+    notes: 'Unique differentiator via Datalaya integration. Moat feature.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'dh-feature-9',
+    name: 'Edge Caching & CDN',
+    description: 'Local edge caching for optimized content delivery and reduced latency',
+    category: 'excitement',
+    dysfunctionalScore: 1,
+    functionalScore: 2,
+    importance: 3,
+    satisfactionImpact: 0.85,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'theme-s3-ott'],
+    notes: 'Delighter for content-heavy enterprises. OTT economics enabler.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'dh-feature-10',
+    name: 'Enterprise OTT Distribution',
+    description: 'White-label OTT distribution capability for enterprise content needs',
+    category: 'excitement',
+    dysfunctionalScore: 1,
+    functionalScore: 2,
+    importance: 3,
+    satisfactionImpact: 0.8,
+    linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'theme-s3-ott', 'breakthrough-4'],
+    notes: 'Unique offering. Creates stickiness and additional revenue streams.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  }
+];
+
+// WorldLink Competitor Features (Market Leader)
+const worldLinkKanoFeatures: KanoFeature[] = [
+  {
+    id: 'wl-feature-1',
+    name: 'Fiber Network Coverage',
+    description: 'Extensive fiber infrastructure with widest market coverage',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 1,
+    importance: 5,
+    satisfactionImpact: 0.4,
+    notes: 'Market leader advantage. 900k+ subscribers base.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'wl-feature-2',
+    name: 'Network Redundancy',
+    description: 'Standard redundancy features',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 1,
+    importance: 5,
+    satisfactionImpact: 0.3,
+    notes: 'Table stakes delivery.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'wl-feature-3',
+    name: 'Basic Security Services',
+    description: 'Standard security package',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 0,
+    importance: 5,
+    satisfactionImpact: 0.2,
+    notes: 'Compliance baseline.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'wl-feature-4',
+    name: 'Enterprise WiFi Management',
+    description: 'Managed WiFi for businesses',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 2,
+    importance: 4,
+    satisfactionImpact: 0.7,
+    notes: 'Competitive offering.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'wl-feature-5',
+    name: 'SD-WAN Services',
+    description: 'Software-defined WAN for enterprise',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 2,
+    importance: 4,
+    satisfactionImpact: 0.7,
+    notes: 'Similar to DishHome offering.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'wl-feature-6',
+    name: 'SLA-Backed Enterprise Plans',
+    description: 'Service level guarantees with compensation',
+    category: 'performance',
+    dysfunctionalScore: -1,
+    functionalScore: 2,
+    importance: 4,
+    satisfactionImpact: 0.65,
+    notes: '2तै program benchmark.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'wl-feature-7',
+    name: 'Limited Data Center Services',
+    description: 'Basic hosting and colocation',
+    category: 'indifferent',
+    dysfunctionalScore: 0,
+    functionalScore: 1,
+    importance: 2,
+    satisfactionImpact: 0.3,
+    notes: 'Not a focus area for WorldLink.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  }
+];
+
+// Nepal Telecom Features (Government-Backed)
+const nepalTelecomKanoFeatures: KanoFeature[] = [
+  {
+    id: 'nt-feature-1',
+    name: 'Nationwide Coverage',
+    description: 'Broadest geographic reach including rural areas',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 2,
+    importance: 5,
+    satisfactionImpact: 0.5,
+    notes: 'Government mandate coverage advantage.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'nt-feature-2',
+    name: 'Basic Internet Services',
+    description: 'Standard broadband connectivity',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 1,
+    importance: 5,
+    satisfactionImpact: 0.3,
+    notes: 'Core offering.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'nt-feature-3',
+    name: 'Government Pricing',
+    description: 'Regulated pricing structure',
+    category: 'basic',
+    dysfunctionalScore: -1,
+    functionalScore: 1,
+    importance: 4,
+    satisfactionImpact: 0.3,
+    notes: 'Price advantage for cost-conscious segments.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'nt-feature-4',
+    name: 'Enterprise Data Services',
+    description: 'Leased lines and data services for enterprises',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 1,
+    importance: 3,
+    satisfactionImpact: 0.5,
+    notes: 'Traditional enterprise focus.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'nt-feature-5',
+    name: 'Limited Value-Added Services',
+    description: 'Basic VAS offerings',
+    category: 'indifferent',
+    dysfunctionalScore: 0,
+    functionalScore: 0,
+    importance: 2,
+    satisfactionImpact: 0.2,
+    notes: 'Weakness area - limited innovation.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  }
+];
+
+// Vianet Features
+const vianetKanoFeatures: KanoFeature[] = [
+  {
+    id: 'vn-feature-1',
+    name: 'Fiber Connectivity',
+    description: 'FTTH services in urban areas',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 1,
+    importance: 5,
+    satisfactionImpact: 0.35,
+    notes: '300-350k subscriber base.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'vn-feature-2',
+    name: 'Basic Enterprise Services',
+    description: 'Standard business connectivity',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 1,
+    importance: 4,
+    satisfactionImpact: 0.3,
+    notes: 'Mid-tier enterprise offering.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'vn-feature-3',
+    name: 'Managed Services',
+    description: 'IT managed services bundle',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 1,
+    importance: 3,
+    satisfactionImpact: 0.5,
+    notes: 'Growing service area.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'vn-feature-4',
+    name: 'Customer Support Quality',
+    description: 'Responsive technical support',
+    category: 'performance',
+    dysfunctionalScore: -1,
+    functionalScore: 2,
+    importance: 4,
+    satisfactionImpact: 0.6,
+    notes: 'Differentiation attempt.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  }
+];
+
+// Subisu Features (Potential M&A Target)
+const subisuKanoFeatures: KanoFeature[] = [
+  {
+    id: 'sb-feature-1',
+    name: 'Cable Internet Services',
+    description: 'HFC and fiber connectivity',
+    category: 'basic',
+    dysfunctionalScore: -2,
+    functionalScore: 1,
+    importance: 5,
+    satisfactionImpact: 0.3,
+    notes: '~300k subscriber base. M&A target.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'sb-feature-2',
+    name: 'Cable TV Integration',
+    description: 'Triple-play bundling capability',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 1,
+    importance: 3,
+    satisfactionImpact: 0.45,
+    notes: 'Legacy cable infrastructure.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  },
+  {
+    id: 'sb-feature-3',
+    name: 'Local Content',
+    description: 'Localized content offerings',
+    category: 'performance',
+    dysfunctionalScore: 0,
+    functionalScore: 1,
+    importance: 3,
+    satisfactionImpact: 0.4,
+    notes: 'Content differentiation attempt.',
+    createdAt: '2025-01-15T10:00:00Z',
+    updatedAt: '2025-01-15T10:00:00Z'
+  }
+];
+
+// Export Kano Analyses for Companies
+export const dishHomeKanoAnalysis: CompanyKanoAnalysis = {
+  id: 'kano-dishhome',
+  companyName: 'DishHome',
+  companyType: 'self',
+  industry: 'Telecommunications - DTH/ISP/OTT',
+  features: dishHomeKanoFeatures,
+  overallScore: 72,
+  strengthAreas: ['Data Sovereignty (Datalaya)', 'Enterprise OTT Distribution', 'Edge Caching', 'DTH-ISP-OTT Integration'],
+  weaknessAreas: ['Market Scale vs WorldLink', 'Enterprise Sales Maturity', 'Current Financial Performance'],
+  analysisDate: '2025-01-15T10:00:00Z'
+};
+
+export const worldLinkKanoAnalysis: CompanyKanoAnalysis = {
+  id: 'kano-worldlink',
+  companyName: 'WorldLink',
+  companyType: 'competitor',
+  industry: 'Telecommunications - ISP',
+  features: worldLinkKanoFeatures,
+  overallScore: 78,
+  strengthAreas: ['Market Leadership', 'Scale (900k+ subscribers)', 'SLA Programs (2तै)', 'Distribution Network'],
+  weaknessAreas: ['Data Center/Sovereignty', 'OTT Integration', 'DTH Cross-sell'],
+  analysisDate: '2025-01-15T10:00:00Z'
+};
+
+export const nepalTelecomKanoAnalysis: CompanyKanoAnalysis = {
+  id: 'kano-nepal-telecom',
+  companyName: 'Nepal Telecom',
+  companyType: 'competitor',
+  industry: 'Telecommunications - Full Service',
+  features: nepalTelecomKanoFeatures,
+  overallScore: 65,
+  strengthAreas: ['Nationwide Coverage', 'Government Backing', 'Capital Access', 'Enterprise Legacy'],
+  weaknessAreas: ['Innovation Speed', 'Value-Added Services', 'Customer Experience'],
+  analysisDate: '2025-01-15T10:00:00Z'
+};
+
+export const vianetKanoAnalysis: CompanyKanoAnalysis = {
+  id: 'kano-vianet',
+  companyName: 'Vianet',
+  companyType: 'competitor',
+  industry: 'Telecommunications - ISP',
+  features: vianetKanoFeatures,
+  overallScore: 62,
+  strengthAreas: ['Customer Support', 'Urban Focus', 'Managed Services'],
+  weaknessAreas: ['Scale (300-350k)', 'Enterprise Depth', 'Geographic Reach'],
+  analysisDate: '2025-01-15T10:00:00Z'
+};
+
+export const subisuKanoAnalysis: CompanyKanoAnalysis = {
+  id: 'kano-subisu',
+  companyName: 'Subisu',
+  companyType: 'competitor',
+  industry: 'Telecommunications - Cable/ISP',
+  features: subisuKanoFeatures,
+  overallScore: 55,
+  strengthAreas: ['Triple-Play Legacy', 'Local Content', 'Established Base'],
+  weaknessAreas: ['Technology Modernization', 'Scale (~300k)', 'Enterprise Capability'],
+  analysisDate: '2025-01-15T10:00:00Z'
+};
+
+// All Kano Analyses Array (for store initialization)
+export const allKanoAnalyses: CompanyKanoAnalysis[] = [
+  dishHomeKanoAnalysis,
+  worldLinkKanoAnalysis,
+  nepalTelecomKanoAnalysis,
+  vianetKanoAnalysis,
+  subisuKanoAnalysis
+];
+
+// =============================================================================
+// Dataset Options for UI Selection
+// =============================================================================
 export interface DatasetOption {
   id: string;
   name: string;
@@ -863,50 +1527,46 @@ export interface DatasetOption {
 
 export const availableDatasets: DatasetOption[] = [
   {
-    id: 'dishome-unified',
+    id: 'dishhome-unified',
     name: 'DishHome Unified Strategic Plan (All Levels)',
-    description: 'Complete strategic plan across all executive levels and departments',
+    description: 'Complete 5-year Hoshin Kanri plan across all executive levels - Breakthrough Objectives, Annual Objectives, and Four Pillars',
     data: dishHomeUnifiedData
   },
   {
     id: 'ceo-strategic',
-    name: 'CEO - Strategic Vision & Governance (Level 1)',
-    description: 'Strategic objectives and transformation leadership for organizational direction',
+    name: 'CEO - Strategic Vision & Capital Pathways (Level 1)',
+    description: 'Breakthrough objectives, capital-contingent strategy, M&A readiness, and PMO transformation leadership',
     data: ceoData
   },
   {
-    id: 'coo-operational',
-    name: 'COO - Operational Excellence & Service Delivery (Level 2)',
-    description: 'Service delivery optimization and operational excellence initiatives',
-    data: cooData
-  },
-  {
     id: 'cfo-financial',
-    name: 'CFO - Financial Transformation & Resource Optimization (Level 2)',
-    description: 'Financial recovery strategies and resource optimization programs',
+    name: 'CFO - Financial Core & Credibility Reset (Pillar I)',
+    description: 'EBITDA restoration, cash flow predictability, ROIC gating, and IPO-grade financial controls',
     data: cfoData
   },
   {
-    id: 'cio-infrastructure',
-    name: 'CIO - Technology Infrastructure & Digital Transformation (Level 2)',
-    description: 'Technology infrastructure and digital platform transformation',
-    data: cioData
+    id: 'cto-technology',
+    name: 'CTO - Technology, NOC & Platform Architecture (Pillar III)',
+    description: 'AI-NOC, OSS/BSS unification, IAM/SIEM, cyber governance, and M&A-ready infrastructure',
+    data: ctoData
   },
   {
-    id: 'cmo-marketing',
-    name: 'CMO - Customer Acquisition & Brand Positioning (Level 2)',
-    description: 'Customer acquisition strategies and brand positioning initiatives',
+    id: 'cmo-enterprise',
+    name: 'CMO - Enterprise, OTT & Customer Strategy (Pillar II)',
+    description: 'Enterprise GTM, SLA product stack, OTT repositioning with economic guardrails, Kano-based architecture',
     data: cmoData
   },
   {
-    id: 'cto-innovation',
-    name: 'CTO - Technical Innovation & Platform Architecture (Level 2)',
-    description: 'Technical innovation and scalable platform architecture development',
-    data: ctoData
+    id: 'coo-operations',
+    name: 'COO - Operations, Distribution & Ecosystem (Pillar IV)',
+    description: 'PMO governance, vendor/distributor consolidation, audit closure, and service delivery excellence',
+    data: cooData
   }
 ];
 
-// Legacy exports for backward compatibility
+// =============================================================================
+// Legacy Exports for Backward Compatibility
+// =============================================================================
 export const dummyStrategicObjectives = dishHomeUnifiedData.strategicObjectives;
 export const dummyAnnualObjectives = dishHomeUnifiedData.annualObjectives;
 export const dummyProcesses = dishHomeUnifiedData.processes;

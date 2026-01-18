@@ -7,16 +7,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { 
-  FileText, 
-  Download, 
-  AlertTriangle, 
-  Clock, 
+import {
+  FileText,
+  Download,
+  AlertTriangle,
+  Clock,
   Target,
   BarChart3,
   Users,
   X,
-  Zap
+  Zap,
+  Sparkles,
+  Bot
 } from 'lucide-react';
 
 interface ExecutiveReportProps {
@@ -38,14 +40,16 @@ interface CriticalIssue {
 const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpenChange }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [reportGenerated, setReportGenerated] = useState(false);
-  
-  const { 
-    strategicObjectives, 
-    annualObjectives, 
-    processes, 
-    metrics, 
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
+  const {
+    strategicObjectives,
+    annualObjectives,
+    processes,
+    metrics,
     catchball,
-    getCurrentDatasetName 
+    getCurrentDatasetName
   } = useHoshinStore();
 
   const generateReport = async () => {
@@ -54,6 +58,42 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
     await new Promise(resolve => setTimeout(resolve, 2000));
     setReportGenerated(true);
     setIsGenerating(false);
+  };
+
+  const generateAiInsights = async () => {
+    setIsAiLoading(true);
+    try {
+      const issues = analyzeCriticalIssues();
+      const kpis = analyzeKPIPerformance();
+
+      const payload = {
+        datasetName: getCurrentDatasetName(),
+        objectives: [
+          ...strategicObjectives.filter(o => o.status === 'at-risk' || o.priority === 'high'),
+          ...annualObjectives.filter(o => o.status === 'at-risk')
+        ],
+        metrics: kpis.filter(k => k.performance < 80),
+        issues: issues.filter(i => i.severity === 'high')
+      };
+
+      const response = await fetch('/api/ai/generate-summary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate insights');
+      }
+
+      const data = await response.json();
+      setAiSummary(data.summary);
+    } catch (error) {
+      console.error('Error generating AI insights:', error);
+      // Fallback or error toast could act here
+    } finally {
+      setIsAiLoading(false);
+    }
   };
 
   const downloadReport = () => {
@@ -73,7 +113,7 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
     const criticalIssues = analyzeCriticalIssues();
     const kpiSummary = analyzeKPIPerformance();
     const projectHealth = analyzeProjectHealth();
-    
+
     return `
 <!DOCTYPE html>
 <html>
@@ -207,8 +247,8 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
     });
 
     // Analyze pending critical catchball items
-    const criticalCatchball = catchball.filter(item => 
-      item.status === 'pending' && 
+    const criticalCatchball = catchball.filter(item =>
+      item.status === 'pending' &&
       (item.type === 'concern' || item.type === 'approval') &&
       (new Date().getTime() - new Date(item.createdAt).getTime()) > (3 * 24 * 60 * 60 * 1000) // Older than 3 days
     );
@@ -236,7 +276,7 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
     return metrics.map(metric => {
       const performance = (metric.current / metric.target) * 100;
       let recommendation = '';
-      
+
       if (performance < 70) {
         recommendation = 'Requires immediate attention and resource reallocation';
       } else if (performance < 90) {
@@ -260,7 +300,7 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
   const analyzeProjectHealth = () => {
     return annualObjectives.map(obj => {
       let recommendation = '';
-      
+
       if (obj.status === 'at-risk') {
         recommendation = '🚨 Requires immediate executive intervention and resource support';
       } else if (obj.progress < 50) {
@@ -295,7 +335,7 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
     ].length;
 
     const underperformingMetrics = metrics.filter(metric => (metric.current / metric.target) < 0.8).length;
-    
+
     const healthScore = Math.max(0, 100 - ((atRiskItems + underperformingMetrics) / totalItems * 100));
     return Math.round(healthScore);
   };
@@ -346,11 +386,11 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
                 </div>
 
                 <p className="text-slate-600 max-w-2xl mx-auto">
-                  This report will analyze your current strategic initiatives, identify critical issues, 
+                  This report will analyze your current strategic initiatives, identify critical issues,
                   and provide executive-level recommendations for immediate action.
                 </p>
 
-                <Button 
+                <Button
                   onClick={generateReport}
                   className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                 >
@@ -384,14 +424,14 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
                 <p className="text-slate-600">{getCurrentDatasetName()} • {new Date().toLocaleDateString()}</p>
               </div>
               <div className="flex items-center gap-3">
-                <Button 
+                <Button
                   onClick={downloadReport}
                   className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-xl"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Download
                 </Button>
-                <Button 
+                <Button
                   onClick={() => onOpenChange(false)}
                   variant="outline"
                   className="p-2 rounded-xl"
@@ -402,6 +442,54 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
             </div>
 
             <div className="p-6 space-y-8">
+
+              {/* AI Insights Section */}
+              <div className="bg-gradient-to-br from-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-bold flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-yellow-300" />
+                      AI Strategic Analysis
+                    </h3>
+                    {!aiSummary && (
+                      <Button
+                        onClick={generateAiInsights}
+                        disabled={isAiLoading}
+                        className="bg-indigo-500 hover:bg-indigo-600 text-white border-0"
+                        size="sm"
+                      >
+                        {isAiLoading ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2"></div>
+                            Analyzing...
+                          </>
+                        ) : (
+                          <>
+                            <Bot className="w-4 h-4 mr-2" />
+                            Generate Insights
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+
+                  {aiSummary ? (
+                    <div
+                      className="prose prose-invert max-w-none bg-white/5 rounded-xl p-6 backdrop-blur-sm"
+                      dangerouslySetInnerHTML={{ __html: aiSummary }}
+                    />
+                  ) : (
+                    <div className="text-indigo-200 text-sm bg-white/5 rounded-xl p-6 border border-white/10 text-center">
+                      <Bot className="w-8 h-8 mx-auto mb-3 opacity-50" />
+                      <p>Click "Generate Insights" to utilize AWS Bedrock AI to analyze your performance data, seek root causes for critical issues, and provide executive recommendations.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Executive Summary */}
               <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-6 border border-slate-200">
                 <h3 className="text-xl font-semibold text-slate-800 mb-4 flex items-center gap-2">
@@ -439,19 +527,17 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
                   </h3>
                   <div className="space-y-4">
                     {criticalIssues.slice(0, 5).map((issue, index) => (
-                      <div key={issue.id} className={`p-6 rounded-xl border-l-4 ${
-                        issue.severity === 'high' ? 'bg-red-50 border-red-500' :
+                      <div key={issue.id} className={`p-6 rounded-xl border-l-4 ${issue.severity === 'high' ? 'bg-red-50 border-red-500' :
                         issue.severity === 'medium' ? 'bg-yellow-50 border-yellow-500' :
-                        'bg-blue-50 border-blue-500'
-                      }`}>
+                          'bg-blue-50 border-blue-500'
+                        }`}>
                         <div className="flex items-start justify-between mb-3">
                           <div>
                             <h4 className="font-semibold text-slate-800 text-lg">{issue.title}</h4>
-                            <Badge className={`mt-2 ${
-                              issue.severity === 'high' ? 'bg-red-100 text-red-800' :
+                            <Badge className={`mt-2 ${issue.severity === 'high' ? 'bg-red-100 text-red-800' :
                               issue.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-blue-100 text-blue-800'
-                            }`}>
+                                'bg-blue-100 text-blue-800'
+                              }`}>
                               {issue.severity.toUpperCase()} PRIORITY
                             </Badge>
                           </div>
@@ -496,22 +582,20 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
                     <div key={index} className="bg-white border border-slate-200 rounded-xl p-4">
                       <div className="flex justify-between items-start mb-3">
                         <h4 className="font-medium text-slate-800">{kpi.name}</h4>
-                        <Badge className={`${
-                          kpi.performance >= 90 ? 'bg-green-100 text-green-800' :
+                        <Badge className={`${kpi.performance >= 90 ? 'bg-green-100 text-green-800' :
                           kpi.performance >= 70 ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
+                            'bg-red-100 text-red-800'
+                          }`}>
                           {kpi.performance.toFixed(1)}%
                         </Badge>
                       </div>
                       <div className="space-y-3">
-                        <Progress 
-                          value={Math.min(kpi.performance, 100)} 
-                          className={`h-2 ${
-                            kpi.performance >= 90 ? 'bg-green-100 [&>div]:bg-green-500' :
+                        <Progress
+                          value={Math.min(kpi.performance, 100)}
+                          className={`h-2 ${kpi.performance >= 90 ? 'bg-green-100 [&>div]:bg-green-500' :
                             kpi.performance >= 70 ? 'bg-yellow-100 [&>div]:bg-yellow-500' :
-                            'bg-red-100 [&>div]:bg-red-500'
-                          }`}
+                              'bg-red-100 [&>div]:bg-red-500'
+                            }`}
                         />
                         <div className="text-sm text-slate-600">
                           {kpi.current.toLocaleString()} / {kpi.target.toLocaleString()} {kpi.unit}

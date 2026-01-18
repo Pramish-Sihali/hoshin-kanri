@@ -3,32 +3,32 @@
 
 import React, { useState } from 'react';
 import { useHoshinStore } from '../store/hoshinStore';
-import { Card, CardContent, } from './ui/card';
+import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
 import { Badge } from './ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Plus, MessageSquare, User, Calendar, Send, CheckCircle2, XCircle, Clock, AlertCircle, ArrowRight } from 'lucide-react';
+import { Plus, MessageSquare, User, Calendar, Send, CheckCircle2, XCircle, Clock, AlertCircle, ArrowRight, Inbox } from 'lucide-react';
 import { CatchballItem } from '../types/hoshin';
 
 const CatchballBoard: React.FC = () => {
-  const { 
-    catchball, 
-    strategicObjectives, 
-    annualObjectives, 
-    processes, 
+  const {
+    catchball,
+    strategicObjectives,
+    annualObjectives,
+    processes,
     metrics,
     addCatchballItem,
     updateCatchballItem,
     addCatchballResponse
   } = useHoshinStore();
-  
+
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CatchballItem | null>(null);
   const [responseText, setResponseText] = useState('');
-  
+
   const [formData, setFormData] = useState({
     type: 'question' as 'question' | 'suggestion' | 'concern' | 'approval',
     title: '',
@@ -58,13 +58,13 @@ const CatchballBoard: React.FC = () => {
     });
     setShowAddForm(false);
     setFormData({
-      type: 'question' as 'question' | 'suggestion' | 'concern' | 'approval',
+      type: 'question',
       title: '',
       description: '',
       from: '',
       to: '',
       relatedItemId: '',
-      relatedItemType: 'strategic' as 'strategic' | 'annual' | 'process' | 'metric'
+      relatedItemType: 'strategic'
     });
   };
 
@@ -72,7 +72,7 @@ const CatchballBoard: React.FC = () => {
     if (selectedItem && responseText.trim()) {
       addCatchballResponse(selectedItem.id, {
         message: responseText,
-        author: 'Current User', // In a real app, this would be from auth
+        author: 'Current User',
         createdAt: new Date().toISOString()
       });
       setResponseText('');
@@ -81,10 +81,10 @@ const CatchballBoard: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'addressed': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-      case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-slate-100 text-slate-800 border-slate-200';
+      case 'pending': return 'text-amber-600 bg-amber-50 border-amber-200';
+      case 'addressed': return 'text-emerald-600 bg-emerald-50 border-emerald-200';
+      case 'rejected': return 'text-red-600 bg-red-50 border-red-200';
+      default: return 'text-slate-600 bg-slate-50 border-slate-200';
     }
   };
 
@@ -99,21 +99,21 @@ const CatchballBoard: React.FC = () => {
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'question': return '❓';
-      case 'suggestion': return '💡';
-      case 'concern': return '⚠️';
-      case 'approval': return '✅';
-      default: return '📝';
+      case 'question': return '?';
+      case 'suggestion': return '→';
+      case 'concern': return '!';
+      case 'approval': return '✓';
+      default: return '•';
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'question': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'suggestion': return 'bg-green-100 text-green-800 border-green-200';
-      case 'concern': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'approval': return 'bg-purple-100 text-purple-800 border-purple-200';
-      default: return 'bg-slate-100 text-slate-800 border-slate-200';
+      case 'question': return 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'suggestion': return 'text-green-600 bg-green-50 border-green-200';
+      case 'concern': return 'text-orange-600 bg-orange-50 border-orange-200';
+      case 'approval': return 'text-purple-600 bg-purple-50 border-purple-200';
+      default: return 'text-slate-600 bg-slate-50 border-slate-200';
     }
   };
 
@@ -125,122 +125,112 @@ const CatchballBoard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
-      <div className="p-8 space-y-8">
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
-              Catchball Communication
-            </h1>
-            <p className="text-slate-600 text-lg">Collaborative policy deployment discussions</p>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-6xl mx-auto px-8 py-8 space-y-8">
+        {/* Minimal Header */}
+        <div className="flex items-start justify-between border-b pb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Catchball</h1>
+            <p className="text-sm text-gray-500 mt-1.5">Strategic alignment through collaborative dialogue</p>
           </div>
-          <Button 
+          <Button
             onClick={() => setShowAddForm(true)}
-            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-xl"
+            className="bg-black hover:bg-gray-800 text-white text-sm px-4 py-2 h-9"
           >
-            <Plus className="w-5 h-5 mr-2" />
-            New Catchball Item
+            <Plus className="w-4 h-4 mr-1.5" />
+            New Item
           </Button>
         </div>
 
-        {/* Status Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Minimal Status Overview */}
+        <div className="grid grid-cols-4 gap-5">
           {[
-            { status: 'pending', label: 'Pending', count: statusCounts.pending, icon: Clock, color: 'from-amber-500 to-amber-600' },
-            { status: 'addressed', label: 'Addressed', count: statusCounts.addressed, icon: CheckCircle2, color: 'from-emerald-500 to-emerald-600' },
-            { status: 'rejected', label: 'Rejected', count: statusCounts.rejected, icon: XCircle, color: 'from-red-500 to-red-600' },
-            { status: 'all', label: 'Total', count: statusCounts.total, icon: MessageSquare, color: 'from-teal-500 to-teal-600' }
-          ].map(({ status, label, count, icon: Icon, color }) => (
-            <Card key={status} className="border-5 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-slate-600">{label}</p>
-                    <p className="text-3xl font-bold text-slate-800">{count}</p>
-                  </div>
-                  <div className={`p-3 bg-gradient-to-br ${color} rounded-xl shadow-lg`}>
-                    <Icon className="w-7 h-7 text-white" />
-                  </div>
+            { status: 'pending', label: 'Pending', count: statusCounts.pending, icon: Clock },
+            { status: 'addressed', label: 'Addressed', count: statusCounts.addressed, icon: CheckCircle2 },
+            { status: 'rejected', label: 'Rejected', count: statusCounts.rejected, icon: XCircle },
+            { status: 'all', label: 'Total', count: statusCounts.total, icon: MessageSquare }
+          ].map(({ status, label, count, icon: Icon }) => (
+            <div key={status} className="border rounded-lg p-5 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">{label}</p>
+                  <p className="text-3xl font-bold text-gray-900">{count}</p>
                 </div>
-              </CardContent>
-            </Card>
+                <Icon className="w-6 h-6 text-gray-400" />
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* Catchball Items */}
-        <div className="space-y-6">
+        {/* Catchball Items List */}
+        <div className="space-y-4">
           {catchball.length === 0 ? (
-            <Card className="border-5 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <MessageSquare className="w-10 h-10 text-teal-600" />
-                </div>
-                <h3 className="text-2xl font-semibold text-slate-800 mb-3">No catchball items yet</h3>
-                <p className="text-slate-500 mb-8 max-w-md mx-auto">
-                  Start collaborative discussions to align your organization and improve strategic deployment
-                </p>
-                <Button 
-                  onClick={() => setShowAddForm(true)}
-                  className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-8 py-3 rounded-xl"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Create First Catchball Item
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="border rounded-lg p-12 text-center">
+              <Inbox className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">No catchball items</h3>
+              <p className="text-sm text-gray-500 mb-6">
+                Start collaborative discussions to align strategic deployment
+              </p>
+              <Button
+                onClick={() => setShowAddForm(true)}
+                className="bg-black hover:bg-gray-800 text-white text-sm px-5 py-2"
+              >
+                <Plus className="w-4 h-4 mr-1.5" />
+                Create First Item
+              </Button>
+            </div>
           ) : (
             catchball.map((item) => {
               const StatusIcon = getStatusIcon(item.status);
               return (
-                <Card key={item.id} className="border-5 shadow-lg bg-white/90 backdrop-blur-sm cursor-pointer hover:shadow-xl hover:bg-white transition-all duration-300 group"
-                      onClick={() => setSelectedItem(item)}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-2xl">{getTypeIcon(item.type)}</span>
-                            <Badge className={`px-3 py-1 rounded-full text-xs font-medium ${getTypeColor(item.type)}`}>
-                              {item.type}
-                            </Badge>
-                          </div>
-                          <Badge className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
-                            <StatusIcon className="w-3 h-3 mr-1" />
-                            {item.status}
-                          </Badge>
-                        </div>
-                        
-                        <h3 className="font-semibold text-xl text-slate-800 mb-3 group-hover:text-teal-700 transition-colors">
-                          {item.title}
-                        </h3>
-                        <p className="text-slate-600 mb-4 line-clamp-2">{item.description}</p>
-                        
-                        <div className="flex items-center flex-wrap gap-4 text-sm">
-                          <div className="flex items-center gap-2 text-slate-500">
-                            <User className="w-4 h-4" />
-                            <span className="font-medium">{item.from}</span>
-                            <ArrowRight className="w-3 h-3" />
-                            <span className="font-medium">{item.to}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-slate-500">
-                            <Calendar className="w-4 h-4" />
-                            <span>{new Date(item.createdAt).toLocaleDateString()}</span>
-                          </div>
-                          <Badge variant="outline" className="text-xs px-2 py-1 rounded-full">
-                            {item.relatedItemType}
-                          </Badge>
-                        </div>
+                <div
+                  key={item.id}
+                  className="border rounded-lg p-5 cursor-pointer hover:bg-gray-50 transition-colors group"
+                  onClick={() => setSelectedItem(item)}
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex-1 min-w-0">
+                      {/* Tags */}
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <Badge className={`px-2.5 py-1 text-xs font-medium border ${getTypeColor(item.type)} rounded`}>
+                          {getTypeIcon(item.type)} {item.type}
+                        </Badge>
+                        <Badge className={`px-2.5 py-1 text-xs font-medium border ${getStatusColor(item.status)} rounded`}>
+                          <StatusIcon className="w-3 h-3 mr-1" />
+                          {item.status}
+                        </Badge>
                       </div>
-                      <div className="flex items-center gap-2 ml-6">
-                        <div className="flex items-center gap-2 text-slate-500 bg-slate-50 px-3 py-2 rounded-full">
-                          <MessageSquare className="w-4 h-4" />
-                          <span className="text-sm font-medium">{item.responses.length}</span>
+
+                      {/* Title */}
+                      <h3 className="font-semibold text-base text-gray-900 mb-2 group-hover:text-black transition-colors">
+                        {item.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-sm text-gray-600 mb-4 line-clamp-1">{item.description}</p>
+
+                      {/* Metadata */}
+                      <div className="flex items-center gap-5 text-xs text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <User className="w-3 h-3" />
+                          <span>{item.from}</span>
+                          <ArrowRight className="w-3 h-3" />
+                          <span>{item.to}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{new Date(item.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+
+                    {/* Response count */}
+                    <div className="flex items-center gap-2 text-sm text-gray-500 bg-gray-100 px-3 py-2 rounded-lg">
+                      <MessageSquare className="w-4 h-4" />
+                      <span className="font-medium">{item.responses.length}</span>
+                    </div>
+                  </div>
+                </div>
               );
             })
           )}
@@ -248,111 +238,96 @@ const CatchballBoard: React.FC = () => {
 
         {/* Add Catchball Item Dialog */}
         <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-          <DialogContent className="max-w-2xl p-4">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-semibold text-slate-800 flex items-center gap-2">
-                <MessageSquare className="w-6 h-6 text-teal-600" />
-                Add Catchball Item
-              </DialogTitle>
+          <DialogContent className="max-w-2xl p-6">
+            <DialogHeader className="mb-4">
+              <DialogTitle className="text-2xl font-semibold">New Catchball Item</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label htmlFor="type" className="block text-sm font-semibold text-slate-700 mb-2">Type</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">Type</label>
                   <Select
-                    id="type"
                     value={formData.type}
-                    onChange={(value) => setFormData({ ...formData, type: value as 'question' | 'suggestion' | 'concern' | 'approval' })}
+                    onChange={(value) => setFormData({ ...formData, type: value as any })}
                     options={[
-                      { value: 'question', label: 'Question', icon: '❓' },
-                      { value: 'suggestion', label: 'Suggestion', icon: '💡' },
-                      { value: 'concern', label: 'Concern', icon: '⚠️' },
-                      { value: 'approval', label: 'Approval Request', icon: '✅' }
+                      { value: 'question', label: 'Question' },
+                      { value: 'suggestion', label: 'Suggestion' },
+                      { value: 'concern', label: 'Concern' },
+                      { value: 'approval', label: 'Approval' }
                     ]}
-                    className="h-12 rounded-xl border-slate-200 focus:border-teal-500"
+                    className="h-9 text-sm"
                     placeholder="Select type"
                   />
                 </div>
                 <div>
-                  <label htmlFor="relatedItem" className="block text-sm font-semibold text-slate-700 mb-2">Related Item</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">Related Item</label>
                   <Select
-                    id="relatedItem"
                     value={formData.relatedItemId}
                     onChange={(value) => setFormData({ ...formData, relatedItemId: value })}
                     options={getAllItems().map((item) => ({
                       value: item.id,
-                      label: `[${item.type}] ${item.displayName}`,
-                      icon: item.type === 'strategic' ? '🎯' : 
-                            item.type === 'annual' ? '📊' :
-                            item.type === 'process' ? '⚙️' : '📈'
+                      label: `${item.displayName}`,
                     }))}
-                    className="h-12 rounded-xl border-slate-200 focus:border-teal-500"
-                    placeholder="Select related item..."
+                    className="h-9 text-sm"
+                    placeholder="Select item"
                   />
                 </div>
               </div>
-              
+
               <div>
-                <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">Title</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">Title</label>
                 <Input
-                  id="title"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="h-12 rounded-xl border-slate-200 focus:border-teal-500"
-                  placeholder="Enter a clear, descriptive title"
+                  className="h-9 text-sm"
+                  placeholder="Brief, descriptive title"
                   required
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="description" className="block text-sm font-semibold text-slate-700 mb-2">Description</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">Description</label>
                 <Textarea
-                  id="description"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="min-h-24 rounded-xl border-slate-200 focus:border-teal-500"
-                  placeholder="Provide detailed context and background"
+                  className="min-h-20 text-sm"
+                  placeholder="Detailed context and background"
                   required
                 />
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label htmlFor="from" className="block text-sm font-semibold text-slate-700 mb-2">From</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">From</label>
                   <Input
-                    id="from"
                     value={formData.from}
                     onChange={(e) => setFormData({ ...formData, from: e.target.value })}
-                    className="h-12 rounded-xl border-slate-200 focus:border-teal-500"
-                    placeholder="Your name or role"
+                    className="h-9 text-sm"
+                    placeholder="Your name"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="to" className="block text-sm font-semibold text-slate-700 mb-2">To</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1.5">To</label>
                   <Input
-                    id="to"
                     value={formData.to}
                     onChange={(e) => setFormData({ ...formData, to: e.target.value })}
-                    className="h-12 rounded-xl border-slate-200 focus:border-teal-500"
-                    placeholder="Recipient name or role"
+                    className="h-9 text-sm"
+                    placeholder="Recipient name"
                     required
                   />
                 </div>
               </div>
-              
-              <div className="flex gap-3 pt-4">
-                <Button 
-                  type="submit"
-                  className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200"
-                >
-                  Add Item
+
+              <div className="flex gap-2 pt-2">
+                <Button type="submit" className="bg-black hover:bg-gray-800 text-white text-sm px-4 py-2 h-9">
+                  Create Item
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => setShowAddForm(false)}
-                  className="px-8 py-3 rounded-xl font-medium border-slate-200 hover:bg-slate-50"
+                  className="text-sm px-4 py-2 h-9"
                 >
                   Cancel
                 </Button>
@@ -363,91 +338,96 @@ const CatchballBoard: React.FC = () => {
 
         {/* Item Detail Dialog */}
         <Dialog open={!!selectedItem} onOpenChange={() => setSelectedItem(null)}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto p-6">
             {selectedItem && (
               <>
-                <DialogHeader className="pb-6">
-                  <DialogTitle className="text-2xl font-semibold text-slate-800 flex items-center gap-3">
-                    <span className="text-3xl">{getTypeIcon(selectedItem.type)}</span>
+                <DialogHeader className="mb-5">
+                  <DialogTitle className="text-2xl font-semibold flex items-center gap-3">
+                    <span className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-sm">
+                      {getTypeIcon(selectedItem.type)}
+                    </span>
                     {selectedItem.title}
                   </DialogTitle>
                 </DialogHeader>
                 <div className="space-y-6">
-                  <div className="bg-slate-50 rounded-xl p-6">
-                    <p className="text-slate-700 leading-relaxed mb-4">{selectedItem.description}</p>
-                    <div className="flex items-center flex-wrap gap-4 text-sm">
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-slate-500" />
-                        <span className="font-medium">{selectedItem.from}</span>
-                        <ArrowRight className="w-3 h-3 text-slate-400" />
-                        <span className="font-medium">{selectedItem.to}</span>
+                  {/* Description */}
+                  <div className="bg-gray-50 rounded-lg p-5">
+                    <p className="text-sm text-gray-700 leading-relaxed mb-3">{selectedItem.description}</p>
+                    <div className="flex items-center gap-3 text-xs">
+                      <div className="flex items-center gap-1 text-gray-600">
+                        <User className="w-3 h-3" />
+                        <span>{selectedItem.from}</span>
+                        <ArrowRight className="w-3 h-3" />
+                        <span>{selectedItem.to}</span>
                       </div>
-                      <Badge className={`px-3 py-1 rounded-full ${getStatusColor(selectedItem.status)}`}>
+                      <Badge className={`px-2 py-0.5 text-[10px] border ${getStatusColor(selectedItem.status)} rounded`}>
                         {selectedItem.status}
                       </Badge>
-                      <Badge className={`px-3 py-1 rounded-full ${getTypeColor(selectedItem.type)}`}>
+                      <Badge className={`px-2 py-0.5 text-[10px] border ${getTypeColor(selectedItem.type)} rounded`}>
                         {selectedItem.type}
                       </Badge>
                     </div>
                   </div>
-                  
+
+                  {/* Responses */}
                   <div>
-                    <h4 className="font-semibold text-lg text-slate-800 mb-4 flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-teal-600" />
+                    <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4" />
                       Responses ({selectedItem.responses.length})
                     </h4>
-                    <div className="space-y-4 max-h-80 overflow-y-auto mb-6">
+                    <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
                       {selectedItem.responses.map((response) => (
-                        <div key={response.id} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                          <p className="text-slate-700 mb-3 leading-relaxed">{response.message}</p>
-                          <div className="flex justify-between items-center text-sm text-slate-500">
+                        <div key={response.id} className="border rounded-lg p-3">
+                          <p className="text-sm text-gray-700 mb-2">{response.message}</p>
+                          <div className="flex justify-between items-center text-xs text-gray-500">
                             <span className="font-medium">{response.author}</span>
                             <span>{new Date(response.createdAt).toLocaleDateString()}</span>
                           </div>
                         </div>
                       ))}
                       {selectedItem.responses.length === 0 && (
-                        <div className="text-center py-8">
-                          <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                          <p className="text-slate-500">No responses yet</p>
+                        <div className="text-center py-6 text-sm text-gray-400">
+                          No responses yet
                         </div>
                       )}
                     </div>
                   </div>
-                  
-                  <div className="bg-white border border-slate-200 rounded-xl p-4">
-                    <div className="flex gap-3">
+
+                  {/* Add Response */}
+                  <div className="border rounded-lg p-3">
+                    <div className="flex gap-2">
                       <Textarea
-                        placeholder="Add your response..."
+                        placeholder="Add response..."
                         value={responseText}
                         onChange={(e) => setResponseText(e.target.value)}
-                        className="flex-1 min-h-20 border-slate-200 focus:border-teal-500 rounded-xl"
+                        className="flex-1 min-h-16 text-sm"
                       />
-                      <Button 
+                      <Button
                         onClick={handleAddResponse}
-                        className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                        className="bg-black hover:bg-gray-800 text-white px-3 h-9 self-end"
                       >
                         <Send className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
-                  
-                  <div className="flex gap-3 pt-4 border-t border-slate-200">
-                    <Button 
+
+                  {/* Actions */}
+                  <div className="flex gap-2 pt-2 border-t">
+                    <Button
                       variant="outline"
                       onClick={() => updateCatchballItem(selectedItem.id, { status: 'addressed' })}
-                      className="flex-1 bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100 rounded-xl font-medium py-3"
+                      className="flex-1 text-sm h-9 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
                     >
-                      <CheckCircle2 className="w-4 h-4 mr-2" />
-                      Mark as Addressed
+                      <CheckCircle2 className="w-4 h-4 mr-1.5" />
+                      Mark Addressed
                     </Button>
-                    <Button 
+                    <Button
                       variant="outline"
                       onClick={() => updateCatchballItem(selectedItem.id, { status: 'rejected' })}
-                      className="flex-1 bg-red-50 border-red-200 text-red-700 hover:bg-red-100 rounded-xl font-medium py-3"
+                      className="flex-1 text-sm h-9 border-red-200 text-red-700 hover:bg-red-50"
                     >
-                      <XCircle className="w-4 h-4 mr-2" />
-                      Mark as Rejected
+                      <XCircle className="w-4 h-4 mr-1.5" />
+                      Mark Rejected
                     </Button>
                   </div>
                 </div>

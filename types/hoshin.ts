@@ -76,12 +76,24 @@ export interface CatchballItem {
   }>;
 }
 
+
+export interface GanttItem {
+  id: string;
+  initiative: string;
+  category?: 'financial' | 'customer' | 'process' | 'people' | 'technology' | 'governance' | string;
+  timeline: {
+    period: string; // e.g., "0-6M"
+    active: boolean;
+  }[];
+}
+
 export interface HoshinData {
   strategicObjectives: StrategicObjective[];
   annualObjectives: AnnualObjective[];
   processes: Process[];
   metrics: Metric[];
   catchball: CatchballItem[];
+  gantt?: GanttItem[];
 }
 
 export interface DatasetOption {

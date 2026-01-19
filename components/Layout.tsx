@@ -19,7 +19,8 @@ import {
   Download,
   Loader2,
   FileText,
-  LineChart
+  LineChart,
+  Route
 } from 'lucide-react';
 
 import UserMenu from './UserMenu';
@@ -91,6 +92,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
     { name: 'Dashboard', href: 'dashboard', icon: Home },
     { name: 'X-Matrix', href: 'matrix', icon: Target },
     { name: 'Catchball', href: 'catchball', icon: MessageSquare },
+    { name: 'Roadmap', href: 'roadmap', icon: Route },
     { name: 'Objectives', href: 'objectives', icon: BarChart3 },
     { name: 'Kano Model', href: 'kano', icon: LineChart },
     { name: 'Processes', href: 'processes', icon: Users },

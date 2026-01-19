@@ -7,14 +7,15 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import StrategicObjectiveForm from './StrategicObjectiveForm';
+import { GanttChart } from './GanttChart';
 import { Plus, Target, TrendingUp, Users, AlertCircle, Activity, CheckCircle2, Clock, AlertTriangle, Database, Info } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { 
-    strategicObjectives, 
-    annualObjectives, 
-    processes, 
-    metrics, 
+  const {
+    strategicObjectives,
+    annualObjectives,
+    processes,
+    metrics,
     catchball,
     currentDatasetId,
     getCurrentDatasetName,
@@ -77,7 +78,7 @@ const Dashboard: React.FC = () => {
               </div>
             )}
           </div>
-          <Button 
+          <Button
             onClick={() => setShowObjectiveForm(true)}
             className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-xl"
           >
@@ -88,7 +89,7 @@ const Dashboard: React.FC = () => {
 
         {/* Dataset Information Banner */}
         {!currentDatasetId && stats.total === 0 && (
-          <Card className="border-5 shadow-lg bg-gradient-to-r from-teal-50 to-blue-50 border-teal-200">
+          <Card className="border-4 shadow-lg bg-gradient-to-r from-teal-50 to-blue-50 border-teal-200">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
@@ -97,7 +98,7 @@ const Dashboard: React.FC = () => {
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-teal-800 mb-1">Welcome to Strategic Policy Deployment</h3>
                   <p className="text-teal-700 mb-3">
-                    This application helps you implement Hoshin Kanri (Policy Deployment) methodology. 
+                    This application helps you implement Hoshin Kanri (Policy Deployment) methodology.
                     Load demo data to explore features or start building your own strategic plan.
                   </p>
                   <p className="text-sm text-teal-600">
@@ -111,7 +112,7 @@ const Dashboard: React.FC = () => {
 
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="border-5 shadow-lg bg-gradient-to-br from-white to-teal-50/50 hover:shadow-xl transition-all duration-300">
+          <Card className="border-4 shadow-lg bg-gradient-to-br from-white to-teal-50/50 hover:shadow-xl transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
@@ -125,7 +126,7 @@ const Dashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-5 shadow-lg bg-gradient-to-br from-white to-emerald-50/50 hover:shadow-xl transition-all duration-300">
+          <Card className="border-4 shadow-lg bg-gradient-to-br from-white to-emerald-50/50 hover:shadow-xl transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
@@ -139,7 +140,7 @@ const Dashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-5 shadow-lg bg-gradient-to-br from-white to-blue-50/50 hover:shadow-xl transition-all duration-300">
+          <Card className="border-4 shadow-lg bg-gradient-to-br from-white to-blue-50/50 hover:shadow-xl transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
@@ -153,7 +154,7 @@ const Dashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-5 shadow-lg bg-gradient-to-br from-white to-orange-50/50 hover:shadow-xl transition-all duration-300">
+          <Card className="border-4 shadow-lg bg-gradient-to-br from-white to-orange-50/50 hover:shadow-xl transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
@@ -170,7 +171,7 @@ const Dashboard: React.FC = () => {
 
         {/* Status Overview and Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card className="border-5 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border-4 shadow-lg bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-semibold text-slate-800 flex items-center gap-2">
                 <Activity className="w-5 h-5 text-teal-600" />
@@ -193,11 +194,11 @@ const Dashboard: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <Progress 
-                  value={stats.total > 0 ? (stats.completed / stats.total) * 100 : 0} 
+                <Progress
+                  value={stats.total > 0 ? (stats.completed / stats.total) * 100 : 0}
                   className="h-2 bg-emerald-100 [&>div]:bg-gradient-to-r [&>div]:from-emerald-500 [&>div]:to-emerald-600"
                 />
-                
+
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <Clock className="w-5 h-5 text-blue-500" />
@@ -212,11 +213,11 @@ const Dashboard: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <Progress 
-                  value={stats.total > 0 ? (stats.inProgress / stats.total) * 100 : 0} 
+                <Progress
+                  value={stats.total > 0 ? (stats.inProgress / stats.total) * 100 : 0}
                   className="h-2 bg-blue-100 [&>div]:bg-gradient-to-r [&>div]:from-blue-500 [&>div]:to-blue-600"
                 />
-                
+
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <AlertTriangle className="w-5 h-5 text-red-500" />
@@ -231,15 +232,15 @@ const Dashboard: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <Progress 
-                  value={stats.total > 0 ? (stats.atRisk / stats.total) * 100 : 0} 
+                <Progress
+                  value={stats.total > 0 ? (stats.atRisk / stats.total) * 100 : 0}
                   className="h-2 bg-red-100 [&>div]:bg-gradient-to-r [&>div]:from-red-500 [&>div]:to-red-600"
                 />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-5 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className="border-4 shadow-lg bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-semibold text-slate-800 flex items-center gap-2">
                 <Activity className="w-5 h-5 text-teal-600" />
@@ -258,11 +259,10 @@ const Dashboard: React.FC = () => {
                       </p>
                     </div>
                     <Badge
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        item.status === 'pending' 
-                          ? 'bg-amber-100 text-amber-800 border-amber-200' 
-                          : 'bg-slate-100 text-slate-800 border-slate-200'
-                      }`}
+                      className={`text-xs px-2 py-1 rounded-full ${item.status === 'pending'
+                        ? 'bg-amber-100 text-amber-800 border-amber-200'
+                        : 'bg-slate-100 text-slate-800 border-slate-200'
+                        }`}
                     >
                       {item.status}
                     </Badge>
@@ -282,7 +282,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Strategic Objectives */}
-        <Card className="border-5 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className="border-4 shadow-lg bg-white/80 backdrop-blur-sm">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl font-semibold text-slate-800 flex items-center gap-2">
               <Target className="w-5 h-5 text-teal-600" />
@@ -310,21 +310,19 @@ const Dashboard: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-3 ml-4">
                       <Badge
-                        className={`text-xs px-3 py-1 rounded-full font-medium ${
-                          objective.priority === 'high' ? 'bg-red-100 text-red-800 border-red-200' :
+                        className={`text-xs px-3 py-1 rounded-full font-medium ${objective.priority === 'high' ? 'bg-red-100 text-red-800 border-red-200' :
                           objective.priority === 'medium' ? 'bg-amber-100 text-amber-800 border-amber-200' :
-                          'bg-emerald-100 text-emerald-800 border-emerald-200'
-                        }`}
+                            'bg-emerald-100 text-emerald-800 border-emerald-200'
+                          }`}
                       >
                         {objective.priority}
                       </Badge>
                       <Badge
-                        className={`text-xs px-3 py-1 rounded-full font-medium text-white ${
-                          objective.status === 'completed' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' :
+                        className={`text-xs px-3 py-1 rounded-full font-medium text-white ${objective.status === 'completed' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' :
                           objective.status === 'in-progress' ? 'bg-gradient-to-r from-blue-500 to-blue-600' :
-                          objective.status === 'at-risk' ? 'bg-gradient-to-r from-red-500 to-red-600' :
-                          'bg-gradient-to-r from-slate-500 to-slate-600'
-                        }`}
+                            objective.status === 'at-risk' ? 'bg-gradient-to-r from-red-500 to-red-600' :
+                              'bg-gradient-to-r from-slate-500 to-slate-600'
+                          }`}
                       >
                         {objective.status}
                       </Badge>
@@ -339,7 +337,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <h3 className="text-lg font-medium text-slate-800 mb-2">No strategic objectives defined yet</h3>
                   <p className="text-slate-500 mb-6">Start your strategic planning journey by adding your first objective</p>
-                  <Button 
+                  <Button
                     onClick={() => setShowObjectiveForm(true)}
                     className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-xl"
                   >
@@ -351,6 +349,11 @@ const Dashboard: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Gantt Chart Section */}
+        <div className="mt-8">
+          <GanttChart />
+        </div>
 
         <StrategicObjectiveForm
           open={showObjectiveForm}

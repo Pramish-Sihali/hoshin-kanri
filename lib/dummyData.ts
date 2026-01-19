@@ -1,5 +1,5 @@
 // lib/dummyData.ts
-import { StrategicObjective, AnnualObjective, Process, Metric, CatchballItem, HoshinData, CompanyKanoAnalysis, KanoFeature } from '../types/hoshin';
+import { StrategicObjective, AnnualObjective, Process, Metric, CatchballItem, HoshinData, CompanyKanoAnalysis, KanoFeature, DatasetOption } from '../types/hoshin';
 
 // =============================================================================
 // CEO - Strategic Vision & Capital Pathways (Level 1)
@@ -992,43 +992,7 @@ export const cooData: HoshinData = {
 // =============================================================================
 // Unified DishHome Dataset (All Levels Combined)
 // =============================================================================
-export const dishHomeUnifiedData: HoshinData = {
-  strategicObjectives: [
-    ...ceoData.strategicObjectives,
-    ...cfoData.strategicObjectives,
-    ...ctoData.strategicObjectives,
-    ...cmoData.strategicObjectives,
-    ...cooData.strategicObjectives
-  ],
-  annualObjectives: [
-    ...ceoData.annualObjectives,
-    ...cfoData.annualObjectives,
-    ...ctoData.annualObjectives,
-    ...cmoData.annualObjectives,
-    ...cooData.annualObjectives
-  ],
-  processes: [
-    ...ceoData.processes,
-    ...cfoData.processes,
-    ...ctoData.processes,
-    ...cmoData.processes,
-    ...cooData.processes
-  ],
-  metrics: [
-    ...ceoData.metrics,
-    ...cfoData.metrics,
-    ...ctoData.metrics,
-    ...cmoData.metrics,
-    ...cooData.metrics
-  ],
-  catchball: [
-    ...ceoData.catchball,
-    ...cfoData.catchball,
-    ...ctoData.catchball,
-    ...cmoData.catchball,
-    ...cooData.catchball
-  ]
-};
+
 
 // =============================================================================
 // Kano Model Data - DishHome & Competitors
@@ -1516,16 +1480,395 @@ export const allKanoAnalyses: CompanyKanoAnalysis[] = [
 ];
 
 // =============================================================================
-// Dataset Options for UI Selection
 // =============================================================================
-export interface DatasetOption {
-  id: string;
-  name: string;
-  description: string;
-  data: HoshinData;
-}
+// Leadership Charter V2 Data (Extracted from Excel)
+// =============================================================================
+
+const leadershipCharterV2Data: HoshinData = {
+  strategicObjectives: [
+    {
+      id: 'lc-strat-1',
+      title: 'Financial: Capital Architecture & Efficiency',
+      description: 'Throughput Accounting, Zero-Base Budgeting, Working Capital Optimization.',
+      targetYear: 2030,
+      owner: 'CFO',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'lc-strat-2',
+      title: 'Financial: Investment Strategy',
+      description: 'Capex gating logic, ROIC based allocation.',
+      targetYear: 2030,
+      owner: 'CFO',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'lc-strat-3',
+      title: 'Financial: M&A / Growth',
+      description: 'Capital recycling, M&A envelopes.',
+      targetYear: 2030,
+      owner: 'CEO',
+      status: 'planning',
+      priority: 'high'
+    },
+    {
+      id: 'lc-strat-4',
+      title: 'Ecosystem/Process: Process Re-baselining & improvement',
+      description: 'TOC constraint map, Lean A3 governance, Hoshin Driven Interventions.',
+      targetYear: 2028,
+      owner: 'COO',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'lc-strat-5',
+      title: 'Ecosystem/Process: Stabilize & Improve',
+      description: 'Processes Mapped, KPI baselines, Kaizen Burst, Org PMO.',
+      targetYear: 2028,
+      owner: 'COO',
+      status: 'in-progress',
+      priority: 'medium'
+    },
+    {
+      id: 'lc-strat-6',
+      title: 'Technology: Platform & Infrastructure leverage',
+      description: 'RPA factory, AI ops, platform architecture.',
+      targetYear: 2028,
+      owner: 'CTO',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'lc-strat-7',
+      title: 'Technology: Audit & Optimization',
+      description: 'Tech/Network/Infra Inventory Audit, Utilization audit, Automation Pipeline.',
+      targetYear: 2027,
+      owner: 'CTO',
+      status: 'in-progress',
+      priority: 'medium'
+    },
+    {
+      id: 'lc-strat-8',
+      title: 'People: Institutional capability/ depth assessment',
+      description: 'Performance contracts, succession architecture.',
+      targetYear: 2028,
+      owner: 'HR Director',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'lc-strat-9',
+      title: 'People: Contracts & Culture',
+      description: 'Leadership contracts defined by PMO outcomes, Automated Performance Tracking.',
+      targetYear: 2028,
+      owner: 'HR Director',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'lc-strat-10',
+      title: 'Governance & Risk: Governance Cycle',
+      description: 'Governance Cycle & Cadence institutionalization.',
+      targetYear: 2026,
+      owner: 'Chief Risk Officer',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
+      id: 'lc-strat-11',
+      title: 'Governance & Risk: Audit & Compliance',
+      description: 'Operations, PMO & Org Governance cycle, Internal audit scope revision.',
+      targetYear: 2026,
+      owner: 'Chief Risk Officer',
+      status: 'in-progress',
+      priority: 'high'
+    }
+  ],
+  annualObjectives: [
+    {
+      id: 'lc-annual-1',
+      title: 'Stabilize Financial Core',
+      description: 'Achieve Cash EBITDA > 2.5x Coverage. Implement ROIC gating.',
+      strategicObjectiveIds: ['lc-strat-1', 'lc-strat-2'],
+      targetDate: '2025-12-31',
+      owner: 'CFO',
+      status: 'in-progress',
+      progress: 30
+    },
+    {
+      id: 'lc-annual-2',
+      title: 'Establish Integration-Ready Execution Model',
+      description: 'New Constraints Escalated & resolved. Lean value streams Delivered.',
+      strategicObjectiveIds: ['lc-strat-4', 'lc-strat-5'],
+      targetDate: '2025-12-31',
+      owner: 'COO',
+      status: 'in-progress',
+      progress: 40
+    },
+    {
+      id: 'lc-annual-3',
+      title: 'Achieve Platform Scale',
+      description: 'AI-enabled ops, Tech/Infra ROI lens active, OTT investment monetized.',
+      strategicObjectiveIds: ['lc-strat-6', 'lc-strat-7'],
+      targetDate: '2026-06-30',
+      owner: 'CTO',
+      status: 'planning',
+      progress: 15
+    },
+    {
+      id: 'lc-annual-4',
+      title: 'Build Strong Integration Squads',
+      description: 'HR productivity improved, Skill/will aligned, Best place to work track.',
+      strategicObjectiveIds: ['lc-strat-8', 'lc-strat-9'],
+      targetDate: '2025-12-31',
+      owner: 'HR Director',
+      status: 'in-progress',
+      progress: 25
+    },
+    {
+      id: 'lc-annual-5',
+      title: 'Implement Zero Defect Risk Mitigation',
+      description: 'De-risked proactive risk management system.',
+      strategicObjectiveIds: ['lc-strat-10', 'lc-strat-11'],
+      targetDate: '2025-09-30',
+      owner: 'Chief Risk Officer',
+      status: 'in-progress',
+      progress: 50
+    }
+  ],
+  processes: [
+    {
+      id: 'lc-proc-1',
+      title: 'Automated Real-time P&L',
+      description: 'Weekly flash close and variance discipline.',
+      annualObjectiveIds: ['lc-annual-1'],
+      owner: 'Finance Team',
+      startDate: '2025-01-01',
+      endDate: '2025-12-31',
+      status: 'in-progress',
+      resources: ['ERP System', 'Finance Analysts']
+    },
+    {
+      id: 'lc-proc-2',
+      title: 'Lean A3 Governance',
+      description: 'Hoshin driven interventions and benefit realization office.',
+      annualObjectiveIds: ['lc-annual-2'],
+      owner: 'PMO',
+      startDate: '2025-01-01',
+      endDate: '2025-12-31',
+      status: 'in-progress',
+      resources: ['PMO Team', 'Lean Consultants']
+    },
+    {
+      id: 'lc-proc-3',
+      title: 'AI-NOC Implementation',
+      description: 'Predictive operations and automated remediation.',
+      annualObjectiveIds: ['lc-annual-3'],
+      owner: 'NOC Team',
+      startDate: '2025-06-01',
+      endDate: '2026-06-30',
+      status: 'planning',
+      resources: ['AI Tools', 'Network Engineers']
+    }
+  ],
+  metrics: [
+    {
+      id: 'lc-metric-1',
+      name: 'EBITDA Margin',
+      description: 'Baseline: 3-6%, Target: 18-22%',
+      processIds: ['lc-proc-1'],
+      target: 20,
+      current: 5,
+      unit: '%',
+      frequency: 'monthly',
+      owner: 'CFO'
+    },
+    {
+      id: 'lc-metric-2',
+      name: 'Net Debt / EBITDA',
+      description: 'Baseline: >5x, Target: <2.0x',
+      processIds: ['lc-proc-1'],
+      target: 2.0,
+      current: 5.5,
+      unit: 'Ratio',
+      frequency: 'quarterly',
+      owner: 'CFO'
+    },
+    {
+      id: 'lc-metric-3',
+      name: 'Enterprise Revenue Share',
+      description: 'Baseline: <8%, Target: 30%+',
+      processIds: [],
+      target: 30,
+      current: 7,
+      unit: '%',
+      frequency: 'monthly',
+      owner: 'CMO'
+    },
+    {
+      id: 'lc-metric-4',
+      name: 'Automation Penetration',
+      description: 'Baseline: Low, Target: AI-led (60%+)',
+      processIds: ['lc-proc-3'],
+      target: 60,
+      current: 5,
+      unit: '%',
+      frequency: 'quarterly',
+      owner: 'CTO'
+    },
+    {
+      id: 'lc-metric-5',
+      name: 'Leadership Bench Coverage',
+      description: 'Baseline: Weak, Target: Institutional',
+      processIds: [],
+      target: 100,
+      current: 30,
+      unit: '%',
+      frequency: 'quarterly',
+      owner: 'CEO'
+    }
+  ],
+  catchball: [],
+  gantt: [
+    {
+      id: 'gantt-1',
+      initiative: 'Cash EBITDA & Controls',
+      category: 'financial',
+      timeline: [
+        { period: '0-6M', active: true }, { period: '6-12M', active: true }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
+        { period: '24-30M', active: false }, { period: '30-36M', active: false }, { period: '36-42M', active: false }, { period: '42-48M', active: false }, { period: '48-54M', active: false }, { period: '54-60M', active: false }
+      ]
+    },
+    {
+      id: 'gantt-2',
+      initiative: 'ROIC CapEx Governance',
+      category: 'financial',
+      timeline: [
+        { period: '0-6M', active: true }, { period: '6-12M', active: true }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
+        { period: '24-30M', active: false }, { period: '30-36M', active: false }, { period: '36-42M', active: false }, { period: '42-48M', active: false }, { period: '48-54M', active: false }, { period: '54-60M', active: false }
+      ]
+    },
+    {
+      id: 'gantt-3',
+      initiative: 'Lean Value Streams',
+      category: 'process',
+      timeline: [
+        { period: '0-6M', active: false }, { period: '6-12M', active: true }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
+        { period: '24-30M', active: false }, { period: '30-36M', active: false }, { period: '36-42M', active: false }, { period: '42-48M', active: false }, { period: '48-54M', active: false }, { period: '54-60M', active: false }
+      ]
+    },
+    {
+      id: 'gantt-4',
+      initiative: 'RPA Factory',
+      category: 'technology',
+      timeline: [
+        { period: '0-6M', active: false }, { period: '6-12M', active: true }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
+        { period: '24-30M', active: true }, { period: '30-36M', active: true }, { period: '36-42M', active: false }, { period: '42-48M', active: false }, { period: '48-54M', active: false }, { period: '54-60M', active: false }
+      ]
+    },
+    {
+      id: 'gantt-5',
+      initiative: 'OTT Monetization',
+      category: 'customer',
+      timeline: [
+        { period: '0-6M', active: false }, { period: '6-12M', active: true }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
+        { period: '24-30M', active: true }, { period: '30-36M', active: true }, { period: '36-42M', active: false }, { period: '42-48M', active: false }, { period: '48-54M', active: false }, { period: '54-60M', active: false }
+      ]
+    },
+    {
+      id: 'gantt-6',
+      initiative: 'Leadership Development',
+      category: 'people',
+      timeline: [
+        { period: '0-6M', active: false }, { period: '6-12M', active: true }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
+        { period: '24-30M', active: false }, { period: '30-36M', active: false }, { period: '36-42M', active: false }, { period: '42-48M', active: false }, { period: '48-54M', active: false }, { period: '54-60M', active: false }
+      ]
+    },
+    {
+      id: 'gantt-7',
+      initiative: 'Capital Recycling',
+      category: 'financial',
+      timeline: [
+        { period: '0-6M', active: false }, { period: '6-12M', active: false }, { period: '12-18M', active: false }, { period: '18-24M', active: false },
+        { period: '24-30M', active: true }, { period: '30-36M', active: true }, { period: '36-42M', active: true }, { period: '42-48M', active: true }, { period: '48-54M', active: false }, { period: '54-60M', active: false }
+      ]
+    },
+    {
+      id: 'gantt-8',
+      initiative: 'AI Ops Platform',
+      category: 'technology',
+      timeline: [
+        { period: '0-6M', active: false }, { period: '6-12M', active: false }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
+        { period: '24-30M', active: true }, { period: '30-36M', active: true }, { period: '36-42M', active: true }, { period: '42-48M', active: true }, { period: '48-54M', active: true }, { period: '54-60M', active: true }
+      ]
+    },
+    {
+      id: 'gantt-9',
+      initiative: 'M&A Integration Engine',
+      category: 'financial',
+      timeline: [
+        { period: '0-6M', active: false }, { period: '6-12M', active: false }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
+        { period: '24-30M', active: true }, { period: '30-36M', active: true }, { period: '36-42M', active: true }, { period: '42-48M', active: true }, { period: '48-54M', active: false }, { period: '54-60M', active: false }
+      ]
+    },
+    {
+      id: 'gantt-10',
+      initiative: 'Succession Pipeline',
+      category: 'people',
+      timeline: [
+        { period: '0-6M', active: false }, { period: '6-12M', active: false }, { period: '12-18M', active: false }, { period: '18-24M', active: false },
+        { period: '24-30M', active: false }, { period: '30-36M', active: false }, { period: '36-42M', active: true }, { period: '42-48M', active: true }, { period: '48-54M', active: true }, { period: '54-60M', active: true }
+      ]
+    }
+  ]
+};
+
+export const dishHomeUnifiedData: HoshinData = {
+  strategicObjectives: [
+    ...ceoData.strategicObjectives,
+    ...leadershipCharterV2Data.strategicObjectives
+  ],
+  annualObjectives: [
+    ...ceoData.annualObjectives,
+    ...cfoData.annualObjectives,
+    ...ctoData.annualObjectives,
+    ...cmoData.annualObjectives,
+    ...cooData.annualObjectives,
+    ...leadershipCharterV2Data.annualObjectives
+  ],
+  processes: [
+    ...cfoData.processes,
+    ...ctoData.processes,
+    ...cmoData.processes,
+    ...cooData.processes,
+    ...leadershipCharterV2Data.processes
+  ],
+  metrics: [
+    ...cfoData.metrics,
+    ...ctoData.metrics,
+    ...cmoData.metrics,
+    ...cooData.metrics,
+    ...leadershipCharterV2Data.metrics
+  ],
+  catchball: [
+    ...ceoData.catchball,
+    ...cfoData.catchball,
+    ...ctoData.catchball,
+    ...cmoData.catchball,
+    ...cooData.catchball
+  ],
+  gantt: leadershipCharterV2Data.gantt
+};
 
 export const availableDatasets: DatasetOption[] = [
+  {
+    id: 'leadership-charter-v2',
+    name: 'Leadership Charter V2 (Excel Analysis)',
+    description: 'Extracted data from Leadership_Charter_and_Intervention_Design_V2.xlsx, including Gantt roadmap and KPI trackers.',
+    data: leadershipCharterV2Data
+  },
   {
     id: 'dishhome-unified',
     name: 'DishHome Unified Strategic Plan (All Levels)',
@@ -1564,12 +1907,10 @@ export const availableDatasets: DatasetOption[] = [
   }
 ];
 
-// =============================================================================
-// Legacy Exports for Backward Compatibility
-// =============================================================================
 export const dummyStrategicObjectives = dishHomeUnifiedData.strategicObjectives;
 export const dummyAnnualObjectives = dishHomeUnifiedData.annualObjectives;
 export const dummyProcesses = dishHomeUnifiedData.processes;
 export const dummyMetrics = dishHomeUnifiedData.metrics;
 export const dummyCatchballItems = dishHomeUnifiedData.catchball;
 export const allDummyData = dishHomeUnifiedData;
+

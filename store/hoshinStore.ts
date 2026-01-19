@@ -1,6 +1,6 @@
 // store/hoshinStore.ts
-import { HoshinData, StrategicObjective, AnnualObjective, Process, Metric, CatchballItem, CompanyKanoAnalysis, KanoComparison, KanoFeature, KanoInsight, KanoCategory } from '@/types/hoshin';
-import { availableDatasets, DatasetOption, allKanoAnalyses } from '@/lib/dummyData';
+import { HoshinData, StrategicObjective, AnnualObjective, Process, Metric, CatchballItem, GanttItem, CompanyKanoAnalysis, KanoComparison, KanoFeature, KanoInsight, KanoCategory, DatasetOption } from '@/types/hoshin';
+import { availableDatasets, allKanoAnalyses } from '@/lib/dummyData';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -33,6 +33,9 @@ interface HoshinStore extends HoshinData {
   addCatchballItem: (item: Omit<CatchballItem, 'id'>) => void;
   updateCatchballItem: (id: string, item: Partial<CatchballItem>) => void;
   addCatchballResponse: (itemId: string, response: Omit<CatchballItem['responses'][0], 'id'>) => void;
+
+  // Gantt Chart State
+  gantt: GanttItem[];
 
   // Kano Model state
   kanoAnalyses: CompanyKanoAnalysis[];
@@ -70,6 +73,7 @@ export const useHoshinStore = create<HoshinStore>()(
       processes: [],
       metrics: [],
       catchball: [],
+      gantt: [],
       kanoAnalyses: [],
       activeComparison: null,
       currentDatasetId: null,
@@ -89,6 +93,7 @@ export const useHoshinStore = create<HoshinStore>()(
             processes: [...dataset.data.processes],
             metrics: [...dataset.data.metrics],
             catchball: [...dataset.data.catchball],
+            gantt: dataset.data.gantt ? [...dataset.data.gantt] : [],
             currentDatasetId: datasetId,
             ...(shouldLoadKano ? { kanoAnalyses: [...allKanoAnalyses] } : {})
           }));

@@ -9,6 +9,7 @@ import CatchballBoard from '../components/CatchballBoard';
 import ObjectivesManagement from '../components/ObjectivesManagement';
 import ProcessManagement from '../components/ProcessManagement';
 import KanoModel from '../components/KanoModel';
+import { GanttChart } from '../components/GanttChart';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -21,6 +22,15 @@ export default function Home() {
         return <XMatrix />;
       case 'catchball':
         return <CatchballBoard />;
+      case 'roadmap':
+        return (
+          <div className="p-8">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent mb-8">
+              Strategic Roadmap
+            </h1>
+            <GanttChart />
+          </div>
+        );
       case 'objectives':
         return <ObjectivesManagement />;
       case 'processes':

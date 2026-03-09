@@ -7,14 +7,14 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select } from './ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Dialog, DialogContent } from './ui/dialog';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { StrategicObjective } from '../types/hoshin';
-import { 
-  Target, Calendar, User, Flag, AlertCircle, DollarSign, Users, 
-  TrendingUp, CheckCircle2, Clock, AlertTriangle, Plus, Trash2,
-  Building, FileText, Award, Zap, Settings, BarChart3, Briefcase,
+import {
+  Target, Calendar, User, Flag,
+  CheckCircle2, AlertTriangle, Plus, Trash2,
+  Building, FileText, Zap, Settings, BarChart3,
   ChevronDown, ChevronRight, Save, X
 } from 'lucide-react';
 
@@ -105,20 +105,20 @@ const StrategicObjectiveCharter: React.FC<StrategicObjectiveCharterProps> = ({
   const [successCriteria, setSuccessCriteria] = useState<string[]>(['']);
   const [inScope, setInScope] = useState<string[]>(['']);
   const [outOfScope, setOutOfScope] = useState<string[]>(['']);
-  const [deliverables, setDeliverables] = useState<Deliverable[]>([]);
-  const [risks, setRisks] = useState<Risk[]>([]);
-  const [assumptions, setAssumptions] = useState<string[]>(['']);
-  const [dependencies, setDependencies] = useState<string[]>(['']);
-  const [milestones, setMilestones] = useState<Milestone[]>([]);
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [kpis, setKPIs] = useState<KPI[]>([]);
-  const [approvers, setApprovers] = useState<Approver[]>([]);
+  const [deliverables] = useState<Deliverable[]>([]);
+  const [risks] = useState<Risk[]>([]);
+  const [assumptions] = useState<string[]>(['']);
+  const [dependencies] = useState<string[]>(['']);
+  const [milestones] = useState<Milestone[]>([]);
+  const [teamMembers] = useState<TeamMember[]>([]);
+  const [kpis] = useState<KPI[]>([]);
+  const [approvers] = useState<Approver[]>([]);
 
   // UI State
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([
     'basic', 'context', 'scope'
   ]));
-  const [completionProgress, setCompletionProgress] = useState(25);
+  const [completionProgress] = useState(25);
 
   const toggleSection = (section: string) => {
     const newExpanded = new Set(expandedSections);
@@ -130,16 +130,9 @@ const StrategicObjectiveCharter: React.FC<StrategicObjectiveCharterProps> = ({
     setExpandedSections(newExpanded);
   };
 
-  const addToArray = (setter: Function, current: any[], template: any) => {
-    setter([...current, { ...template, id: Date.now().toString() }]);
-  };
-
-  const removeFromArray = (setter: Function, current: any[], id: string) => {
-    setter(current.filter(item => item.id !== id));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const charterData = {
       ...formData,
       successCriteria,

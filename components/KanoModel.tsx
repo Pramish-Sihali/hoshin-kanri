@@ -5,7 +5,7 @@ import { useHoshinStore, generateInsights } from '@/store/hoshinStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
-import { Plus, Trash2, Download, BarChart2, Table } from 'lucide-react';
+import { Plus, Trash2, BarChart2, Table } from 'lucide-react';
 import { CompanyKanoAnalysis, KanoFeature, KanoComparison } from '@/types/hoshin';
 
 import { KanoMatrix } from './kano/KanoMatrix';
@@ -206,7 +206,7 @@ const KanoModel: React.FC = () => {
                                     <ul className="text-sm text-teal-700 space-y-1 list-disc pl-4">
                                         <li><strong>Excitement:</strong> Delighters. High priority for differentiation.</li>
                                         <li><strong>Performance:</strong> Linear features. More is better. Competitive battleground.</li>
-                                        <li><strong>Basic:</strong> Must-haves. Entry cost. Don't over-engineer.</li>
+                                        <li><strong>Basic:</strong> Must-haves. Entry cost. Don&apos;t over-engineer.</li>
                                     </ul>
                                 </div>
                             </div>

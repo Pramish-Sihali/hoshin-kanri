@@ -28,8 +28,6 @@ import {
   Activity,
   FileText,
   Workflow,
-  Package,
-  UserCheck,
   X
 } from 'lucide-react';
 

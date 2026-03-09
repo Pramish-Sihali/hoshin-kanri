@@ -25,7 +25,7 @@ export const KanoMatrix: React.FC<KanoMatrixProps> = ({ features }) => {
         reverse: '#ef4444'       // red-500
     };
 
-    const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: any[] }) => {
+    const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: { payload: { name: string; category: string; y: number; x: number } }[] }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (

@@ -377,7 +377,7 @@ export const useHoshinStore = create<HoshinStore>()(
         catchball: state.catchball,
         kanoAnalyses: state.kanoAnalyses,
         currentDatasetId: state.currentDatasetId
-      })
+      }) as unknown as HoshinStore
     }
   )
 );

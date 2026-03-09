@@ -439,7 +439,7 @@ const ExecutiveReportGenerator: React.FC<ExecutiveReportProps> = ({ open, onOpen
                     Critical Issues Requiring Immediate Attention
                   </h3>
                   <div className="space-y-4">
-                    {criticalIssues.slice(0, 5).map((issue, index) => (
+                    {criticalIssues.slice(0, 5).map((issue) => (
                       <div key={issue.id} className={`p-6 rounded-xl border-l-4 ${issue.severity === 'high' ? 'bg-red-50 border-red-500' :
                         issue.severity === 'medium' ? 'bg-yellow-50 border-yellow-500' :
                           'bg-blue-50 border-blue-500'

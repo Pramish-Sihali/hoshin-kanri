@@ -24,8 +24,8 @@ interface CorrelationCell {
 }
 
 
-// Union type for matrix items
-type MatrixItem = {
+// Object type for matrix items
+type MatrixItemObject = {
   id: string;
   title?: string;
   name?: string;
@@ -43,7 +43,13 @@ type MatrixItem = {
   frequency?: string;
   priority?: string;
   targetYear?: string | number;
-} | string;
+  items?: string[];
+  strategicObjectiveIds?: string[];
+  annualObjectiveIds?: string[];
+};
+
+// Union type for matrix items
+type MatrixItem = MatrixItemObject | string;
 
 // Enhanced correlation symbols with professional design and strength indicators
 const CORRELATION_SYMBOLS: CorrelationSymbol[] = [
@@ -135,8 +141,8 @@ const InteractiveMatrix: React.FC = () => {
   const [correlationMatrixType, setCorrelationMatrixType] = useState<{
     rowType: string;
     colType: string;
-    rowItems: any[];
-    colItems: any[];
+    rowItems: MatrixItemObject[];
+    colItems: MatrixItemObject[];
     rowLabel: string;
     colLabel: string;
   }>({ rowType: '', colType: '', rowItems: [], colItems: [], rowLabel: '', colLabel: '' });
@@ -239,7 +245,7 @@ const InteractiveMatrix: React.FC = () => {
     };
 
     // Specific correlation calculation functions
-    const calculateStrategicProcessCorrelation = (strategic: any, process: any, factors: string[]) => {
+    const calculateStrategicProcessCorrelation = (strategic: MatrixItemObject, process: MatrixItemObject, factors: string[]) => {
       let score = 0;
       // Check if process supports any annual objectives linked to this strategic objective
       const linkedAnnuals = annualObjectives.filter(annual => 
@@ -256,7 +262,7 @@ const InteractiveMatrix: React.FC = () => {
       return score;
     };
 
-    const calculateAnnualProcessCorrelation = (annual: any, process: any, factors: string[]) => {
+    const calculateAnnualProcessCorrelation = (annual: MatrixItemObject, process: MatrixItemObject, factors: string[]) => {
       let score = 0;
       // Direct relationship (process supports this annual objective)
       if (process.annualObjectiveIds?.includes(annual.id)) {
@@ -280,14 +286,15 @@ const InteractiveMatrix: React.FC = () => {
       return score;
     };
 
-    const calculateProcessMetricCorrelation = (process: any, metric: any, factors: string[]) => {
-      let score = 0;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const calculateProcessMetricCorrelation = (_process: MatrixItemObject, _metric: MatrixItemObject, _factors: string[]) => {
+      const score = 0;
       // Check if metric measures this process (if metrics have processIds)
       // For now, use common factors like same owner, similar timeline
       return score;
     };
 
-    const calculateStrategicAnnualCorrelation = (strategic: any, annual: any, factors: string[]) => {
+    const calculateStrategicAnnualCorrelation = (strategic: MatrixItemObject, annual: MatrixItemObject, factors: string[]) => {
       let score = 0;
       // Direct relationship (annual objective supports this strategic objective)
       if (annual.strategicObjectiveIds?.includes(strategic.id)) {
@@ -296,19 +303,19 @@ const InteractiveMatrix: React.FC = () => {
       }
 
       // Priority alignment
-      if (strategic.priority === 'high' && annual.progress >= 75) {
+      if (strategic.priority === 'high' && (annual.progress ?? 0) >= 75) {
         score += 15;
         factors.push('High priority strategic with high annual progress');
       }
       return score;
     };
 
-    const calculateCommonFactors = (item1: any, item2: any, factors: string[]) => {
+    const calculateCommonFactors = (item1: MatrixItemObject, item2: MatrixItemObject, factors: string[]) => {
       let score = 0;
 
       // Status alignment
-      const status1Score = getStatusScore(item1.status);
-      const status2Score = getStatusScore(item2.status);
+      const status1Score = getStatusScore(item1.status ?? '');
+      const status2Score = getStatusScore(item2.status ?? '');
       const statusAlignment = Math.abs(status1Score - status2Score);
       
       if (statusAlignment === 0) {
@@ -334,9 +341,9 @@ const InteractiveMatrix: React.FC = () => {
       return score;
     };
 
-    const calculateCorrelationStrength = (rowItem: any, colItem: any, rowType: string, colType: string) => {
+    const calculateCorrelationStrength = (rowItem: MatrixItemObject, colItem: MatrixItemObject, rowType: string, colType: string) => {
       let score = 0;
-      let factors: any[] = [];
+      const factors: string[] = [];
 
       // Calculate correlation based on the types being compared
       if (rowType === 'strategic' && colType === 'processes') {
@@ -504,7 +511,7 @@ const InteractiveMatrix: React.FC = () => {
       <div
         key={owner.name}
         className="bg-gradient-to-br from-purple-50 to-purple-100 text-purple-900 border-purple-400 rounded border h-full flex flex-col cursor-pointer transition-all duration-150 group relative overflow-hidden hover:shadow-sm hover:border-opacity-70"
-        onClick={() => handleCardClick({ id: owner.name, title: owner.name, description: `Responsible for ${owner.count} items`, owner: owner.name, items: owner.items } as any)}
+        onClick={() => handleCardClick({ id: owner.name, title: owner.name, description: `Responsible for ${owner.count} items`, owner: owner.name, items: owner.items } as MatrixItemObject)}
         style={{
           minHeight: '45px',
           padding: 'max(4px, calc(0.375rem * var(--zoom-scale, 1)))'
@@ -545,7 +552,8 @@ const InteractiveMatrix: React.FC = () => {
   ) => {
     const itemId = isStringItem(item) ? item : item.id;
     const displayText = isStringItem(item) ? item : (item.title || item.name || '');
-    const ownerText = !isStringItem(item) && item.owner ? item.owner : '';
+    // Owner text used for tooltip display
+    const ownerText = !isStringItem(item) && item.owner ? item.owner : ''; // eslint-disable-line @typescript-eslint/no-unused-vars
     const isHighlighted = highlightedCards.has(itemId);
 
     // Get initials from owner name (e.g., "Chief Financial Officer" -> "CFO")
@@ -861,14 +869,14 @@ const InteractiveMatrix: React.FC = () => {
                 )}
 
                 {/* Owner Responsibilities List */}
-                {!isString && (item as any).items && (item as any).items.length > 0 && (
+                {!isString && (item as MatrixItemObject).items && ((item as MatrixItemObject).items ?? []).length > 0 && (
                   <div className="bg-gradient-to-br from-purple-50/80 to-indigo-50/80 backdrop-blur-sm p-6 rounded-xl border border-purple-200/50">
                     <h4 className="font-semibold text-purple-800 mb-4 text-lg flex items-center gap-2">
                       <Users className="w-5 h-5" />
                       Responsibilities
                     </h4>
                     <div className="space-y-2 max-h-40 overflow-y-auto">
-                      {(item as any).items.slice(0, 10).map((itemName: string, idx: number) => (
+                      {((item as MatrixItemObject).items ?? []).slice(0, 10).map((itemName: string, idx: number) => (
                         <div key={idx} className="flex items-start gap-2 text-sm text-purple-700">
                           <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"></div>
                           <span>{itemName}</span>

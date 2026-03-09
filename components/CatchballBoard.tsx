@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { useHoshinStore } from '../store/hoshinStore';
-import { Card, CardContent } from './ui/card';
+import { CatchballItem } from '../types/hoshin';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -11,7 +11,7 @@ import { Select } from './ui/select';
 import { Badge } from './ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Plus, MessageSquare, User, Calendar, Send, CheckCircle2, XCircle, Clock, AlertCircle, ArrowRight, Inbox } from 'lucide-react';
-import { CatchballItem } from '../types/hoshin';
+
 
 const CatchballBoard: React.FC = () => {
   const {
@@ -248,7 +248,7 @@ const CatchballBoard: React.FC = () => {
                   <label className="block text-xs font-medium text-gray-700 mb-1.5">Type</label>
                   <Select
                     value={formData.type}
-                    onChange={(value) => setFormData({ ...formData, type: value as any })}
+                    onChange={(value) => setFormData({ ...formData, type: value as CatchballItem['type'] })}
                     options={[
                       { value: 'question', label: 'Question' },
                       { value: 'suggestion', label: 'Suggestion' },

@@ -1,6 +1,5 @@
-// components/Layout.tsx - Enhanced version with Generate Report functionality
+// components/Layout.tsx
 'use client';
-
 
 import React, { useState } from 'react';
 import {
@@ -13,21 +12,39 @@ import {
   Menu,
   X,
   Database,
-  Zap,
-  ChevronDown,
-  Trash2,
-  Download,
   Loader2,
-  FileText,
   LineChart,
-  Route
+  Route,
+  Trash2,
+  FileText
 } from 'lucide-react';
 
 import UserMenu from './UserMenu';
 import ExecutiveReportGenerator from './ExecutiveReportGenerator';
+import OnboardingModal from './OnboardingModal';
 import { useHoshinStore } from '../store/hoshinStore';
 import { useUiStore } from '../store/uiStore';
 import { Button } from './ui/button';
+
+// Custom Hoshin Kanri SVG Logo
+const HoshinLogo = ({ size = 'md' }: { size?: 'sm' | 'md' }) => {
+  const dim = size === 'sm' ? 'w-8 h-8' : 'w-10 h-10';
+  const iconDim = size === 'sm' ? 'w-5 h-5' : 'w-6 h-6';
+  return (
+    <div className={`${dim} bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg`}>
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={iconDim}>
+        <path d="M12 2L12 22" stroke="white" strokeWidth="1" strokeOpacity="0.3" />
+        <path d="M2 12L22 12" stroke="white" strokeWidth="1" strokeOpacity="0.3" />
+        <rect x="5" y="5" width="14" height="14" rx="1" stroke="white" strokeWidth="1.5" strokeOpacity="0.5" transform="rotate(45 12 12)" />
+        <circle cx="12" cy="12" r="2.5" fill="white" />
+        <circle cx="12" cy="6" r="1.5" fill="white" fillOpacity="0.7" />
+        <circle cx="12" cy="18" r="1.5" fill="white" fillOpacity="0.7" />
+        <circle cx="6" cy="12" r="1.5" fill="white" fillOpacity="0.7" />
+        <circle cx="18" cy="12" r="1.5" fill="white" fillOpacity="0.7" />
+      </svg>
+    </div>
+  );
+};
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -38,54 +55,29 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) => {
   const { sidebarOpen, toggleSidebar } = useUiStore();
-  const [datasetDropdownOpen, setDatasetDropdownOpen] = useState(false);
   const [isLoadingDataset, setIsLoadingDataset] = useState(false);
   const [showReportGenerator, setShowReportGenerator] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const {
     loadDataset,
     clearAllData,
-    hasDummyData,
-    availableDatasets,
-    currentDatasetId,
-    getCurrentDatasetName
+    hasDummyData
   } = useHoshinStore();
 
-  const handleDatasetSelect = async (datasetId: string) => {
+  const handleLoadDemoData = async () => {
     setIsLoadingDataset(true);
-    setDatasetDropdownOpen(false);
-
-    // Add a small delay to show loading state
     await new Promise(resolve => setTimeout(resolve, 300));
-
-    if (datasetId === 'clear') {
-      clearAllData();
-    } else {
-      loadDataset(datasetId);
-    }
-
+    loadDataset('dishhome-unified');
     setIsLoadingDataset(false);
+    setShowOnboarding(true);
   };
 
-  const getCurrentButtonText = () => {
-    if (isLoadingDataset) {
-      return 'Loading...';
-    }
-    if (!hasDummyData()) {
-      return 'Load Demo Data';
-    }
-    const datasetName = getCurrentDatasetName();
-    return datasetName ? `${datasetName} ` : 'Custom Data';
-  };
-
-  const getCurrentButtonIcon = () => {
-    if (isLoadingDataset) {
-      return Loader2;
-    }
-    if (!hasDummyData()) {
-      return Download;
-    }
-    return Database;
+  const handleClearData = async () => {
+    setIsLoadingDataset(true);
+    await new Promise(resolve => setTimeout(resolve, 200));
+    clearAllData();
+    setIsLoadingDataset(false);
   };
 
   const navigation = [
@@ -130,9 +122,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
           <div className="flex-1 h-0 pt-4 pb-4 overflow-y-auto">
             <div className="flex-shrink-0 flex items-center px-6 mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
+                <HoshinLogo size="sm" />
                 <div>
                   <h1 className="text-lg font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
                     Policy Tracking
@@ -170,40 +160,38 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
       </div>
 
       {/* Static sidebar for desktop with collapse functionality */}
-      <div className={`hidden md:flex ${sidebarOpen ? 'md:w-64' : 'md:w-20'} md:flex-col md:fixed md:inset-y-0 transition-all duration-300`}>
-        <div className="flex-1 flex flex-col min-h-0 bg-white border-r border-slate-200 shadow-lg">
-          <div className="flex-1 flex flex-col pt-4 pb-4 overflow-y-auto">
-            <div className={`flex items-center flex-shrink-0 mb-8 ${sidebarOpen ? 'px-6' : 'px-3 justify-center'}`}>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
+      <div className={`hidden md:flex ${sidebarOpen ? 'md:w-56' : 'md:w-16'} md:flex-col md:fixed md:inset-y-0 transition-all duration-300`}>
+        <div className="flex-1 flex flex-col min-h-0 bg-white border-r border-slate-200 shadow-sm">
+          <div className="flex-1 flex flex-col pt-3 pb-3 overflow-y-auto">
+            <div className={`flex items-center flex-shrink-0 mb-5 ${sidebarOpen ? 'px-4' : 'px-2 justify-center'}`}>
+              <div className="flex items-center gap-2.5">
+                <HoshinLogo size="sm" />
                 {sidebarOpen && (
                   <div>
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
+                    <h1 className="text-sm font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
                       Policy Tracking
                     </h1>
-                    <p className="text-xs text-slate-500 mt-1">Strategic Planning</p>
+                    <p className="text-[10px] text-slate-500">Strategic Planning</p>
                   </div>
                 )}
               </div>
             </div>
 
-            <nav className={`flex-1 space-y-2 ${sidebarOpen ? 'px-4' : 'px-2'}`}>
+            <nav className={`flex-1 space-y-1 ${sidebarOpen ? 'px-3' : 'px-1.5'}`}>
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
                   <button
                     key={item.name}
                     onClick={() => onPageChange(item.href)}
-                    className={`group flex items-center ${sidebarOpen ? 'px-4' : 'px-2'} py-3 text-sm font-medium rounded-xl w-full transition-all duration-200 ${currentPage === item.href
-                      ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/25'
+                    className={`group flex items-center ${sidebarOpen ? 'px-3' : 'px-2'} py-2 text-xs font-medium rounded-lg w-full transition-all duration-200 ${currentPage === item.href
+                      ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md shadow-teal-500/25'
                       : 'text-slate-700 hover:bg-slate-50 hover:text-teal-700'
                       } ${sidebarOpen ? 'text-left' : 'justify-center'}`}
                     disabled={isLoadingDataset}
                     title={!sidebarOpen ? item.name : undefined}
                   >
-                    <Icon className={`${sidebarOpen ? 'mr-3' : ''} h-5 w-5 transition-colors ${currentPage === item.href ? 'text-white' : 'text-slate-500 group-hover:text-teal-600'
+                    <Icon className={`${sidebarOpen ? 'mr-2.5' : ''} h-4 w-4 transition-colors ${currentPage === item.href ? 'text-white' : 'text-slate-500 group-hover:text-teal-600'
                       }`} />
                     {sidebarOpen && item.name}
                   </button>
@@ -211,14 +199,14 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
               })}
 
               {/* Sidebar Collapse Toggle */}
-              <div className="pt-4 mt-4 border-t border-slate-200">
+              <div className="pt-3 mt-3 border-t border-slate-200">
                 <button
                   onClick={toggleSidebar}
-                  className={`group flex items-center ${sidebarOpen ? 'px-4' : 'px-2'} py-3 text-sm font-medium rounded-xl w-full transition-all duration-200 text-slate-600 hover:bg-slate-50 hover:text-slate-700 ${sidebarOpen ? 'text-left' : 'justify-center'
+                  className={`group flex items-center ${sidebarOpen ? 'px-3' : 'px-2'} py-2 text-xs font-medium rounded-lg w-full transition-all duration-200 text-slate-600 hover:bg-slate-50 hover:text-slate-700 ${sidebarOpen ? 'text-left' : 'justify-center'
                     }`}
                   title={sidebarOpen ? "Toggle Sidebar" : "Expand Sidebar"}
                 >
-                  <Menu className={`${sidebarOpen ? 'mr-3' : ''} h-5 w-5 text-slate-500 group-hover:text-slate-600`} />
+                  <Menu className={`${sidebarOpen ? 'mr-2.5' : ''} h-4 w-4 text-slate-500 group-hover:text-slate-600`} />
                   {sidebarOpen && "Toggle Sidebar"}
                 </button>
               </div>
@@ -227,8 +215,8 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
         </div>
       </div>
 
-      <div className={`${sidebarOpen ? 'md:pl-64' : 'md:pl-20'} flex flex-col flex-1 transition-all duration-300`}>
-        {/* Top header with user menu, dataset dropdown, and generate report */}
+      <div className={`${sidebarOpen ? 'md:pl-56' : 'md:pl-16'} flex flex-col flex-1 transition-all duration-300`}>
+        {/* Top header */}
         <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200">
           <div className="flex justify-between items-center px-6 py-4">
             <button
@@ -240,142 +228,78 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
               <Menu className="h-6 w-6" />
             </button>
 
-            <div className="flex-1 md:flex-none">
-              {/* Page title or breadcrumbs could go here */}
-            </div>
+            <div className="flex-1 md:flex-none" />
 
-            {/* Actions: Generate Report, Dataset Dropdown, and User Menu */}
+            {/* Actions */}
             <div className="flex items-center gap-3">
-              {/* Generate Report Button - Always show but disabled when no data */}
+              {/* Generate Report Button */}
               <Button
                 onClick={() => setShowReportGenerator(true)}
                 disabled={isLoadingDataset || !hasDummyData()}
-                className={`shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl font-medium ${hasDummyData()
-                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white'
+                className={`shadow-md hover:shadow-lg transition-all duration-200 px-4 py-2 rounded-xl font-medium gap-2 ${hasDummyData()
+                  ? 'bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white'
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                   }`}
                 title={!hasDummyData() ? 'Load demo data first to generate reports' : 'Generate executive report'}
               >
-                <FileText className="w-4 h-4 mr-2" />
+                <FileText className="w-4 h-4" />
                 <span className="hidden sm:inline">Generate Report</span>
                 <span className="sm:hidden">Report</span>
               </Button>
 
-              {/* Dataset Dropdown */}
-              <div className="relative">
+              {/* Load / Clear Data Button */}
+              {hasDummyData() ? (
                 <Button
-                  onClick={() => !isLoadingDataset && setDatasetDropdownOpen(!datasetDropdownOpen)}
+                  onClick={handleClearData}
                   variant="outline"
                   disabled={isLoadingDataset}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 border-slate-200 hover:bg-slate-50 ${hasDummyData()
-                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200 text-blue-700'
-                    : 'text-slate-700'
-                    } ${isLoadingDataset ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
                 >
-                  {React.createElement(getCurrentButtonIcon(), {
-                    className: `w-4 h-4 ${isLoadingDataset ? 'animate-spin' : ''}`
-                  })}
-                  <span className="hidden sm:inline max-w-48 truncate">
-                    {getCurrentButtonText()}
+                  <Trash2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Clear Data</span>
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleLoadDemoData}
+                  disabled={isLoadingDataset}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 ${isLoadingDataset
+                    ? 'opacity-70 cursor-not-allowed bg-slate-100 text-slate-400'
+                    : 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-md hover:shadow-lg'
+                    }`}
+                >
+                  {isLoadingDataset ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Database className="w-4 h-4" />
+                  )}
+                  <span className="hidden sm:inline">
+                    {isLoadingDataset ? 'Loading...' : 'Load Demo Data'}
                   </span>
                   <span className="sm:hidden">
-                    {isLoadingDataset ? 'Loading' : hasDummyData() ? 'Data' : 'Demo'}
+                    {isLoadingDataset ? '...' : 'Demo'}
                   </span>
-                  {!isLoadingDataset && (
-                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${datasetDropdownOpen ? 'rotate-180' : ''}`} />
-                  )}
                 </Button>
+              )}
 
-                {datasetDropdownOpen && !isLoadingDataset && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setDatasetDropdownOpen(false)}
-                    />
-                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
-                      {/* Dropdown Header */}
-                      <div className="px-4 py-3 bg-gradient-to-r from-slate-50 to-teal-50/50 border-b border-slate-200">
-                        <h3 className="text-sm font-semibold text-slate-800">Demo Datasets</h3>
-                        <p className="text-xs text-slate-500 mt-1">Choose a dataset to explore the application</p>
-                      </div>
-
-                      {/* Clear Data Option */}
-                      {hasDummyData() && (
-                        <>
-                          <button
-                            onClick={() => handleDatasetSelect('clear')}
-                            className="w-full px-4 py-3 text-left hover:bg-red-50 transition-colors group flex items-center gap-3"
-                          >
-                            <div className="w-8 h-8 bg-red-100 group-hover:bg-red-200 rounded-lg flex items-center justify-center transition-colors">
-                              <Trash2 className="w-4 h-4 text-red-600" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="text-sm font-medium text-red-600">Clear All Data</div>
-                              <div className="text-xs text-red-400">Remove all current data</div>
-                            </div>
-                          </button>
-                          <div className="border-t border-slate-100"></div>
-                        </>
-                      )}
-
-                      {/* Dataset Options */}
-                      <div className="py-1 max-h-96 overflow-y-auto">
-                        {availableDatasets.map((dataset) => (
-                          <button
-                            key={dataset.id}
-                            onClick={() => handleDatasetSelect(dataset.id)}
-                            className={`w-full px-4 py-3 text-left hover:bg-slate-50 transition-colors group flex items-start gap-3 ${currentDatasetId === dataset.id ? 'bg-teal-50 border-r-2 border-teal-500' : ''
-                              }`}
-                          >
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${currentDatasetId === dataset.id
-                              ? 'bg-teal-100 text-teal-600'
-                              : 'bg-slate-100 group-hover:bg-slate-200 text-slate-600'
-                              }`}>
-                              <Database className="w-4 h-4" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className={`text-sm font-medium truncate ${currentDatasetId === dataset.id ? 'text-teal-700' : 'text-slate-800'
-                                }`}>
-                                {dataset.name}
-                              </div>
-                              <div className={`text-xs mt-1 line-clamp-2 ${currentDatasetId === dataset.id ? 'text-teal-600' : 'text-slate-500'
-                                }`}>
-                                {dataset.description}
-                              </div>
-                            </div>
-                            {currentDatasetId === dataset.id && (
-                              <div className="flex-shrink-0 w-2 h-2 bg-teal-500 rounded-full mt-2"></div>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-
-                      {/* Dropdown Footer */}
-                      <div className="px-4 py-3 bg-slate-50 border-t border-slate-200">
-                        <p className="text-xs text-slate-500">
-                          Datasets include strategic objectives, processes, metrics, and more
-                        </p>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* User Menu Component */}
+              {/* User Menu */}
               <UserMenu />
             </div>
           </div>
         </div>
 
-        <main className="flex-1 bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
+        <main className="flex-1 bg-gradient-to-br from-slate-50 via-white to-teal-50/30 main-content">
           {children}
         </main>
       </div>
 
-      {/* Executive Report Generator Modal */}
+      {/* Modals */}
       <ExecutiveReportGenerator
         open={showReportGenerator}
         onOpenChange={setShowReportGenerator}
+      />
+      <OnboardingModal
+        open={showOnboarding}
+        onOpenChange={setShowOnboarding}
       />
     </div>
   );

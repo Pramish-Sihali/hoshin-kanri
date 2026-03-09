@@ -83,10 +83,6 @@ export const useHoshinStore = create<HoshinStore>()(
       loadDataset: (datasetId: string) => {
         const dataset = availableDatasets.find((d: { id: string; }) => d.id === datasetId);
         if (dataset) {
-          // Also load Kano data if not already present
-          const state = get();
-          const shouldLoadKano = state.kanoAnalyses.length === 0;
-
           set(() => ({
             strategicObjectives: [...dataset.data.strategicObjectives],
             annualObjectives: [...dataset.data.annualObjectives],
@@ -95,7 +91,7 @@ export const useHoshinStore = create<HoshinStore>()(
             catchball: [...dataset.data.catchball],
             gantt: dataset.data.gantt ? [...dataset.data.gantt] : [],
             currentDatasetId: datasetId,
-            ...(shouldLoadKano ? { kanoAnalyses: [...allKanoAnalyses] } : {})
+            kanoAnalyses: [...allKanoAnalyses]
           }));
         }
       },
@@ -359,6 +355,19 @@ export const useHoshinStore = create<HoshinStore>()(
     }),
     {
       name: 'hoshin-kanri-storage',
+      // Use sessionStorage so data clears when tab is closed
+      storage: {
+        getItem: (name) => {
+          const value = sessionStorage.getItem(name);
+          return value ? JSON.parse(value) : null;
+        },
+        setItem: (name, value) => {
+          sessionStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => {
+          sessionStorage.removeItem(name);
+        },
+      },
       // Don't persist availableDatasets as they come from the imported data
       partialize: (state) => ({
         strategicObjectives: state.strategicObjectives,
@@ -369,7 +378,6 @@ export const useHoshinStore = create<HoshinStore>()(
         kanoAnalyses: state.kanoAnalyses,
         currentDatasetId: state.currentDatasetId
       })
-
     }
   )
 );

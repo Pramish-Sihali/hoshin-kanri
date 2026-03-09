@@ -1,16 +1,16 @@
 // lib/dummyData.ts
-import { StrategicObjective, AnnualObjective, Process, Metric, CatchballItem, HoshinData, CompanyKanoAnalysis, KanoFeature, DatasetOption } from '../types/hoshin';
+import { HoshinData, CompanyKanoAnalysis, KanoFeature, DatasetOption } from '../types/hoshin';
 
 // =============================================================================
-// CEO - Strategic Vision & Capital Pathways (Level 1)
+// CEO - Strategic Vision & Growth Pathways (Level 1)
 // Breakthrough Objectives (5-Year) + Capital-Contingent Strategy
 // =============================================================================
 export const ceoData: HoshinData = {
   strategicObjectives: [
     {
       id: 'breakthrough-1',
-      title: 'Restore EBITDA Quality ≥20% and Cash EBITDA ≥15%',
-      description: 'Valuation credibility precedes any IPO or M&A. Achieve sustainable earnings quality through disciplined cost management, revenue optimization, and capital-aware execution.',
+      title: 'Restore Gross Margin Quality ≥25% and Operating Cash ≥18%',
+      description: 'Credibility with investors precedes any liquidity event. Achieve sustainable earnings quality through cost discipline, revenue diversification, and execution rigor.',
       targetYear: 2030,
       owner: 'Chief Executive Officer',
       status: 'in-progress',
@@ -18,8 +18,8 @@ export const ceoData: HoshinData = {
     },
     {
       id: 'breakthrough-2',
-      title: 'Build Enterprise + VAS to ≥30% of EBITDA',
-      description: 'Create structural hedge against price-led consumer wars through high-ARPU, SLA-backed enterprise revenues with predictable cash flows.',
+      title: 'Build B2B + Platform Services to ≥35% of Gross Margin',
+      description: 'Create structural hedge against commodity pricing pressure through high-value B2B contracts with predictable recurring revenue.',
       targetYear: 2030,
       owner: 'Chief Executive Officer',
       status: 'in-progress',
@@ -27,8 +27,8 @@ export const ceoData: HoshinData = {
     },
     {
       id: 'breakthrough-3',
-      title: 'Achieve M&A-Ready Operating Architecture',
-      description: 'Enable consolidation without value leakage through standardized processes, unified systems, and integration-ready infrastructure.',
+      title: 'Achieve Integration-Ready Operating Architecture',
+      description: 'Enable growth through acquisition without value leakage via standardized processes, unified systems, and modular infrastructure.',
       targetYear: 2028,
       owner: 'Chief Executive Officer',
       status: 'planning',
@@ -36,8 +36,8 @@ export const ceoData: HoshinData = {
     },
     {
       id: 'breakthrough-4',
-      title: 'Establish OTT as Churn-Defence Ecosystem Lever',
-      description: 'Position OTT as ARPU defense and bundling pillar - not a cost center. Prevent ARPU erosion while avoiding content traps through partner-first aggregator strategy.',
+      title: 'Establish Digital Platform as Retention Ecosystem Lever',
+      description: 'Position the digital platform as an ARPU defense and cross-sell pillar — not a cost center. Prevent churn while avoiding unsustainable content investments.',
       targetYear: 2028,
       owner: 'Chief Executive Officer',
       status: 'in-progress',
@@ -46,7 +46,7 @@ export const ceoData: HoshinData = {
     {
       id: 'breakthrough-5',
       title: 'Create Capital-Contingent Strategic Freedom',
-      description: 'Strategy must survive both IPO and non-IPO outcomes. Pre-design capital pathways: IPO-led consolidator (Path A) vs Strategic Merger (Path B).',
+      description: 'Strategy must survive multiple outcomes. Pre-design capital pathways: Growth Equity (Path A) vs Strategic Partnership (Path B).',
       targetYear: 2027,
       owner: 'Chief Executive Officer',
       status: 'at-risk',
@@ -57,22 +57,22 @@ export const ceoData: HoshinData = {
     {
       id: 'ceo-annual-1',
       title: 'Execute Strategic Transformation Roadmap',
-      description: 'Implement PMO-led transformation with clear milestones across all Four Pillars. Establish control layer as foundation for IPO and consolidation readiness.',
+      description: 'Implement PMO-led transformation with clear milestones across all Four Pillars. Establish control layer as foundation for growth and readiness.',
       strategicObjectiveIds: ['breakthrough-1', 'breakthrough-3'],
       targetDate: '2025-12-31',
       owner: 'Chief Executive Officer',
       status: 'in-progress',
-      progress: 45
+      progress: 40
     },
     {
       id: 'ceo-annual-2',
-      title: 'Achieve M&A/IPO Decision Readiness Gate (Year 2 H2)',
-      description: 'Complete pre-integration readiness assessment for Subisu/TechMinds (Path A) or WorldLink merger fast-track (Path B). Capital pathway activation.',
+      title: 'Achieve Capital Decision Readiness Gate (Year 2 H2)',
+      description: 'Complete readiness assessment for acquisition targets (Path A) or strategic partnership fast-track (Path B). Capital pathway activation.',
       strategicObjectiveIds: ['breakthrough-5', 'breakthrough-3'],
       targetDate: '2026-12-31',
       owner: 'Chief Executive Officer',
       status: 'planning',
-      progress: 15
+      progress: 12
     }
   ],
   processes: [
@@ -87,7 +87,7 @@ export const ceoData: HoshinData = {
       status: 'in-progress',
       resources: ['Executive team', 'PMO office', 'Strategic consultants', 'Change management'],
       sipoc: {
-        suppliers: ['Board of Directors', 'External Advisors', 'Big-4 Consultants'],
+        suppliers: ['Board of Directors', 'External Advisors', 'Strategy Consultants'],
         inputs: ['Strategic mandate', 'Capital constraints', 'Market intelligence', 'Audit findings'],
         process: 'PMO-led transformation with stage-gate governance and quarterly KPI reviews',
         outputs: ['Strategic roadmap', 'Initiative scorecards', 'Board dashboards', 'Capital pathway decisions'],
@@ -97,7 +97,7 @@ export const ceoData: HoshinData = {
     {
       id: 'ceo-process-2',
       title: 'Capital Pathway Decision Framework',
-      description: 'Pre-designed decision framework for Path A (IPO-led M&A) vs Path B (Strategic Merger) with ROIC gating and trigger points.',
+      description: 'Pre-designed decision framework for Path A (Growth Equity M&A) vs Path B (Strategic Partnership) with ROIC gating and trigger points.',
       annualObjectiveIds: ['ceo-annual-2'],
       owner: 'Chief Executive Officer',
       startDate: '2025-06-01',
@@ -112,19 +112,19 @@ export const ceoData: HoshinData = {
       name: 'Strategic Objective Completion Rate',
       description: 'Percentage of breakthrough objectives on track with quarterly KPI gates passed',
       processIds: ['ceo-process-1'],
-      target: 85,
-      current: 45,
+      target: 80,
+      current: 40,
       unit: '% on-track',
       frequency: 'quarterly',
       owner: 'Chief Executive Officer'
     },
     {
       id: 'ceo-metric-2',
-      name: 'M&A Readiness Score',
-      description: 'Integration readiness assessment score for potential consolidation scenarios',
+      name: 'Integration Readiness Score',
+      description: 'Readiness assessment score for potential growth or partnership scenarios',
       processIds: ['ceo-process-2'],
-      target: 80,
-      current: 25,
+      target: 75,
+      current: 20,
       unit: '% ready',
       frequency: 'quarterly',
       owner: 'Chief Executive Officer'
@@ -169,7 +169,7 @@ export const ceoData: HoshinData = {
 
 // =============================================================================
 // CFO - Financial Core & Credibility Reset (Level 2 - Pillar I)
-// EBITDA Restoration, Cash Flow, Capital Discipline, IPO-Grade Controls
+// Margin Restoration, Cash Flow, Capital Discipline, Investor-Grade Controls
 // =============================================================================
 export const cfoData: HoshinData = {
   strategicObjectives: [
@@ -184,8 +184,8 @@ export const cfoData: HoshinData = {
     },
     {
       id: 'cfo-strategic-1',
-      title: 'Achieve Sustainable EBITDA Margin ≥18-20%',
-      description: 'Return to positive operating margin through EBITDA restoration with structural levers: vendor consolidation, enterprise mix shift, VAS bundling, tech efficiency.',
+      title: 'Achieve Sustainable Gross Margin ≥22-25%',
+      description: 'Return to positive operating margin through margin restoration with structural levers: vendor consolidation, B2B mix shift, platform bundling, tech efficiency.',
       targetYear: 2026,
       owner: 'Chief Financial Officer',
       status: 'at-risk',
@@ -194,7 +194,7 @@ export const cfoData: HoshinData = {
     {
       id: 'cfo-strategic-2',
       title: 'Rebuild Cash Credibility & Working Capital Discipline',
-      description: 'Restore operating cash predictability. CFO fell from 1,358.6m to 338.6m (-75.1%). Cash improved via financing, not operations - this must reverse.',
+      description: 'Restore operating cash predictability. Operating cash flow fell from 820m to 195m (-76.2%). Cash improved via financing, not operations - this must reverse.',
       targetYear: 2026,
       owner: 'Chief Financial Officer',
       status: 'at-risk',
@@ -204,43 +204,43 @@ export const cfoData: HoshinData = {
   annualObjectives: [
     {
       id: 'annual-a1',
-      title: 'Stabilise EBITDA to ≥18% Run-Rate',
-      description: 'Year 1 Foundation objective. Starting from ~13% baseline, achieve 18%+ through ZBB reset, vendor consolidation, and margin bridge implementation.',
+      title: 'Stabilise Gross Margin to ≥22% Run-Rate',
+      description: 'Year 1 Foundation objective. Starting from ~15% baseline, achieve 22%+ through ZBB reset, vendor consolidation, and margin bridge implementation.',
       strategicObjectiveIds: ['theme-s1-financial', 'cfo-strategic-1'],
       targetDate: '2025-12-31',
       owner: 'Chief Financial Officer',
       status: 'in-progress',
-      progress: 35
+      progress: 30
     },
     {
       id: 'annual-a2',
       title: 'Restore Operating Cash Predictability',
-      description: 'Year 1 Foundation objective. Implement working capital discipline, demand-linked capex, and ROIC gating. Target Cash EBITDA ≥15%.',
+      description: 'Year 1 Foundation objective. Implement working capital discipline, demand-linked capex, and ROIC gating. Target Operating Cash ≥18%.',
       strategicObjectiveIds: ['theme-s1-financial', 'cfo-strategic-2'],
       targetDate: '2025-12-31',
       owner: 'Chief Financial Officer',
       status: 'in-progress',
-      progress: 28
+      progress: 24
     },
     {
       id: 'cfo-annual-3',
-      title: 'Implement IPO-Grade Financial Controls',
-      description: 'Deploy segment P&Ls (DTH vs ISP vs OTT vs Data Center), weekly close + variance discipline, NFRS 15 compliance, Big-4 aligned audit model.',
+      title: 'Implement Investor-Grade Financial Controls',
+      description: 'Deploy segment P&Ls (Residential vs B2B vs Platform vs Data Center), weekly close + variance discipline, IFRS 15 compliance, Big-4 aligned audit model.',
       strategicObjectiveIds: ['theme-s1-financial'],
       targetDate: '2025-09-30',
       owner: 'Chief Financial Officer',
       status: 'in-progress',
-      progress: 42
+      progress: 38
     },
     {
       id: 'cfo-annual-4',
-      title: 'Reduce FX Exposure to ≤2% of Revenue',
-      description: 'Current FX impact ~7% of revenue. Implement hedging strategy and exposure cap to protect margins from currency volatility.',
+      title: 'Reduce FX Exposure to ≤3% of Revenue',
+      description: 'Current FX impact ~8% of revenue. Implement hedging strategy and exposure cap to protect margins from currency volatility.',
       strategicObjectiveIds: ['cfo-strategic-1'],
       targetDate: '2025-12-31',
       owner: 'Chief Financial Officer',
       status: 'in-progress',
-      progress: 30
+      progress: 25
     }
   ],
   processes: [
@@ -258,7 +258,7 @@ export const cfoData: HoshinData = {
     {
       id: 'cfo-process-2',
       title: 'Weekly Flash Close & Variance Discipline',
-      description: 'Implement weekly flash close with monthly hard close. Real-time EBITDA visibility and variance analysis for rapid course correction.',
+      description: 'Implement weekly flash close with monthly hard close. Real-time margin visibility and variance analysis for rapid course correction.',
       annualObjectiveIds: ['annual-a1', 'cfo-annual-3'],
       owner: 'Financial Controller',
       startDate: '2025-02-01',
@@ -279,7 +279,7 @@ export const cfoData: HoshinData = {
     },
     {
       id: 'cfo-process-4',
-      title: 'NFRS 15 Revenue Recognition Remediation',
+      title: 'IFRS 15 Revenue Recognition Remediation',
       description: 'Address internal audit finding on revenue recognition weakness. Implement automated revenue deferral and contract performance obligation mapping.',
       annualObjectiveIds: ['cfo-annual-3'],
       owner: 'Revenue Operations Manager',
@@ -292,22 +292,22 @@ export const cfoData: HoshinData = {
   metrics: [
     {
       id: 'cfo-metric-1',
-      name: 'EBITDA Margin Percentage',
-      description: 'Operating EBITDA as percentage of revenue. Baseline ~13%, Target 18-20%',
+      name: 'Gross Margin Percentage',
+      description: 'Operating gross margin as percentage of revenue. Baseline ~15%, Target 22-25%',
       processIds: ['cfo-process-1', 'cfo-process-2'],
-      target: 18,
-      current: 13,
+      target: 22,
+      current: 15,
       unit: '% margin',
       frequency: 'monthly',
       owner: 'Chief Financial Officer'
     },
     {
       id: 'cfo-metric-2',
-      name: 'Cash EBITDA Percentage',
-      description: 'Cash conversion from EBITDA. Baseline ~10%, Target ≥15%',
+      name: 'Operating Cash Percentage',
+      description: 'Cash conversion from operations. Baseline ~11%, Target ≥18%',
       processIds: ['cfo-process-3'],
-      target: 15,
-      current: 10,
+      target: 18,
+      current: 11,
       unit: '% cash conversion',
       frequency: 'monthly',
       owner: 'Chief Financial Officer'
@@ -315,10 +315,10 @@ export const cfoData: HoshinData = {
     {
       id: 'cfo-metric-3',
       name: 'Return on Invested Capital (ROIC)',
-      description: 'Capital efficiency measure. Currently <0%, Target ≥10%',
+      description: 'Capital efficiency measure. Currently <0%, Target ≥12%',
       processIds: ['cfo-process-3'],
-      target: 10,
-      current: -2,
+      target: 12,
+      current: -3,
       unit: '% ROIC',
       frequency: 'quarterly',
       owner: 'Chief Financial Officer'
@@ -326,22 +326,22 @@ export const cfoData: HoshinData = {
     {
       id: 'cfo-metric-4',
       name: 'FX Impact on Revenue',
-      description: 'Foreign exchange losses as percentage of revenue. Current ~7%, Target ≤2%',
+      description: 'Foreign exchange losses as percentage of revenue. Current ~8%, Target ≤3%',
       processIds: ['cfo-process-1'],
-      target: 2,
-      current: 7,
+      target: 3,
+      current: 8,
       unit: '% revenue',
       frequency: 'monthly',
       owner: 'Treasury Manager'
     },
     {
       id: 'cfo-metric-5',
-      name: 'Operating Cash Flow (NPR)',
-      description: 'Operating cash flow in millions. FY81: 1,358.6m → FY82: 338.6m. Must recover.',
+      name: 'Operating Cash Flow (USD)',
+      description: 'Operating cash flow in millions. FY23: 820m → FY24: 195m. Must recover.',
       processIds: ['cfo-process-2', 'cfo-process-3'],
-      target: 1200,
-      current: 339,
-      unit: 'NPR Million',
+      target: 700,
+      current: 195,
+      unit: 'USD Million',
       frequency: 'monthly',
       owner: 'Chief Financial Officer'
     }
@@ -351,7 +351,7 @@ export const cfoData: HoshinData = {
       id: 'cfo-catchball-1',
       type: 'concern',
       title: 'Revenue Decline is Structural, Not Cyclical',
-      description: 'Revenue from 5,159m to 3,715m (-28%). DTH revenue collapsed 54.5% while ISP held flat. Profitability erosion is economic. Incremental growth strategies no longer compound enterprise value.',
+      description: 'Revenue from 3,200m to 2,280m (-29%). Legacy product revenue collapsed 52% while broadband held flat. Profitability erosion is structural. Incremental growth strategies no longer compound enterprise value.',
       from: 'Chief Financial Officer',
       to: 'Board of Directors',
       relatedItemId: 'cfo-strategic-1',
@@ -370,8 +370,8 @@ export const cfoData: HoshinData = {
     {
       id: 'cfo-catchball-2',
       type: 'approval',
-      title: 'NFRS 15 Revenue Recognition Remediation Budget',
-      description: 'Request approval for external consultant engagement to address internal audit finding on revenue recognition weakness. IPO readiness requirement.',
+      title: 'IFRS 15 Revenue Recognition Remediation Budget',
+      description: 'Request approval for external consultant engagement to address internal audit finding on revenue recognition weakness. Investor readiness requirement.',
       from: 'Financial Controller',
       to: 'Chief Financial Officer',
       relatedItemId: 'cfo-annual-3',
@@ -392,7 +392,7 @@ export const ctoData: HoshinData = {
     {
       id: 'theme-s4-technology',
       title: 'Programmable Network & Distribution Reset',
-      description: 'Transform from network operator to programmable infrastructure. Technology builds operating leverage and M&A readiness.',
+      description: 'Transform from network operator to programmable infrastructure. Technology builds operating leverage and integration readiness.',
       targetYear: 2028,
       owner: 'Chief Technology Officer',
       status: 'in-progress',
@@ -410,7 +410,7 @@ export const ctoData: HoshinData = {
     {
       id: 'cto-strategic-2',
       title: 'Achieve Unified OSS/BSS Architecture',
-      description: 'Consolidate operations and business support systems into unified platform. M&A-ready stack enabling seamless integration.',
+      description: 'Consolidate operations and business support systems into unified platform. Integration-ready stack enabling seamless onboarding.',
       targetYear: 2027,
       owner: 'Chief Technology Officer',
       status: 'planning',
@@ -426,7 +426,7 @@ export const ctoData: HoshinData = {
       targetDate: '2026-12-31',
       owner: 'Chief Technology Officer',
       status: 'planning',
-      progress: 10
+      progress: 8
     },
     {
       id: 'cto-annual-1',
@@ -436,17 +436,17 @@ export const ctoData: HoshinData = {
       targetDate: '2025-12-31',
       owner: 'Chief Technology Officer',
       status: 'in-progress',
-      progress: 25
+      progress: 22
     },
     {
       id: 'cto-annual-2',
       title: 'Implement IAM/RBAC & SIEM Rollout',
-      description: 'Address critical internal audit finding: unauthorized OSS access and ONT deletion incidents. Deploy zero-tolerance access controls.',
+      description: 'Address critical internal audit finding: unauthorized system access and configuration deletion incidents. Deploy zero-tolerance access controls.',
       strategicObjectiveIds: ['theme-s4-technology'],
       targetDate: '2025-09-30',
       owner: 'Chief Technology Officer',
       status: 'in-progress',
-      progress: 40
+      progress: 35
     },
     {
       id: 'cto-annual-3',
@@ -456,7 +456,7 @@ export const ctoData: HoshinData = {
       targetDate: '2025-12-31',
       owner: 'Chief Technology Officer',
       status: 'in-progress',
-      progress: 20
+      progress: 18
     }
   ],
   processes: [
@@ -485,7 +485,7 @@ export const ctoData: HoshinData = {
     {
       id: 'cto-process-3',
       title: 'OSS/BSS Unification Blueprint',
-      description: 'Design and implement unified operations and business support system architecture for M&A readiness.',
+      description: 'Design and implement unified operations and business support system architecture for integration readiness.',
       annualObjectiveIds: ['annual-a7'],
       owner: 'Enterprise Architecture Manager',
       startDate: '2025-06-01',
@@ -501,7 +501,7 @@ export const ctoData: HoshinData = {
       description: 'Platform availability target. Industry standard 99.9%',
       processIds: ['cto-process-1'],
       target: 99.9,
-      current: 98.5,
+      current: 98.2,
       unit: '% uptime',
       frequency: 'daily',
       owner: 'NOC Manager'
@@ -509,10 +509,10 @@ export const ctoData: HoshinData = {
     {
       id: 'cto-metric-2',
       name: 'Unauthorized Access Incidents',
-      description: 'Critical security metric. Target zero unauthorized OSS/network access. Audit flagged multiple incidents.',
+      description: 'Critical security metric. Target zero unauthorized system/network access. Audit flagged multiple incidents.',
       processIds: ['cto-process-2'],
       target: 0,
-      current: 8,
+      current: 11,
       unit: 'incidents/month',
       frequency: 'monthly',
       owner: 'Security Manager'
@@ -523,7 +523,7 @@ export const ctoData: HoshinData = {
       description: 'Average time to resolve network incidents. Target reduction through AI-NOC.',
       processIds: ['cto-process-1'],
       target: 2,
-      current: 6,
+      current: 7,
       unit: 'hours',
       frequency: 'weekly',
       owner: 'NOC Manager'
@@ -531,10 +531,10 @@ export const ctoData: HoshinData = {
     {
       id: 'cto-metric-4',
       name: 'System Integration Readiness',
-      description: 'M&A integration readiness score based on OSS/BSS maturity',
+      description: 'Integration readiness score based on OSS/BSS maturity',
       processIds: ['cto-process-3'],
-      target: 85,
-      current: 35,
+      target: 80,
+      current: 30,
       unit: '% ready',
       frequency: 'quarterly',
       owner: 'Enterprise Architecture Manager'
@@ -544,8 +544,8 @@ export const ctoData: HoshinData = {
     {
       id: 'cto-catchball-1',
       type: 'concern',
-      title: 'Critical: Unauthorized OSS Access & ONT Deletion',
-      description: 'Internal audit flagged unauthorized OSS access and ONT deletion incidents. Service integrity and fraud risk. Zero-trust segments and configuration baselines urgently needed.',
+      title: 'Critical: Unauthorized System Access & Config Deletion',
+      description: 'Internal audit flagged unauthorized system access and configuration deletion incidents. Service integrity and fraud risk. Zero-trust segments and configuration baselines urgently needed.',
       from: 'Security Manager',
       to: 'Chief Technology Officer',
       relatedItemId: 'cto-annual-2',
@@ -564,7 +564,7 @@ export const ctoData: HoshinData = {
     {
       id: 'cto-catchball-2',
       type: 'question',
-      title: 'Mandatory IS Audit Compliance (Cyber Security By-laws 2077)',
+      title: 'Mandatory IS Audit Compliance (Cyber Security Regulations)',
       description: 'Internal audit notes mandatory IS audit not conducted. Regulatory and cyber exposure risk. Request guidance on audit vendor selection and timeline.',
       from: 'Security Manager',
       to: 'Chief Technology Officer',
@@ -578,15 +578,15 @@ export const ctoData: HoshinData = {
 };
 
 // =============================================================================
-// CMO - Enterprise, OTT & Customer Strategy (Level 2 - Pillar II & III)
-// Enterprise GTM, OTT Repositioning, Customer Acquisition
+// CMO - Enterprise, Platform & Customer Strategy (Level 2 - Pillar II & III)
+// Enterprise GTM, Platform Repositioning, Customer Acquisition
 // =============================================================================
 export const cmoData: HoshinData = {
   strategicObjectives: [
     {
       id: 'theme-s2-enterprise',
       title: 'Enterprise-Led Value Expansion',
-      description: 'SLA-backed, predictable, high-margin revenues. Enterprise is risk reducer (less price war exposure) and improves IPO narrative with recurring revenue.',
+      description: 'SLA-backed, predictable, high-margin revenues. B2B is risk reducer (less price war exposure) and improves investor narrative with recurring revenue.',
       targetYear: 2030,
       owner: 'Chief Marketing Officer',
       status: 'in-progress',
@@ -594,7 +594,7 @@ export const cmoData: HoshinData = {
     },
     {
       id: 'theme-s3-ott',
-      title: 'OTT & VAS With Economic Guardrails',
+      title: 'Digital Platform & VAS With Economic Guardrails',
       description: 'Bundling, retention, diaspora monetisation. No exclusive content bidding wars. No minimum guarantees without scale proof. Partner-first aggregator strategy.',
       targetYear: 2028,
       owner: 'Chief Marketing Officer',
@@ -603,7 +603,7 @@ export const cmoData: HoshinData = {
     },
     {
       id: 'cmo-strategic-1',
-      title: 'Achieve Enterprise ≥25-30% of EBITDA (5 Years)',
+      title: 'Achieve B2B ≥25-30% of Gross Margin (5 Years)',
       description: 'Transform revenue mix from consumer-dependent to enterprise-balanced. High ARPU, multi-year contracts, SLA-backed revenues with predictable cash flows.',
       targetYear: 2030,
       owner: 'Chief Marketing Officer',
@@ -620,27 +620,27 @@ export const cmoData: HoshinData = {
       targetDate: '2025-12-31',
       owner: 'Chief Marketing Officer',
       status: 'in-progress',
-      progress: 30
+      progress: 28
     },
     {
       id: 'annual-a4',
-      title: 'Reset OTT into Bundling-Led, ROI-Guarded Model',
-      description: 'Year 1 Foundation objective. OTT as ARPU defense not cost center. Implement churn-based ROI tests, diaspora geo-pricing, ad-supported models.',
+      title: 'Reset Platform into Bundling-Led, ROI-Guarded Model',
+      description: 'Year 1 Foundation objective. Platform as ARPU defense not cost center. Implement churn-based ROI tests, geo-pricing, ad-supported models.',
       strategicObjectiveIds: ['theme-s3-ott', 'breakthrough-4'],
       targetDate: '2025-12-31',
       owner: 'Chief Marketing Officer',
       status: 'in-progress',
-      progress: 35
+      progress: 32
     },
     {
       id: 'annual-a6',
-      title: 'Reach Enterprise ≥15% of EBITDA',
+      title: 'Reach B2B ≥15% of Gross Margin',
       description: 'Year 2 Optionality objective. Scale enterprise revenue contribution as hedge against consumer price wars.',
       strategicObjectiveIds: ['theme-s2-enterprise', 'cmo-strategic-1'],
       targetDate: '2026-12-31',
       owner: 'Chief Marketing Officer',
       status: 'planning',
-      progress: 5
+      progress: 4
     },
     {
       id: 'cmo-annual-4',
@@ -650,7 +650,7 @@ export const cmoData: HoshinData = {
       targetDate: '2025-10-31',
       owner: 'Chief Marketing Officer',
       status: 'in-progress',
-      progress: 25
+      progress: 22
     }
   ],
   processes: [
@@ -678,10 +678,10 @@ export const cmoData: HoshinData = {
     },
     {
       id: 'cmo-process-3',
-      title: 'OTT Bundling & Churn Analytics',
+      title: 'Platform Bundling & Churn Analytics',
       description: 'Deploy churn analytics with cohort analysis, A/B testing on bundles, and ROI proof requirements before expansion.',
       annualObjectiveIds: ['annual-a4'],
-      owner: 'OTT Product Manager',
+      owner: 'Platform Product Manager',
       startDate: '2025-02-01',
       endDate: '2025-12-31',
       status: 'in-progress',
@@ -702,44 +702,44 @@ export const cmoData: HoshinData = {
   metrics: [
     {
       id: 'cmo-metric-1',
-      name: 'Enterprise Revenue as % of EBITDA',
-      description: 'Enterprise contribution to profitability. Year 1 target 10%, Year 2 target 15%, 5-year target 25-30%',
+      name: 'Enterprise Revenue as % of Gross Margin',
+      description: 'Enterprise contribution to profitability. Year 1 target 12%, Year 2 target 18%, 5-year target 25-30%',
       processIds: ['cmo-process-1', 'cmo-process-2'],
-      target: 10,
-      current: 5,
-      unit: '% of EBITDA',
+      target: 12,
+      current: 6,
+      unit: '% of gross margin',
       frequency: 'monthly',
       owner: 'Enterprise Sales Director'
     },
     {
       id: 'cmo-metric-2',
-      name: 'Enterprise Pipeline Value (NPR)',
+      name: 'Enterprise Pipeline Value (USD)',
       description: 'Qualified enterprise opportunity pipeline value',
       processIds: ['cmo-process-1'],
-      target: 500,
-      current: 180,
-      unit: 'NPR Million',
+      target: 45,
+      current: 16,
+      unit: 'USD Million',
       frequency: 'monthly',
       owner: 'Enterprise Sales Director'
     },
     {
       id: 'cmo-metric-3',
-      name: 'OTT Attach Rate (Bundle)',
-      description: 'Percentage of DTH/ISP customers with active OTT bundle',
+      name: 'Platform Attach Rate (Bundle)',
+      description: 'Percentage of broadband customers with active platform bundle',
       processIds: ['cmo-process-3'],
-      target: 40,
-      current: 18,
+      target: 35,
+      current: 15,
       unit: '% attach rate',
       frequency: 'monthly',
-      owner: 'OTT Product Manager'
+      owner: 'Platform Product Manager'
     },
     {
       id: 'cmo-metric-4',
       name: 'Churn Rate (Bundled vs Non-Bundled)',
-      description: 'Comparative churn showing OTT bundle retention impact',
+      description: 'Comparative churn showing platform bundle retention impact',
       processIds: ['cmo-process-3'],
-      target: 2,
-      current: 5,
+      target: 2.5,
+      current: 6,
       unit: '% monthly churn',
       frequency: 'monthly',
       owner: 'Customer Retention Manager'
@@ -750,7 +750,7 @@ export const cmoData: HoshinData = {
       description: 'Percentage of enterprise contracts meeting SLA commitments',
       processIds: ['cmo-process-2'],
       target: 99,
-      current: 92,
+      current: 89,
       unit: '% compliance',
       frequency: 'weekly',
       owner: 'Service Delivery Manager'
@@ -760,9 +760,9 @@ export const cmoData: HoshinData = {
     {
       id: 'cmo-catchball-1',
       type: 'suggestion',
-      title: 'OTT Strategy Guardrail Proposal',
+      title: 'Platform Strategy Guardrail Proposal',
       description: 'Recommend explicit prohibitions: No exclusive content bidding wars, no minimum guarantees without scale proof. Partner-first aggregator approach.',
-      from: 'OTT Product Manager',
+      from: 'Platform Product Manager',
       to: 'Chief Marketing Officer',
       relatedItemId: 'theme-s3-ott',
       relatedItemType: 'strategic',
@@ -771,7 +771,7 @@ export const cmoData: HoshinData = {
       responses: [
         {
           id: 'cmo-response-1',
-          message: 'Approved. These guardrails are now mandatory policy. OTT is strategically sound but not yet financially clear on ROI - we proceed with discipline.',
+          message: 'Approved. These guardrails are now mandatory policy. Platform is strategically sound but not yet financially clear on ROI - we proceed with discipline.',
           author: 'Chief Marketing Officer',
           createdAt: '2025-01-21T14:00:00Z'
         }
@@ -780,8 +780,8 @@ export const cmoData: HoshinData = {
     {
       id: 'cmo-catchball-2',
       type: 'question',
-      title: 'Datalaya Integration for Enterprise Offerings',
-      description: 'Datalaya can enable hosting, sovereignty, and CDN/caching for enterprise. However, internal audit flagged missing formal agreements. Clarify governance.',
+      title: 'Cloud Infrastructure Integration for Enterprise Offerings',
+      description: 'Cloud services can enable hosting, sovereignty, and CDN/caching for enterprise. However, internal audit flagged missing formal agreements. Clarify governance.',
       from: 'Enterprise Sales Director',
       to: 'Chief Marketing Officer',
       relatedItemId: 'annual-a3',
@@ -827,7 +827,7 @@ export const cooData: HoshinData = {
       targetDate: '2025-12-31',
       owner: 'Chief Operating Officer',
       status: 'in-progress',
-      progress: 40
+      progress: 36
     },
     {
       id: 'annual-a9',
@@ -837,7 +837,7 @@ export const cooData: HoshinData = {
       targetDate: '2026-12-31',
       owner: 'Chief Operating Officer',
       status: 'planning',
-      progress: 10
+      progress: 8
     },
     {
       id: 'coo-annual-3',
@@ -847,7 +847,7 @@ export const cooData: HoshinData = {
       targetDate: '2025-06-30',
       owner: 'Chief Operating Officer',
       status: 'in-progress',
-      progress: 55
+      progress: 50
     },
     {
       id: 'coo-annual-4',
@@ -857,7 +857,7 @@ export const cooData: HoshinData = {
       targetDate: '2025-12-31',
       owner: 'Chief Operating Officer',
       status: 'in-progress',
-      progress: 30
+      progress: 28
     }
   ],
   processes: [
@@ -912,8 +912,8 @@ export const cooData: HoshinData = {
       name: 'Audit Observation Closure Rate',
       description: 'Percentage of internal audit findings closed within target timeline',
       processIds: ['coo-process-2'],
-      target: 95,
-      current: 68,
+      target: 90,
+      current: 62,
       unit: '% closed',
       frequency: 'monthly',
       owner: 'Internal Audit Manager'
@@ -923,8 +923,8 @@ export const cooData: HoshinData = {
       name: 'Distributor Commission Leakage',
       description: 'Revenue lost to commission scheme weaknesses or fraud. Internal audit flagged issues.',
       processIds: ['coo-process-3'],
-      target: 0.5,
-      current: 3.2,
+      target: 0.8,
+      current: 4.1,
       unit: '% of revenue',
       frequency: 'monthly',
       owner: 'Distribution Manager'
@@ -934,7 +934,7 @@ export const cooData: HoshinData = {
       name: 'Cost-to-Serve Reduction',
       description: 'Operational cost per customer served, targeting reduction through clustering',
       processIds: ['coo-process-4'],
-      target: 15,
+      target: 18,
       current: 0,
       unit: '% reduction YoY',
       frequency: 'quarterly',
@@ -945,8 +945,8 @@ export const cooData: HoshinData = {
       name: 'Vendor Consolidation Progress',
       description: 'Number of vendors reduced through strategic consolidation',
       processIds: ['coo-process-4'],
-      target: 30,
-      current: 5,
+      target: 35,
+      current: 7,
       unit: '% vendors reduced',
       frequency: 'quarterly',
       owner: 'Procurement Manager'
@@ -990,17 +990,17 @@ export const cooData: HoshinData = {
 };
 
 // =============================================================================
-// Unified DishHome Dataset (All Levels Combined)
+// Unified Dataset (All Levels Combined)
 // =============================================================================
 
 
 // =============================================================================
-// Kano Model Data - DishHome & Competitors
-// Based on Enterprise Product Architecture (Slide 11) and Competitive Landscape (Slide 16)
+// Kano Model Data - Company & Competitors
+// Based on Enterprise Product Architecture and Competitive Landscape
 // =============================================================================
 
-// DishHome Enterprise Service Features (Based on Kano Service Stack)
-const dishHomeKanoFeatures: KanoFeature[] = [
+// Enterprise Service Features (Based on Kano Service Stack)
+const meridianKanoFeatures: KanoFeature[] = [
   // BASIC (Must-Haves) - Entry cost, don't over-engineer
   {
     id: 'dh-feature-1',
@@ -1105,14 +1105,14 @@ const dishHomeKanoFeatures: KanoFeature[] = [
   {
     id: 'dh-feature-8',
     name: 'Data Sovereignty Solutions',
-    description: 'On-premise and Nepal-based data hosting ensuring regulatory compliance and sovereignty',
+    description: 'On-premise and locally-hosted data ensuring regulatory compliance and sovereignty',
     category: 'excitement',
     dysfunctionalScore: 1,
     functionalScore: 2,
     importance: 4,
     satisfactionImpact: 0.9,
     linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'cmo-strategic-1'],
-    notes: 'Unique differentiator via Datalaya integration. Moat feature.',
+    notes: 'Unique differentiator via cloud infrastructure integration. Moat feature.',
     createdAt: '2025-01-15T10:00:00Z',
     updatedAt: '2025-01-15T10:00:00Z'
   },
@@ -1126,14 +1126,14 @@ const dishHomeKanoFeatures: KanoFeature[] = [
     importance: 3,
     satisfactionImpact: 0.85,
     linkedStrategicObjectiveIds: ['theme-s2-enterprise', 'theme-s3-ott'],
-    notes: 'Delighter for content-heavy enterprises. OTT economics enabler.',
+    notes: 'Delighter for content-heavy enterprises. Platform economics enabler.',
     createdAt: '2025-01-15T10:00:00Z',
     updatedAt: '2025-01-15T10:00:00Z'
   },
   {
     id: 'dh-feature-10',
-    name: 'Enterprise OTT Distribution',
-    description: 'White-label OTT distribution capability for enterprise content needs',
+    name: 'Enterprise Content Distribution',
+    description: 'White-label content distribution capability for enterprise needs',
     category: 'excitement',
     dysfunctionalScore: 1,
     functionalScore: 2,
@@ -1146,8 +1146,8 @@ const dishHomeKanoFeatures: KanoFeature[] = [
   }
 ];
 
-// WorldLink Competitor Features (Market Leader)
-const worldLinkKanoFeatures: KanoFeature[] = [
+// PrimeLine Competitor Features (Market Leader)
+const primeLineKanoFeatures: KanoFeature[] = [
   {
     id: 'wl-feature-1',
     name: 'Fiber Network Coverage',
@@ -1157,7 +1157,7 @@ const worldLinkKanoFeatures: KanoFeature[] = [
     functionalScore: 1,
     importance: 5,
     satisfactionImpact: 0.4,
-    notes: 'Market leader advantage. 900k+ subscribers base.',
+    notes: 'Market leader advantage. 1.2M+ subscribers base.',
     createdAt: '2025-01-15T10:00:00Z',
     updatedAt: '2025-01-15T10:00:00Z'
   },
@@ -1209,7 +1209,7 @@ const worldLinkKanoFeatures: KanoFeature[] = [
     functionalScore: 2,
     importance: 4,
     satisfactionImpact: 0.7,
-    notes: 'Similar to DishHome offering.',
+    notes: 'Comparable to Meridian offering.',
     createdAt: '2025-01-15T10:00:00Z',
     updatedAt: '2025-01-15T10:00:00Z'
   },
@@ -1222,7 +1222,7 @@ const worldLinkKanoFeatures: KanoFeature[] = [
     functionalScore: 2,
     importance: 4,
     satisfactionImpact: 0.65,
-    notes: '2तै program benchmark.',
+    notes: 'Industry benchmark program.',
     createdAt: '2025-01-15T10:00:00Z',
     updatedAt: '2025-01-15T10:00:00Z'
   },
@@ -1235,14 +1235,14 @@ const worldLinkKanoFeatures: KanoFeature[] = [
     functionalScore: 1,
     importance: 2,
     satisfactionImpact: 0.3,
-    notes: 'Not a focus area for WorldLink.',
+    notes: 'Not a focus area for PrimeLine.',
     createdAt: '2025-01-15T10:00:00Z',
     updatedAt: '2025-01-15T10:00:00Z'
   }
 ];
 
-// Nepal Telecom Features (Government-Backed)
-const nepalTelecomKanoFeatures: KanoFeature[] = [
+// NationTel Features (Government-Backed)
+const nationTelKanoFeatures: KanoFeature[] = [
   {
     id: 'nt-feature-1',
     name: 'Nationwide Coverage',
@@ -1310,8 +1310,8 @@ const nepalTelecomKanoFeatures: KanoFeature[] = [
   }
 ];
 
-// Vianet Features
-const vianetKanoFeatures: KanoFeature[] = [
+// ClearPath Features
+const clearPathKanoFeatures: KanoFeature[] = [
   {
     id: 'vn-feature-1',
     name: 'Fiber Connectivity',
@@ -1321,7 +1321,7 @@ const vianetKanoFeatures: KanoFeature[] = [
     functionalScore: 1,
     importance: 5,
     satisfactionImpact: 0.35,
-    notes: '300-350k subscriber base.',
+    notes: '400-450k subscriber base.',
     createdAt: '2025-01-15T10:00:00Z',
     updatedAt: '2025-01-15T10:00:00Z'
   },
@@ -1366,8 +1366,8 @@ const vianetKanoFeatures: KanoFeature[] = [
   }
 ];
 
-// Subisu Features (Potential M&A Target)
-const subisuKanoFeatures: KanoFeature[] = [
+// NetBridge Features (Potential Acquisition Target)
+const netBridgeKanoFeatures: KanoFeature[] = [
   {
     id: 'sb-feature-1',
     name: 'Cable Internet Services',
@@ -1377,7 +1377,7 @@ const subisuKanoFeatures: KanoFeature[] = [
     functionalScore: 1,
     importance: 5,
     satisfactionImpact: 0.3,
-    notes: '~300k subscriber base. M&A target.',
+    notes: '~350k subscriber base. Acquisition target.',
     createdAt: '2025-01-15T10:00:00Z',
     updatedAt: '2025-01-15T10:00:00Z'
   },
@@ -1411,62 +1411,62 @@ const subisuKanoFeatures: KanoFeature[] = [
 
 // Export Kano Analyses for Companies
 export const dishHomeKanoAnalysis: CompanyKanoAnalysis = {
-  id: 'kano-dishhome',
-  companyName: 'DishHome',
+  id: 'kano-meridian',
+  companyName: 'Meridian Communications',
   companyType: 'self',
-  industry: 'Telecommunications - DTH/ISP/OTT',
-  features: dishHomeKanoFeatures,
-  overallScore: 72,
-  strengthAreas: ['Data Sovereignty (Datalaya)', 'Enterprise OTT Distribution', 'Edge Caching', 'DTH-ISP-OTT Integration'],
-  weaknessAreas: ['Market Scale vs WorldLink', 'Enterprise Sales Maturity', 'Current Financial Performance'],
+  industry: 'Telecommunications - Broadband/B2B/Platform',
+  features: meridianKanoFeatures,
+  overallScore: 70,
+  strengthAreas: ['Data Sovereignty (Cloud Infra)', 'Enterprise Content Distribution', 'Edge Caching', 'Multi-Product Integration'],
+  weaknessAreas: ['Market Scale vs PrimeLine', 'Enterprise Sales Maturity', 'Current Financial Performance'],
   analysisDate: '2025-01-15T10:00:00Z'
 };
 
 export const worldLinkKanoAnalysis: CompanyKanoAnalysis = {
-  id: 'kano-worldlink',
-  companyName: 'WorldLink',
+  id: 'kano-primeline',
+  companyName: 'PrimeLine',
   companyType: 'competitor',
   industry: 'Telecommunications - ISP',
-  features: worldLinkKanoFeatures,
-  overallScore: 78,
-  strengthAreas: ['Market Leadership', 'Scale (900k+ subscribers)', 'SLA Programs (2तै)', 'Distribution Network'],
-  weaknessAreas: ['Data Center/Sovereignty', 'OTT Integration', 'DTH Cross-sell'],
+  features: primeLineKanoFeatures,
+  overallScore: 76,
+  strengthAreas: ['Market Leadership', 'Scale (1.2M+ subscribers)', 'SLA Programs', 'Distribution Network'],
+  weaknessAreas: ['Data Center/Sovereignty', 'Platform Integration', 'Cross-sell Depth'],
   analysisDate: '2025-01-15T10:00:00Z'
 };
 
 export const nepalTelecomKanoAnalysis: CompanyKanoAnalysis = {
-  id: 'kano-nepal-telecom',
-  companyName: 'Nepal Telecom',
+  id: 'kano-nationtel',
+  companyName: 'NationTel',
   companyType: 'competitor',
   industry: 'Telecommunications - Full Service',
-  features: nepalTelecomKanoFeatures,
-  overallScore: 65,
+  features: nationTelKanoFeatures,
+  overallScore: 63,
   strengthAreas: ['Nationwide Coverage', 'Government Backing', 'Capital Access', 'Enterprise Legacy'],
   weaknessAreas: ['Innovation Speed', 'Value-Added Services', 'Customer Experience'],
   analysisDate: '2025-01-15T10:00:00Z'
 };
 
 export const vianetKanoAnalysis: CompanyKanoAnalysis = {
-  id: 'kano-vianet',
-  companyName: 'Vianet',
+  id: 'kano-clearpath',
+  companyName: 'ClearPath',
   companyType: 'competitor',
   industry: 'Telecommunications - ISP',
-  features: vianetKanoFeatures,
-  overallScore: 62,
+  features: clearPathKanoFeatures,
+  overallScore: 60,
   strengthAreas: ['Customer Support', 'Urban Focus', 'Managed Services'],
-  weaknessAreas: ['Scale (300-350k)', 'Enterprise Depth', 'Geographic Reach'],
+  weaknessAreas: ['Scale (400-450k)', 'Enterprise Depth', 'Geographic Reach'],
   analysisDate: '2025-01-15T10:00:00Z'
 };
 
 export const subisuKanoAnalysis: CompanyKanoAnalysis = {
-  id: 'kano-subisu',
-  companyName: 'Subisu',
+  id: 'kano-netbridge',
+  companyName: 'NetBridge',
   companyType: 'competitor',
   industry: 'Telecommunications - Cable/ISP',
-  features: subisuKanoFeatures,
-  overallScore: 55,
+  features: netBridgeKanoFeatures,
+  overallScore: 53,
   strengthAreas: ['Triple-Play Legacy', 'Local Content', 'Established Base'],
-  weaknessAreas: ['Technology Modernization', 'Scale (~300k)', 'Enterprise Capability'],
+  weaknessAreas: ['Technology Modernization', 'Scale (~350k)', 'Enterprise Capability'],
   analysisDate: '2025-01-15T10:00:00Z'
 };
 
@@ -1481,7 +1481,7 @@ export const allKanoAnalyses: CompanyKanoAnalysis[] = [
 
 // =============================================================================
 // =============================================================================
-// Leadership Charter V2 Data (Extracted from Excel)
+// Leadership Charter V2 Data (Extracted from Analysis)
 // =============================================================================
 
 const leadershipCharterV2Data: HoshinData = {
@@ -1590,12 +1590,12 @@ const leadershipCharterV2Data: HoshinData = {
     {
       id: 'lc-annual-1',
       title: 'Stabilize Financial Core',
-      description: 'Achieve Cash EBITDA > 2.5x Coverage. Implement ROIC gating.',
+      description: 'Achieve Cash Coverage > 2.5x. Implement ROIC gating.',
       strategicObjectiveIds: ['lc-strat-1', 'lc-strat-2'],
       targetDate: '2025-12-31',
       owner: 'CFO',
       status: 'in-progress',
-      progress: 30
+      progress: 28
     },
     {
       id: 'lc-annual-2',
@@ -1605,17 +1605,17 @@ const leadershipCharterV2Data: HoshinData = {
       targetDate: '2025-12-31',
       owner: 'COO',
       status: 'in-progress',
-      progress: 40
+      progress: 35
     },
     {
       id: 'lc-annual-3',
       title: 'Achieve Platform Scale',
-      description: 'AI-enabled ops, Tech/Infra ROI lens active, OTT investment monetized.',
+      description: 'AI-enabled ops, Tech/Infra ROI lens active, Platform investment monetized.',
       strategicObjectiveIds: ['lc-strat-6', 'lc-strat-7'],
       targetDate: '2026-06-30',
       owner: 'CTO',
       status: 'planning',
-      progress: 15
+      progress: 12
     },
     {
       id: 'lc-annual-4',
@@ -1625,7 +1625,7 @@ const leadershipCharterV2Data: HoshinData = {
       targetDate: '2025-12-31',
       owner: 'HR Director',
       status: 'in-progress',
-      progress: 25
+      progress: 22
     },
     {
       id: 'lc-annual-5',
@@ -1635,7 +1635,7 @@ const leadershipCharterV2Data: HoshinData = {
       targetDate: '2025-09-30',
       owner: 'Chief Risk Officer',
       status: 'in-progress',
-      progress: 50
+      progress: 45
     }
   ],
   processes: [
@@ -1676,11 +1676,11 @@ const leadershipCharterV2Data: HoshinData = {
   metrics: [
     {
       id: 'lc-metric-1',
-      name: 'EBITDA Margin',
-      description: 'Baseline: 3-6%, Target: 18-22%',
+      name: 'Gross Margin',
+      description: 'Baseline: 4-7%, Target: 22-25%',
       processIds: ['lc-proc-1'],
-      target: 20,
-      current: 5,
+      target: 24,
+      current: 6,
       unit: '%',
       frequency: 'monthly',
       owner: 'CFO'
@@ -1688,10 +1688,10 @@ const leadershipCharterV2Data: HoshinData = {
     {
       id: 'lc-metric-2',
       name: 'Net Debt / EBITDA',
-      description: 'Baseline: >5x, Target: <2.0x',
+      description: 'Baseline: >6x, Target: <2.5x',
       processIds: ['lc-proc-1'],
-      target: 2.0,
-      current: 5.5,
+      target: 2.5,
+      current: 6.2,
       unit: 'Ratio',
       frequency: 'quarterly',
       owner: 'CFO'
@@ -1699,10 +1699,10 @@ const leadershipCharterV2Data: HoshinData = {
     {
       id: 'lc-metric-3',
       name: 'Enterprise Revenue Share',
-      description: 'Baseline: <8%, Target: 30%+',
+      description: 'Baseline: <6%, Target: 30%+',
       processIds: [],
       target: 30,
-      current: 7,
+      current: 5,
       unit: '%',
       frequency: 'monthly',
       owner: 'CMO'
@@ -1710,10 +1710,10 @@ const leadershipCharterV2Data: HoshinData = {
     {
       id: 'lc-metric-4',
       name: 'Automation Penetration',
-      description: 'Baseline: Low, Target: AI-led (60%+)',
+      description: 'Baseline: Low, Target: AI-led (55%+)',
       processIds: ['lc-proc-3'],
-      target: 60,
-      current: 5,
+      target: 55,
+      current: 4,
       unit: '%',
       frequency: 'quarterly',
       owner: 'CTO'
@@ -1724,7 +1724,7 @@ const leadershipCharterV2Data: HoshinData = {
       description: 'Baseline: Weak, Target: Institutional',
       processIds: [],
       target: 100,
-      current: 30,
+      current: 25,
       unit: '%',
       frequency: 'quarterly',
       owner: 'CEO'
@@ -1734,7 +1734,7 @@ const leadershipCharterV2Data: HoshinData = {
   gantt: [
     {
       id: 'gantt-1',
-      initiative: 'Cash EBITDA & Controls',
+      initiative: 'Cash Flow & Controls',
       category: 'financial',
       timeline: [
         { period: '0-6M', active: true }, { period: '6-12M', active: true }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
@@ -1770,7 +1770,7 @@ const leadershipCharterV2Data: HoshinData = {
     },
     {
       id: 'gantt-5',
-      initiative: 'OTT Monetization',
+      initiative: 'Platform Monetization',
       category: 'customer',
       timeline: [
         { period: '0-6M', active: false }, { period: '6-12M', active: true }, { period: '12-18M', active: true }, { period: '18-24M', active: true },
@@ -1865,38 +1865,38 @@ export const dishHomeUnifiedData: HoshinData = {
 export const availableDatasets: DatasetOption[] = [
   {
     id: 'leadership-charter-v2',
-    name: 'Leadership Charter V2 (Excel Analysis)',
-    description: 'Extracted data from Leadership_Charter_and_Intervention_Design_V2.xlsx, including Gantt roadmap and KPI trackers.',
+    name: 'Leadership Charter V2 (Analysis)',
+    description: 'Extracted data from Leadership Charter and Intervention Design V2, including Gantt roadmap and KPI trackers.',
     data: leadershipCharterV2Data
   },
   {
     id: 'dishhome-unified',
-    name: 'DishHome Unified Strategic Plan (All Levels)',
+    name: 'Meridian Unified Strategic Plan (All Levels)',
     description: 'Complete 5-year Hoshin Kanri plan across all executive levels - Breakthrough Objectives, Annual Objectives, and Four Pillars',
     data: dishHomeUnifiedData
   },
   {
     id: 'ceo-strategic',
     name: 'CEO - Strategic Vision & Capital Pathways (Level 1)',
-    description: 'Breakthrough objectives, capital-contingent strategy, M&A readiness, and PMO transformation leadership',
+    description: 'Breakthrough objectives, capital-contingent strategy, integration readiness, and PMO transformation leadership',
     data: ceoData
   },
   {
     id: 'cfo-financial',
     name: 'CFO - Financial Core & Credibility Reset (Pillar I)',
-    description: 'EBITDA restoration, cash flow predictability, ROIC gating, and IPO-grade financial controls',
+    description: 'Margin restoration, cash flow predictability, ROIC gating, and investor-grade financial controls',
     data: cfoData
   },
   {
     id: 'cto-technology',
     name: 'CTO - Technology, NOC & Platform Architecture (Pillar III)',
-    description: 'AI-NOC, OSS/BSS unification, IAM/SIEM, cyber governance, and M&A-ready infrastructure',
+    description: 'AI-NOC, OSS/BSS unification, IAM/SIEM, cyber governance, and integration-ready infrastructure',
     data: ctoData
   },
   {
     id: 'cmo-enterprise',
-    name: 'CMO - Enterprise, OTT & Customer Strategy (Pillar II)',
-    description: 'Enterprise GTM, SLA product stack, OTT repositioning with economic guardrails, Kano-based architecture',
+    name: 'CMO - Enterprise, Platform & Customer Strategy (Pillar II)',
+    description: 'Enterprise GTM, SLA product stack, platform repositioning with economic guardrails, Kano-based architecture',
     data: cmoData
   },
   {
@@ -1913,4 +1913,3 @@ export const dummyProcesses = dishHomeUnifiedData.processes;
 export const dummyMetrics = dishHomeUnifiedData.metrics;
 export const dummyCatchballItems = dishHomeUnifiedData.catchball;
 export const allDummyData = dishHomeUnifiedData;
-

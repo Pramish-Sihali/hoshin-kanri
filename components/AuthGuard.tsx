@@ -17,7 +17,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     if (status === 'loading') return; // Still loading
 
     if (!session) {
-      router.push('/auth/signin');
+      router.push('/');
       return;
     }
   }, [session, status, router]);

@@ -8,8 +8,8 @@ export interface SIPOCData {
     upstreamProcesses: string[];
     downstreamProcesses: string[];
   }
-  
-  export const dishHomeSIPOCData: Record<string, SIPOCData> = {
+
+  export const companySIPOCData: Record<string, SIPOCData> = {
     // CEO Level Strategic Processes
     'ceo-strategic-transformation': {
       suppliers: [
@@ -36,7 +36,7 @@ export interface SIPOCData {
         'Change management initiatives'
       ],
       customers: [
-        'DishHome Stakeholders',
+        'Company Stakeholders',
         'Board of Directors',
         'Executive Leadership Team',
         'Department Heads',
@@ -55,7 +55,7 @@ export interface SIPOCData {
         'Change Management Execution'
       ]
     },
-  
+
     'ceo-customer-acquisition': {
       suppliers: [
         'Marketing Analytics Team',
@@ -99,7 +99,7 @@ export interface SIPOCData {
         'Retention Strategy Implementation'
       ]
     },
-  
+
     // COO Level Operational Processes
     'coo-network-optimization': {
       suppliers: [
@@ -125,7 +125,7 @@ export interface SIPOCData {
         'Quality assurance confirmations'
       ],
       customers: [
-        'DishHome Customers',
+        'End Customers',
         'Customer Service Teams',
         'Technical Support',
         'Sales Teams',
@@ -144,7 +144,7 @@ export interface SIPOCData {
         'Continuous Improvement Process'
       ]
     },
-  
+
     'coo-customer-service': {
       suppliers: [
         'Customer Service Representatives',
@@ -169,7 +169,7 @@ export interface SIPOCData {
         'Process improvement recommendations'
       ],
       customers: [
-        'DishHome Customers',
+        'End Customers',
         'Customer Experience Teams',
         'Management Reporting',
         'Quality Assurance',
@@ -188,7 +188,7 @@ export interface SIPOCData {
         'Performance Optimization'
       ]
     },
-  
+
     // CFO Level Financial Processes
     'cfo-financial-recovery': {
       suppliers: [
@@ -233,7 +233,7 @@ export interface SIPOCData {
         'Financial Performance Monitoring'
       ]
     },
-  
+
     'cfo-debt-optimization': {
       suppliers: [
         'Treasury Management',
@@ -277,11 +277,11 @@ export interface SIPOCData {
         'Capital Cost Management'
       ]
     },
-  
+
     // CIO Level Technology Infrastructure Processes
     'cio-platform-overhaul': {
       suppliers: [
-        'White-label OTT Providers (ViewLift/VPlayed)',
+        'White-label Platform Providers',
         'Cloud Infrastructure Partners',
         'System Integration Teams',
         'Security Service Providers',
@@ -294,16 +294,16 @@ export interface SIPOCData {
         'Integration protocols',
         'Performance benchmarks'
       ],
-      process: 'DHGO Platform Technology Overhaul Process',
+      process: 'Digital Platform Technology Overhaul Process',
       outputs: [
-        'Stable and scalable DHGO platform',
+        'Stable and scalable digital platform',
         'Enhanced user experience',
         'Improved system performance',
         'Secure content delivery',
         'Multi-device compatibility'
       ],
       customers: [
-        'DHGO Platform Users',
+        'Platform Users',
         'Content Teams',
         'Customer Support',
         'Marketing Teams',
@@ -322,7 +322,7 @@ export interface SIPOCData {
         'Continuous Platform Optimization'
       ]
     },
-  
+
     'cio-digital-experience': {
       suppliers: [
         'Mobile App Development Teams',
@@ -347,7 +347,7 @@ export interface SIPOCData {
         'Customer satisfaction improvements'
       ],
       customers: [
-        'DishHome Customers',
+        'End Customers',
         'Customer Experience Teams',
         'Marketing Department',
         'Customer Support',
@@ -366,7 +366,7 @@ export interface SIPOCData {
         'Continuous UX Optimization'
       ]
     },
-  
+
     // CMO Level Customer Acquisition Processes
     'cmo-freemium-strategy': {
       suppliers: [
@@ -411,7 +411,7 @@ export interface SIPOCData {
         'Revenue Performance Tracking'
       ]
     },
-  
+
     'cmo-content-strategy': {
       suppliers: [
         'Content Production Teams',
@@ -436,7 +436,7 @@ export interface SIPOCData {
         'Content ROI analysis'
       ],
       customers: [
-        'DHGO Platform Users',
+        'Platform Users',
         'Content Distribution Teams',
         'Customer Experience',
         'Product Management',
@@ -455,7 +455,7 @@ export interface SIPOCData {
         'Content Performance Analysis'
       ]
     },
-  
+
     // CTO Level Technical Innovation Processes
     'cto-platform-architecture': {
       suppliers: [
@@ -500,7 +500,7 @@ export interface SIPOCData {
         'Security Compliance Verification'
       ]
     },
-  
+
     'cto-ai-analytics': {
       suppliers: [
         'AI/ML Development Teams',
@@ -545,21 +545,21 @@ export interface SIPOCData {
       ]
     }
   };
-  
+
   // Helper function to get SIPOC data by ID
   export const getSIPOCData = (id: string): SIPOCData | undefined => {
-    return dishHomeSIPOCData[id];
+    return companySIPOCData[id];
   };
-  
+
   // Helper function to get all SIPOC processes
   export const getAllSIPOCProcesses = (): string[] => {
-    return Object.keys(dishHomeSIPOCData);
+    return Object.keys(companySIPOCData);
   };
-  
+
   // Helper function to get SIPOC processes by executive
   export const getSIPOCByExecutive = (executive: string): Record<string, SIPOCData> => {
     const filtered: Record<string, SIPOCData> = {};
-    Object.entries(dishHomeSIPOCData).forEach(([key, value]) => {
+    Object.entries(companySIPOCData).forEach(([key, value]) => {
       if (key.startsWith(executive.toLowerCase())) {
         filtered[key] = value;
       }

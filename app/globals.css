@@ -144,6 +144,12 @@ button {
 }
 
 
+/* Scale down main content area to match sidebar proportions */
+.main-content {
+  font-size: 13px;
+  zoom: 0.90;
+}
+
 /* Custom dropdown animations */
 @keyframes slideDown {
   from {

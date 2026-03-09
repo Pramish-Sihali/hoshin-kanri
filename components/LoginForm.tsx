@@ -37,7 +37,7 @@ const LoginForm: React.FC = () => {
       } else {
         const session = await getSession();
         if (session) {
-          router.push('/');
+          router.push('/dashboard');
           router.refresh();
         }
       }
@@ -49,19 +49,12 @@ const LoginForm: React.FC = () => {
   };
 
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/' });
+    signIn('google', { callbackUrl: '/dashboard' });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-900 via-slate-800 to-slate-900 p-4">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-teal-400/10 rounded-full blur-3xl"></div>
-      </div>
-
-      <Card className="w-full max-w-md relative bg-white/95 backdrop-blur-sm shadow-2xl border-5">
+    <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
+      <Card className="w-full max-w-md relative bg-white shadow-xl border border-slate-200">
         <CardHeader className="text-center pb-6">
 
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent mb-2">
@@ -176,7 +169,7 @@ const LoginForm: React.FC = () => {
                 if (!result?.error) {
                   const session = await getSession();
                   if (session) {
-                    router.push('/');
+                    router.push('/dashboard');
                     router.refresh();
                   }
                 } else {

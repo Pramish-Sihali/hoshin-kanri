@@ -1,14 +1,73 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { useHoshinStore } from '../store/hoshinStore';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
+import { Skeleton } from './ui/skeleton';
 import StrategicObjectiveForm from './StrategicObjectiveForm';
-import { GanttChart } from './GanttChart';
 import { Plus, Target, TrendingUp, Users, AlertCircle, Activity, CheckCircle2, Clock, AlertTriangle, Database, Info } from 'lucide-react';
+
+const GanttChart = lazy(() => import('./GanttChart').then(m => ({ default: m.GanttChart })));
+
+const GanttSkeleton = () => (
+  <div className="space-y-3 p-4">
+    <Skeleton className="h-5 w-48" />
+    <div className="space-y-2">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 flex-1" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const DashboardSkeleton = () => (
+  <div className="p-5 space-y-5">
+    <div className="flex justify-between items-center">
+      <div className="space-y-2">
+        <Skeleton className="h-7 w-72" />
+        <Skeleton className="h-4 w-96" />
+      </div>
+      <Skeleton className="h-9 w-44 rounded-xl" />
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Card key={i} className="border shadow-sm">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-6 w-12" />
+              </div>
+              <Skeleton className="h-9 w-9 rounded-lg" />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      {Array.from({ length: 2 }).map((_, i) => (
+        <Card key={i} className="border shadow-sm">
+          <CardHeader className="pb-3">
+            <Skeleton className="h-5 w-40" />
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {Array.from({ length: 3 }).map((_, j) => (
+              <Skeleton key={j} className="h-4 w-full" />
+            ))}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+export { DashboardSkeleton };
 
 const Dashboard: React.FC = () => {
   const {
@@ -18,7 +77,6 @@ const Dashboard: React.FC = () => {
     metrics,
     catchball,
     currentDatasetId,
-    getCurrentDatasetName,
     availableDatasets
   } = useHoshinStore();
   const [showObjectiveForm, setShowObjectiveForm] = useState(false);
@@ -30,27 +88,23 @@ const Dashboard: React.FC = () => {
 
   const getStatusStats = () => {
     const allItems = [...strategicObjectives, ...annualObjectives, ...processes];
-    const stats = {
+    return {
       total: allItems.length,
       completed: allItems.filter(item => item.status === 'completed').length,
       inProgress: allItems.filter(item => item.status === 'in-progress').length,
       atRisk: allItems.filter(item => item.status === 'at-risk').length
     };
-    return stats;
   };
 
   const getMetricsPerformance = () => {
     if (metrics.length === 0) return 0;
     const totalPerformance = metrics.reduce((sum, metric) => {
-      const performance = Math.min((metric.current / metric.target) * 100, 100);
-      return sum + performance;
+      return sum + Math.min((metric.current / metric.target) * 100, 100);
     }, 0);
     return totalPerformance / metrics.length;
   };
 
-  const getPendingCatchball = () => {
-    return catchball.filter(item => item.status === 'pending').length;
-  };
+  const getPendingCatchball = () => catchball.filter(item => item.status === 'pending').length;
 
   const stats = getStatusStats();
   const avgPerformance = getMetricsPerformance();
@@ -58,51 +112,43 @@ const Dashboard: React.FC = () => {
   const currentDataset = getCurrentDataset();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
-      <div className="p-8 space-y-8">
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
-              Strategic Policy Deployment Overview
+    <div className="min-h-screen">
+      <div className="p-5 space-y-5">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">
+              Strategic Policy Deployment
             </h1>
             {currentDataset && (
-              <div className="flex items-center gap-3 mt-3">
-                <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl">
-                  <Database className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <div className="text-sm font-semibold text-blue-800">{currentDataset.name}</div>
-                    <div className="text-xs text-blue-600">{currentDataset.description}</div>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 text-xs text-blue-600">
+                <Database className="w-3.5 h-3.5" />
+                <span className="font-medium">{currentDataset.name}</span>
               </div>
             )}
           </div>
           <Button
             onClick={() => setShowObjectiveForm(true)}
-            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-xl"
+            size="sm"
+            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-sm hover:shadow-md transition-all rounded-lg text-xs px-4 py-2"
           >
-            <Plus className="w-5 h-5 mr-2" />
+            <Plus className="w-3.5 h-3.5 mr-1.5" />
             Add Strategic Objective
           </Button>
         </div>
 
-        {/* Dataset Information Banner */}
+        {/* Welcome Banner */}
         {!currentDatasetId && stats.total === 0 && (
-          <Card className="border-4 shadow-lg bg-gradient-to-r from-teal-50 to-blue-50 border-teal-200">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
-                  <Info className="w-6 h-6 text-teal-600" />
+          <Card className="border shadow-sm bg-gradient-to-r from-teal-50 to-blue-50 border-teal-200">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Info className="w-4 h-4 text-teal-600" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-teal-800 mb-1">Welcome to Strategic Policy Deployment</h3>
-                  <p className="text-teal-700 mb-3">
-                    This application helps you implement Hoshin Kanri (Policy Deployment) methodology.
-                    Load demo data to explore features or start building your own strategic plan.
-                  </p>
-                  <p className="text-sm text-teal-600">
-                    💡 Use the "Load Demo Data" dropdown in the top navigation to explore different industry examples
+                <div>
+                  <h3 className="text-sm font-semibold text-teal-800">Welcome to Strategic Policy Deployment</h3>
+                  <p className="text-xs text-teal-600 mt-0.5">
+                    Click the &ldquo;Load Demo Data&rdquo; button in the top navigation to explore the platform
                   </p>
                 </div>
               </div>
@@ -110,170 +156,108 @@ const Dashboard: React.FC = () => {
           </Card>
         )}
 
-        {/* Key Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="border-4 shadow-lg bg-gradient-to-br from-white to-teal-50/50 hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-600">Total Objectives</p>
-                  <p className="text-3xl font-bold text-teal-700">{stats.total}</p>
-                </div>
-                <div className="p-3 bg-teal-100 rounded-xl">
-                  <Target className="w-7 h-7 text-teal-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-4 shadow-lg bg-gradient-to-br from-white to-emerald-50/50 hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-600">Avg Performance</p>
-                  <p className="text-3xl font-bold text-emerald-700">{avgPerformance.toFixed(1)}%</p>
-                </div>
-                <div className="p-3 bg-emerald-100 rounded-xl">
-                  <TrendingUp className="w-7 h-7 text-emerald-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-4 shadow-lg bg-gradient-to-br from-white to-blue-50/50 hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-600">Active Processes</p>
-                  <p className="text-3xl font-bold text-blue-700">{processes.length}</p>
-                </div>
-                <div className="p-3 bg-blue-100 rounded-xl">
-                  <Users className="w-7 h-7 text-blue-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-4 shadow-lg bg-gradient-to-br from-white to-orange-50/50 hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-600">Pending Catchball</p>
-                  <p className="text-3xl font-bold text-orange-700">{pendingCatchball}</p>
-                </div>
-                <div className="p-3 bg-orange-100 rounded-xl">
-                  <AlertCircle className="w-7 h-7 text-orange-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Metric Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { label: 'Total Objectives', value: stats.total, icon: Target, color: 'teal' },
+            { label: 'Avg Performance', value: `${avgPerformance.toFixed(1)}%`, icon: TrendingUp, color: 'emerald' },
+            { label: 'Active Processes', value: processes.length, icon: Users, color: 'blue' },
+            { label: 'Pending Catchball', value: pendingCatchball, icon: AlertCircle, color: 'orange' }
+          ].map((card) => {
+            const Icon = card.icon;
+            const colorMap: Record<string, { bg: string; iconBg: string; text: string }> = {
+              teal: { bg: 'from-white to-teal-50/50', iconBg: 'bg-teal-100', text: 'text-teal-700' },
+              emerald: { bg: 'from-white to-emerald-50/50', iconBg: 'bg-emerald-100', text: 'text-emerald-700' },
+              blue: { bg: 'from-white to-blue-50/50', iconBg: 'bg-blue-100', text: 'text-blue-700' },
+              orange: { bg: 'from-white to-orange-50/50', iconBg: 'bg-orange-100', text: 'text-orange-700' }
+            };
+            const c = colorMap[card.color];
+            return (
+              <Card key={card.label} className={`border shadow-sm bg-gradient-to-br ${c.bg} hover:shadow-md transition-all`}>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-medium text-slate-500">{card.label}</p>
+                      <p className={`text-xl font-bold ${c.text} mt-1`}>{card.value}</p>
+                    </div>
+                    <div className={`p-2 ${c.iconBg} rounded-lg`}>
+                      <Icon className={`w-4 h-4 ${c.text}`} />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
-        {/* Status Overview and Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card className="border-4 shadow-lg bg-white/80 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold text-slate-800 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-teal-600" />
+        {/* Status + Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <Card className="border shadow-sm">
+            <CardHeader className="pb-2 px-4 pt-4">
+              <CardTitle className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-teal-600" />
                 Status Distribution
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                    <span className="text-sm font-medium text-slate-600">Completed</span>
+            <CardContent className="px-4 pb-4 space-y-4">
+              {[
+                { label: 'Completed', count: stats.completed, icon: CheckCircle2, color: 'emerald' },
+                { label: 'In Progress', count: stats.inProgress, icon: Clock, color: 'blue' },
+                { label: 'At Risk', count: stats.atRisk, icon: AlertTriangle, color: 'red' }
+              ].map((row) => {
+                const Icon = row.icon;
+                const pct = stats.total > 0 ? ((row.count / stats.total) * 100) : 0;
+                return (
+                  <div key={row.label} className="space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-3.5 h-3.5 text-${row.color}-500`} />
+                        <span className="text-xs font-medium text-slate-600">{row.label}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={`bg-${row.color}-100 text-${row.color}-800 border-${row.color}-200 text-xs px-2 py-0.5 rounded-full`}>
+                          {row.count}
+                        </Badge>
+                        <span className="text-xs text-slate-400 w-10 text-right">{pct.toFixed(1)}%</span>
+                      </div>
+                    </div>
+                    <Progress
+                      value={pct}
+                      className={`h-1.5 bg-${row.color}-100 [&>div]:bg-gradient-to-r [&>div]:from-${row.color}-500 [&>div]:to-${row.color}-600`}
+                    />
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 px-3 py-1 rounded-full">
-                      {stats.completed}
-                    </Badge>
-                    <span className="text-sm text-slate-500 min-w-[3rem] text-right">
-                      {stats.total > 0 ? ((stats.completed / stats.total) * 100).toFixed(1) : 0}%
-                    </span>
-                  </div>
-                </div>
-                <Progress
-                  value={stats.total > 0 ? (stats.completed / stats.total) * 100 : 0}
-                  className="h-2 bg-emerald-100 [&>div]:bg-gradient-to-r [&>div]:from-emerald-500 [&>div]:to-emerald-600"
-                />
-
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-blue-500" />
-                    <span className="text-sm font-medium text-slate-600">In Progress</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className="bg-blue-100 text-blue-800 border-blue-200 px-3 py-1 rounded-full">
-                      {stats.inProgress}
-                    </Badge>
-                    <span className="text-sm text-slate-500 min-w-[3rem] text-right">
-                      {stats.total > 0 ? ((stats.inProgress / stats.total) * 100).toFixed(1) : 0}%
-                    </span>
-                  </div>
-                </div>
-                <Progress
-                  value={stats.total > 0 ? (stats.inProgress / stats.total) * 100 : 0}
-                  className="h-2 bg-blue-100 [&>div]:bg-gradient-to-r [&>div]:from-blue-500 [&>div]:to-blue-600"
-                />
-
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle className="w-5 h-5 text-red-500" />
-                    <span className="text-sm font-medium text-slate-600">At Risk</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className="bg-red-100 text-red-800 border-red-200 px-3 py-1 rounded-full">
-                      {stats.atRisk}
-                    </Badge>
-                    <span className="text-sm text-slate-500 min-w-[3rem] text-right">
-                      {stats.total > 0 ? ((stats.atRisk / stats.total) * 100).toFixed(1) : 0}%
-                    </span>
-                  </div>
-                </div>
-                <Progress
-                  value={stats.total > 0 ? (stats.atRisk / stats.total) * 100 : 0}
-                  className="h-2 bg-red-100 [&>div]:bg-gradient-to-r [&>div]:from-red-500 [&>div]:to-red-600"
-                />
-              </div>
+                );
+              })}
             </CardContent>
           </Card>
 
-          <Card className="border-4 shadow-lg bg-white/80 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold text-slate-800 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-teal-600" />
+          <Card className="border shadow-sm">
+            <CardHeader className="pb-2 px-4 pt-4">
+              <CardTitle className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-teal-600" />
                 Recent Activity
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+            <CardContent className="px-4 pb-4">
+              <div className="space-y-2">
                 {catchball.slice(-5).map((item) => (
-                  <div key={item.id} className="flex items-start gap-4 p-3 rounded-lg hover:bg-slate-50/50 transition-colors">
-                    <div className="flex-shrink-0 w-3 h-3 mt-2 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full shadow-sm"></div>
+                  <div key={item.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                    <div className="flex-shrink-0 w-2 h-2 mt-1.5 bg-teal-500 rounded-full" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-800 truncate">{item.title}</p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        {item.from} → {item.to} • {new Date(item.createdAt).toLocaleDateString()}
+                      <p className="text-xs font-medium text-slate-800 truncate">{item.title}</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">
+                        {item.from} → {item.to} &bull; {new Date(item.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <Badge
-                      className={`text-xs px-2 py-1 rounded-full ${item.status === 'pending'
-                        ? 'bg-amber-100 text-amber-800 border-amber-200'
-                        : 'bg-slate-100 text-slate-800 border-slate-200'
-                        }`}
-                    >
+                    <Badge className={`text-[10px] px-1.5 py-0.5 rounded-full flex-shrink-0 ${item.status === 'pending' ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                       {item.status}
                     </Badge>
                   </div>
                 ))}
                 {catchball.length === 0 && (
-                  <div className="text-center py-8">
-                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Activity className="w-6 h-6 text-slate-400" />
-                    </div>
-                    <p className="text-sm text-slate-500">No recent activity</p>
+                  <div className="text-center py-6">
+                    <Activity className="w-5 h-5 text-slate-300 mx-auto mb-2" />
+                    <p className="text-xs text-slate-400">No recent activity</p>
                   </div>
                 )}
               </div>
@@ -282,48 +266,37 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Strategic Objectives */}
-        <Card className="border-4 shadow-lg bg-white/80 backdrop-blur-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-semibold text-slate-800 flex items-center gap-2">
-              <Target className="w-5 h-5 text-teal-600" />
+        <Card className="border shadow-sm">
+          <CardHeader className="pb-2 px-4 pt-4">
+            <CardTitle className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+              <Target className="w-4 h-4 text-teal-600" />
               Strategic Objectives
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="px-4 pb-4">
+            <div className="space-y-2">
               {strategicObjectives.slice(0, 5).map((objective) => (
-                <div key={objective.id} className="group p-6 border border-slate-200 rounded-xl hover:shadow-md hover:border-teal-200 transition-all duration-200 bg-white/60">
-                  <div className="flex items-start justify-between">
+                <div key={objective.id} className="group p-3 border border-slate-100 rounded-lg hover:shadow-sm hover:border-teal-200 transition-all bg-white">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-slate-800 group-hover:text-teal-700 transition-colors">
+                      <h3 className="text-xs font-semibold text-slate-800 group-hover:text-teal-700 transition-colors">
                         {objective.title}
                       </h3>
-                      <p className="text-sm text-slate-600 mt-2 line-clamp-2">{objective.description}</p>
-                      <div className="flex items-center gap-4 mt-4">
-                        <span className="text-xs text-slate-500 bg-slate-50 px-3 py-1 rounded-full">
-                          Target: {objective.targetYear}
+                      <p className="text-[10px] text-slate-500 mt-1 line-clamp-1">{objective.description}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-[10px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">
+                          {objective.targetYear}
                         </span>
-                        <span className="text-xs text-slate-500 bg-slate-50 px-3 py-1 rounded-full">
-                          Owner: {objective.owner}
+                        <span className="text-[10px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">
+                          {objective.owner}
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 ml-4">
-                      <Badge
-                        className={`text-xs px-3 py-1 rounded-full font-medium ${objective.priority === 'high' ? 'bg-red-100 text-red-800 border-red-200' :
-                          objective.priority === 'medium' ? 'bg-amber-100 text-amber-800 border-amber-200' :
-                            'bg-emerald-100 text-emerald-800 border-emerald-200'
-                          }`}
-                      >
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <Badge className={`text-[10px] px-2 py-0.5 rounded-full ${objective.priority === 'high' ? 'bg-red-50 text-red-700 border-red-200' : objective.priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'}`}>
                         {objective.priority}
                       </Badge>
-                      <Badge
-                        className={`text-xs px-3 py-1 rounded-full font-medium text-white ${objective.status === 'completed' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' :
-                          objective.status === 'in-progress' ? 'bg-gradient-to-r from-blue-500 to-blue-600' :
-                            objective.status === 'at-risk' ? 'bg-gradient-to-r from-red-500 to-red-600' :
-                              'bg-gradient-to-r from-slate-500 to-slate-600'
-                          }`}
-                      >
+                      <Badge className={`text-[10px] px-2 py-0.5 rounded-full text-white ${objective.status === 'completed' ? 'bg-emerald-500' : objective.status === 'in-progress' ? 'bg-blue-500' : objective.status === 'at-risk' ? 'bg-red-500' : 'bg-slate-400'}`}>
                         {objective.status}
                       </Badge>
                     </div>
@@ -331,18 +304,17 @@ const Dashboard: React.FC = () => {
                 </div>
               ))}
               {strategicObjectives.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Target className="w-8 h-8 text-teal-600" />
-                  </div>
-                  <h3 className="text-lg font-medium text-slate-800 mb-2">No strategic objectives defined yet</h3>
-                  <p className="text-slate-500 mb-6">Start your strategic planning journey by adding your first objective</p>
+                <div className="text-center py-8">
+                  <Target className="w-6 h-6 text-teal-300 mx-auto mb-2" />
+                  <h3 className="text-sm font-medium text-slate-700 mb-1">No strategic objectives yet</h3>
+                  <p className="text-xs text-slate-400 mb-4">Add your first objective to get started</p>
                   <Button
                     onClick={() => setShowObjectiveForm(true)}
-                    className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-xl"
+                    size="sm"
+                    className="bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg text-xs"
                   >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Your First Objective
+                    <Plus className="w-3 h-3 mr-1" />
+                    Add Objective
                   </Button>
                 </div>
               )}
@@ -350,10 +322,10 @@ const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Gantt Chart Section */}
-        <div className="mt-8">
+        {/* Gantt Chart - Lazy Loaded */}
+        <Suspense fallback={<GanttSkeleton />}>
           <GanttChart />
-        </div>
+        </Suspense>
 
         <StrategicObjectiveForm
           open={showObjectiveForm}
